@@ -20,22 +20,24 @@ const RegisterPage = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         const { email, fullName, password, phone } = values;
-        const res = await registerAPI(
-            fullName,
-            email,
-            password,
-            phone
-        );
+        setTimeout(async () => {
+            const res = await registerAPI(
+                fullName,
+                email,
+                password,
+                phone
+            );
 
-        if (res.data) {
-            //success
-            message.success("Đăng ký user thành công.");
-            navigate("/login");
-        } else {
-            //error
-            message.error(res.message)
-        }
-        setIsSubmit(false)
+            if (res.data) {
+                //success
+                message.success("Đăng ký user thành công.");
+                navigate("/login");
+            } else {
+                //error
+                message.error(res.message)
+            }
+            setIsSubmit(false)
+        }, 2000);
     };
 
 
