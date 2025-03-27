@@ -5,65 +5,8 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
+import DetailUser from './detail.user';
 
-const columns: ProColumns<IUserTable>[] = [
-    {
-        dataIndex: 'index',
-        valueType: 'indexBorder',
-        width: 48,
-    },
-    {
-        title: 'Id',
-        dataIndex: '_id',
-        hideInSearch: true,
-        render(dom, entity, index, action, schema) {
-            return (
-                <a href='#'>{entity._id}</a>
-            )
-        }
-    },
-    {
-        title: 'Full Name',
-        dataIndex: 'fullName',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-        copyable: true
-    },
-    {
-        title: 'Created At',
-        dataIndex: 'createdAt',
-        valueType: 'date',
-        sorter: true,
-        hideInSearch: true
-    },
-    {
-        title: 'Created At',
-        dataIndex: 'createdAtRange',
-        valueType: 'dateRange',
-        hideInTable: true,
-    },
-    {
-        title: 'Action',
-        hideInSearch: true,
-        render(dom, entity, index, action, schema) {
-            return (
-                <>
-                    <EditTwoTone
-                        twoToneColor="#f57800"
-                        style={{ cursor: "pointer", marginRight: 15 }}
-                    />
-                    <DeleteTwoTone
-                        twoToneColor="#ff4d4f"
-                        style={{ cursor: "pointer" }}
-                    />
-                </>
-            )
-        },
-    },
-
-];
 
 type TSearch = {
     fullName: string;
@@ -74,13 +17,80 @@ type TSearch = {
 }
 
 const TableUser = () => {
-    const actionRef = useRef<ActionType>();
+    const actionRef = useRef<ActionType | null>(null);
     const [meta, setMeta] = useState({
         current: 1,
         pageSize: 5,
         pages: 0,
         total: 0
     });
+
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
+
+    const columns: ProColumns<IUserTable>[] = [
+        {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
+            title: 'Id',
+            dataIndex: '_id',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity._id}</a>
+                )
+            }
+        },
+        {
+            title: 'Full Name',
+            dataIndex: 'fullName',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            copyable: true
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            valueType: 'date',
+            sorter: true,
+            hideInSearch: true
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAtRange',
+            valueType: 'dateRange',
+            hideInTable: true,
+        },
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                        />
+                        <DeleteTwoTone
+                            twoToneColor="#ff4d4f"
+                            style={{ cursor: "pointer" }}
+                        />
+                    </>
+                )
+            },
+        },
+
+    ];
     return (
         <>
             <ProTable<IUserTable, TSearch>
@@ -154,6 +164,12 @@ const TableUser = () => {
                     </Button>
 
                 ]}
+            />
+            <DetailUser
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
             />
         </>
     );
