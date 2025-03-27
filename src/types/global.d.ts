@@ -9,6 +9,16 @@ declare global {
         data?: T;
 }
 
+    interface IModelPaginate<T>{
+      meta: {
+        current: number;
+        pageSize: number;
+        pages: number;
+        total: number;
+      },
+      result: T[]
+    }
+
     interface ILogin {
       access_token: string;
       user: {
@@ -50,6 +60,19 @@ declare global {
 
   interface IFetchAccount {
     user: IUser
+  }
+
+  interface IUserTable {
+    _id: string;
+    email: string;
+    phone: string;
+    fullName: string;
+    role: string;
+    avatar: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+
   }
 
 }
