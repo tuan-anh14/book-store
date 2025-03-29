@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
 import CreateUser from './create.user';
 import ImportUser from './data/import.user';
+import UpdateUser from './update.user';
 
 
 type TSearch = {
@@ -32,6 +33,9 @@ const TableUser = () => {
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
 
 
     const columns: ProColumns<IUserTable>[] = [
@@ -86,6 +90,11 @@ const TableUser = () => {
                         <EditTwoTone
                             twoToneColor="#f57800"
                             style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                console.log("Data Update:", entity);
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
                         />
                         <DeleteTwoTone
                             twoToneColor="#ff4d4f"
@@ -206,6 +215,14 @@ const TableUser = () => {
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
+            />
+
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
             />
 
             <ImportUser
