@@ -6,6 +6,7 @@ import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import DetailBook from './detail.book';
+import CreateBook from './create.book';
 
 
 type TSearch = {
@@ -255,6 +256,12 @@ const TableBook = () => {
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+
+            <CreateBook
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
             />
 
         </>
