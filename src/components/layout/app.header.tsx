@@ -96,7 +96,6 @@ const AppHeader = (props: any) => {
                         <div className='page-header__logo'>
                             <span className='logo'>
                                 <img src="../../assets/logoo.webp" alt="Book Logo" />
-
                                 <VscSearchFuzzy className='icon-search' />
                             </span>
                             <input
