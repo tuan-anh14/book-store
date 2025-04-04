@@ -167,7 +167,7 @@ const LayoutAdmin = () => {
                         <Outlet />
                     </Content>
                     <Footer style={{ padding: 0, textAlign: "center" }}>
-                        Tuan Anh &copy; Tuan Anh <HeartTwoTone />
+                        {/* Tuan Anh &copy; Tuan Anh <HeartTwoTone /> */}
                     </Footer>
                 </Layout>
             </Layout>
