@@ -1,32 +1,32 @@
 import axios from 'services/axios.customize'
 
 export const loginAPI = (username: string, password: string) => {
-    const urlBackend = "/api/v1/auth/login"
-    return axios.post<IBackendRes<ILogin>>(urlBackend, {username, password}, {
-      headers: {
-        delay: 3000
-      }
-    })
+  const urlBackend = "/api/v1/auth/login"
+  return axios.post<IBackendRes<ILogin>>(urlBackend, { username, password }, {
+    headers: {
+      delay: 3000
+    }
+  })
 }
 
 export const registerAPI = (fullName: string, email: string, password: string, phone: string) => {
-    const urlBackend = "/api/v1/user/register";
-    return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone }, {
-    });
-  }
+  const urlBackend = "/api/v1/user/register";
+  return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone }, {
+  });
+}
 
 export const fetchAccountAPI = () => {
-    const urlBackend = "/api/v1/auth/account";
-    return axios.get<IBackendRes<IFetchAccount>>(urlBackend, {
-    });
-  }
+  const urlBackend = "/api/v1/auth/account";
+  return axios.get<IBackendRes<IFetchAccount>>(urlBackend, {
+  });
+}
 
 export const logoutAPI = () => {
   const urlBackend = "/api/v1/auth/logout";
   return axios.post<IBackendRes<IRegister>>(urlBackend);
 }
 
-export const getUsersAPI = (query:string) => {
+export const getUsersAPI = (query: string) => {
   const urlBackend = `/api/v1/user?${query}`;
   return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend);
 }
@@ -53,7 +53,7 @@ export const getBooksAPI = (query: string) => {
   return axios.get<IBackendRes<IModelPaginate<IBookTable>>>(urlBackend, {
     headers: {
       delay: 2500,
-    },  
+    },
   });
 }
 
@@ -98,10 +98,11 @@ export const createBookAPI = (
 };
 
 export const getBookByIdAPI = (id: string) => {
+  const delay = (ms: number) =>
+    new Promise(resolve => setTimeout(resolve, ms));
+
   const urlBackend = `/api/v1/book/${id}`;
-  return axios.get<IBackendRes<IBookTable>>(urlBackend, {
-    headers: {
-      delay: 0,
-    },
-  });
+
+  // Trả về Promise: delay 3s rồi mới gọi axios
+  return delay(1500).then(() => axios.get<IBackendRes<IBookTable>>(urlBackend));
 };
