@@ -12,6 +12,8 @@ interface IProps {
     currentBook: IBookTable | null;
 }
 
+type UserAction = 'MINUS' | 'PLUS';
+
 const BookDetail = (props: IProps) => {
     const { currentBook } = props;
     const [imageGallery, setImageGallery] = useState<
@@ -25,6 +27,7 @@ const BookDetail = (props: IProps) => {
 
     const [isOpenModalGallery, setIsOpenModalGallery] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const [currentQuantity, setCurrentQuantity] = useState<number>(1);
 
     const refGallery = useRef<ImageGallery>(null); // hoặc cụ thể hơn: useRef<ImageGallery | null>(null);
 
@@ -124,6 +127,25 @@ const BookDetail = (props: IProps) => {
         console.log('changed', value);
     };
 
+    const handleChangeButton = (type: UserAction) => {
+        if (type == "MINUS") {
+            if (currentQuantity - 1 <= 0) return;
+            setCurrentQuantity(currentQuantity - 1);
+        }
+        if (type == "PLUS" && currentBook) {
+            if (currentQuantity === +currentBook.quantity) return;
+            setCurrentQuantity(currentQuantity + 1);
+        }
+    }
+
+    const handleChangeInput = (value: string) => {
+        if (!isNaN(+value)) {
+            if (+value > 0 && currentBook && +value < +currentBook.quantity) {
+                setCurrentQuantity(+value);
+            }
+        }
+    };
+
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className='view-detail-book' style={{ maxWidth: 1440, margin: '0 auto', minHeight: "calc(100vh - 150px)" }}>
@@ -177,9 +199,9 @@ const BookDetail = (props: IProps) => {
                                 <div className='quantity'>
                                     <span className='left'>Số lượng</span>
                                     <span className='right'>
-                                        <button><MinusOutlined /></button>
-                                        <input defaultValue={1} />
-                                        <button><PlusOutlined /></button>
+                                        <button onClick={() => handleChangeButton('MINUS')}><MinusOutlined /></button>
+                                        <input onChange={(event) => handleChangeInput(event.target.value)} value={currentQuantity} />
+                                        <button onClick={() => handleChangeButton('PLUS')}><PlusOutlined /></button>
                                     </span>
                                 </div>
                                 <div className='buy'>
