@@ -106,3 +106,29 @@ export const getBookByIdAPI = (id: string) => {
   // Trả về Promise: delay 3s rồi mới gọi axios
   return delay(1500).then(() => axios.get<IBackendRes<IBookTable>>(urlBackend));
 };
+
+export const createOrderAPI = ({
+  name,
+  address,
+  phone,
+  totalPrice,
+  type,
+  detail,
+}: {
+  name: string;
+  address: string;
+  phone: string;
+  totalPrice: number;
+  type: string;
+  detail: any;
+}) => {
+  const urlBackend = "/api/v1/order";
+  return axios.post<IBackendRes<IRegister>>(urlBackend, {
+    name,
+    address,
+    phone,
+    totalPrice,
+    type,
+    detail,
+  });
+};
