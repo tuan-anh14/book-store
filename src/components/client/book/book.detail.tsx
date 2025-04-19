@@ -186,7 +186,6 @@ const BookDetail = (props: IProps) => {
         message.success("Thêm vào giỏ hàng thành công!");
 
     }
-    console.log(carts);
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>

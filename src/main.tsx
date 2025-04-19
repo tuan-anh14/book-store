@@ -21,6 +21,7 @@ import LayoutAdmin from 'components/layout/layout.admin';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import BookPage from './pages/client/book';
+import OrderPage from './pages/client/order';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/book/:id",
         element: <BookPage />,
+      },
+      {
+        path: "/order",
+        element: <OrderPage />,
       },
       {
         path: "/about",
