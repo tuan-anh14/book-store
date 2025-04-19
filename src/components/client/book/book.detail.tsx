@@ -1,4 +1,4 @@
-import { Row, Col, Rate, Divider, Button } from 'antd';
+import { Row, Col, Rate, Divider, Button, message, App } from 'antd';
 import 'styles/book.scss';
 import ImageGallery from 'react-image-gallery';
 
@@ -30,6 +30,7 @@ const BookDetail = (props: IProps) => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [currentQuantity, setCurrentQuantity] = useState<number>(1);
     const { carts, setCarts } = useCurrentApp();
+    const { message } = App.useApp();
 
     const refGallery = useRef<ImageGallery>(null); // hoặc cụ thể hơn: useRef<ImageGallery | null>(null);
 
@@ -182,6 +183,7 @@ const BookDetail = (props: IProps) => {
             //sync React Context
             setCarts(data);
         }
+        message.success("Thêm vào giỏ hàng thành công!");
 
     }
     console.log(carts);
