@@ -22,6 +22,7 @@ import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import BookPage from './pages/client/book';
 import OrderPage from './pages/client/order';
+import HistoryPage from './pages/client/history';
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <div>checkout page</div>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/history",
+        element: (
+          <ProtectedRoute>
+            <HistoryPage />
           </ProtectedRoute>
         ),
       }
