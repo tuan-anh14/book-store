@@ -152,3 +152,17 @@ export const updateUserPasswordAPI = (
   const urlBackend = "/api/v1/user/change-password";
   return axios.post<IBackendRes<IRegister>>(urlBackend, { email, oldpass, newpass });
 };
+
+export const getOrdersAPI = (query: string) => {
+  const urlBackend = `/api/v1/order?${query}`;
+  return axios.get<IBackendRes<IModelPaginate<IOrderTable>>>(urlBackend);
+};
+
+export const getDashboardAPI = () => {
+  const urlBackend = `/api/v1/database/dashboard`;
+  return axios.get<IBackendRes<{
+    countOrder: number;
+    countUser: number;
+    countBook: number;
+  }>>(urlBackend);
+};
