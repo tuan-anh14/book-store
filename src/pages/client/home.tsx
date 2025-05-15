@@ -27,7 +27,7 @@ const HomePage = () => {
 
     const [listBook, setListBook] = useState<IBookTable[]>([]);
     const [current, setCurrent] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(5);
+    const [pageSize, setPageSize] = useState<number>(10);
     const [total, setTotal] = useState<number>(0);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,17 +39,24 @@ const HomePage = () => {
 
     useEffect(() => {
         const initCategory = async () => {
-            const res = await getCategoryAPI();
-            if (res && res.data) {
-                const d = res.data.map((item) => {
-                    return { label: item, value: item };
-                });
-                setListCategory(d);
+            try {
+                const res = await getCategoryAPI();
+                if (res?.data) {
+                    const d = res.data.map((item) => {
+                        return {
+                            label: item.name,  // Sử dụng thuộc tính name
+                            value: item.name   // Sử dụng thuộc tính _id
+                        };
+                    });
+                    setListCategory(d);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
             }
         };
+
         initCategory();
     }, []);
-
     useEffect(() => {
         fetchBook();
     }, [current, pageSize, filter, sortQuery]);
@@ -70,7 +77,6 @@ const HomePage = () => {
             setTotal(res.data.meta.total);
         }
         setIsLoading(false);
-
     };
 
     const handleOnchangePage = (pagination: { current: number; pageSize: number }) => {

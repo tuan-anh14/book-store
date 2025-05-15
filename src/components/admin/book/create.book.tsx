@@ -64,12 +64,17 @@ const CreateBook = (props: IProps) => {
 
     useEffect(() => {
         const fetchCategory = async () => {
-            const res = await getCategoryAPI();
-            if (res && res.data) {
-                const d = res.data.map((item) => {
-                    return { label: item, value: item };
-                });
-                setListCategory(d);
+            try {
+                const res = await getCategoryAPI();
+                if (res && res.data) {
+                    const d = res.data.map((item) => {
+                        // Đảm bảo sử dụng đúng trường từ đối tượng item
+                        return { label: item.name, value: item.name };
+                    });
+                    setListCategory(d);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
             }
         };
 

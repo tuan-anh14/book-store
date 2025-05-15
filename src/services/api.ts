@@ -10,7 +10,7 @@ export const loginAPI = (username: string, password: string) => {
 }
 
 export const registerAPI = (fullName: string, email: string, password: string, phone: string) => {
-  const urlBackend = "/api/v1/user/register";
+  const urlBackend = "/api/v1/auth/register";
   return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone }, {
   });
 }
@@ -58,8 +58,8 @@ export const getBooksAPI = (query: string) => {
 }
 
 export const getCategoryAPI = () => {
-  const urlBackend = '/api/v1/database/category';
-  return axios.get<IBackendRes<string[]>>(urlBackend);
+  const urlBackend = '/api/v1/category';
+  return axios.get<IBackendRes<ICategory[]>>(urlBackend);
 };
 
 export const uploadFileAPI = (fileImg: any, folder: string) => {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FaReact } from 'react-icons/fa'
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, Avatar, Popover, Empty } from 'antd';
+import { Divider, Badge, Drawer, Avatar, Popover, Empty, message } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import './app.header.scss';
@@ -25,6 +25,8 @@ const AppHeader = (props: any) => {
             setUser(null)
             setIsAuthenticated(false)
             localStorage.removeItem("access_token")
+            message.success("Đăng xuất thành công.");
+            navigate("/");
         }
 
     }

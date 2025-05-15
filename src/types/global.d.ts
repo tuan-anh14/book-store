@@ -115,6 +115,11 @@ declare global {
   interface IOrderTable extends IHistory {
 
   }
+
+  interface ICategory {
+    _id: string;
+    name: string;
+  }
 }
 
 declare module "*.png" {
