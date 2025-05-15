@@ -9,6 +9,7 @@ import DetailUser from './detail.user';
 import CreateUser from './create.user';
 import ImportUser from './data/import.user';
 import UpdateUser from './update.user';
+import { CSVLink } from 'react-csv';
 
 
 type TSearch = {
@@ -39,6 +40,8 @@ const TableUser = () => {
 
     const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
     const { message, notification } = App.useApp();
+
+    const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
 
     const handleDeleteUser = async (_id: string) => {
         setIsDeleteUser(true);
@@ -174,6 +177,7 @@ const TableUser = () => {
                     const res = await getUsersAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
+                        setCurrentDataTable(res.data.result ?? []);
                     }
                     return {
                         data: res.data?.result,
@@ -207,7 +211,12 @@ const TableUser = () => {
                         icon={<ExportOutlined />}
                         type="primary"
                     >
-                        Export
+                        <CSVLink
+                            data={currentDataTable}
+                            filename={'export-user.csv'}
+                        >
+                            Export
+                        </CSVLink>
                     </Button>,
 
                     <Button
