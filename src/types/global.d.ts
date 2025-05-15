@@ -120,6 +120,12 @@ declare global {
     _id: string;
     name: string;
   }
+
+  interface IResponseImport {
+    countSuccess: number;
+    countError: number;
+    detail: any;
+  }
 }
 
 declare module "*.png" {
