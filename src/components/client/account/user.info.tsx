@@ -45,7 +45,7 @@ const UserInfo = () => {
         const res = await uploadFileAPI(file, "avatar");
 
         if (res && res.data) {
-            const newAvatar = res.data.fileUploaded;
+            const newAvatar = res.data.fileName;
             setUserAvatar(newAvatar);
 
             if (onSuccess) {

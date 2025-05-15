@@ -62,16 +62,16 @@ export const getCategoryAPI = () => {
   return axios.get<IBackendRes<ICategory[]>>(urlBackend);
 };
 
-export const uploadFileAPI = (fileImg: any, folder: string) => {
+export const uploadFileAPI = (file: any, folderType: string) => {
   const bodyFormData = new FormData();
-  bodyFormData.append('fileImg', fileImg);
-  return axios<IBackendRes<{ fileUploaded: string }>>({
+  bodyFormData.append('fileUpload', file);
+  return axios<IBackendRes<{ fileName: string }>>({
     method: 'post',
-    url: '/api/v1/file/upload',
+    url: '/api/v1/files/upload',
     data: bodyFormData,
     headers: {
-      'Content-Type': 'multipart/form-data',
-      'upload-type': folder,
+      "Content-Type": "multipart/form-data",
+      "folder_type": folderType
     },
   });
 };
