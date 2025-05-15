@@ -23,6 +23,7 @@ import viVN from 'antd/locale/vi_VN';
 import BookPage from './pages/client/book';
 import OrderPage from './pages/client/order';
 import HistoryPage from './pages/client/history';
+import ManageCategoryPage from 'pages/admin/manage.category';
 
 const router = createBrowserRouter([
   {
@@ -102,6 +103,14 @@ const router = createBrowserRouter([
             <ManageUserPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "category",
+        element: (
+          <ProtectedRoute>
+            <ManageCategoryPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: "/admin",
