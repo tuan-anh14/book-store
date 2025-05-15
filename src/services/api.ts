@@ -41,7 +41,7 @@ export const bulkCreateUserAPI = (data: {
   password: string;
   email: string;
   phone: string;
-}[]) => { // Thêm dấu [] để chỉ định đây là một mảng
+}[]) => {
   const urlBackend = "/api/v1/user/bulk-create";
   return axios.post<IBackendRes<IResponseImport>>(urlBackend, data);
 };
