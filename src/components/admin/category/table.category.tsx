@@ -30,6 +30,11 @@ const TableCategory = () => {
 
     const columns: ProColumns<ICategory>[] = [
         {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
             title: 'Id',
             dataIndex: '_id',
             hideInSearch: true,

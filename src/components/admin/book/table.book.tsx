@@ -70,6 +70,11 @@ const TableBook = () => {
 
     const columns: ProColumns<IBookTable>[] = [
         {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
             title: 'Id',
             dataIndex: '_id',
             hideInSearch: true,
