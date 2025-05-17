@@ -229,7 +229,7 @@ const TableBook = () => {
                         )
                     },
                 }}
-                headerTitle="Table book"
+                headerTitle="Table Book"
                 toolBarRender={() => [
                     <Button
                         icon={<ExportOutlined />}

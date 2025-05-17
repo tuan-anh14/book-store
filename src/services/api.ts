@@ -167,7 +167,7 @@ export const getOrdersAPI = (query: string) => {
 };
 
 export const getDashboardAPI = () => {
-  const urlBackend = `/api/v1/database/dashboard`;
+  const urlBackend = `/api/v1/dashboard`;
   return axios.get<IBackendRes<{
     countOrder: number;
     countUser: number;

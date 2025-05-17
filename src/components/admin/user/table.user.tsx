@@ -205,7 +205,7 @@ const TableUser = () => {
                         )
                     },
                 }}
-                headerTitle="Table user"
+                headerTitle="Table User"
                 toolBarRender={() => [
                     <Button
                         icon={<ExportOutlined />}
