@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import DetailBook from './detail.book';
 import CreateBook from './create.book';
 import ImportBook from './data/import.book';
+import UpdateBook from './update.book';
 import { CSVLink } from 'react-csv';
 
 
@@ -280,6 +281,13 @@ const TableBook = () => {
                 refreshTable={refreshTable}
             />
 
+            <UpdateBook
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
+            />
         </>
     );
 };

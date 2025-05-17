@@ -1,4 +1,3 @@
-
 export { };
 
 declare global {
@@ -85,6 +84,7 @@ declare global {
     sold: number;
     quantity: number;
     category: string;
+    description: string;
     createdAt: Date;
     updatedAt: Date;
   }

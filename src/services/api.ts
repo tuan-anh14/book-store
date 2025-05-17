@@ -197,3 +197,25 @@ export const bulkCreateBookAPI = (data: {
   const urlBackend = "/api/v1/book/bulk-create";
   return axios.post<IBackendRes<IResponseImport>>(urlBackend, data);
 };
+
+export const updateBookAPI = (
+  _id: string,
+  mainText: string,
+  author: string,
+  price: number,
+  category: string,
+  description: string,
+  thumbnail: string,
+  slider: string[]
+) => {
+  const urlBackend = `/api/v1/book/${_id}`;
+  return axios.patch<IBackendRes<IRegister>>(urlBackend, {
+    mainText,
+    author,
+    price,
+    category,
+    description,
+    thumbnail,
+    slider
+  });
+};
