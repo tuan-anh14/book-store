@@ -162,7 +162,6 @@ const TableBook = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
-
                     let query = "";
 
                     if (params) {
@@ -180,22 +179,14 @@ const TableBook = () => {
                         query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`;
                     }
 
-                    if (sort && sort.createdAt) {
-                        query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`;
+                    if (sort) {
+                        const sortField = Object.keys(sort)[0];
+                        const sortOrder = sort[sortField];
+                        if (sortField && sortOrder) {
+                            query += `&sort=${sortOrder === "ascend" ? sortField : `-${sortField}`}`;
+                        }
                     } else {
-                        query += "&sort=-createdAt";
-                    }
-
-                    if (sort && sort.mainText) {
-                        query += `&sort=${sort.mainText === "ascend" ? "mainText" : "-mainText"}`;
-                    }
-
-                    if (sort && sort.author) {
-                        query += `&sort=${sort.author === "ascend" ? "author" : "-author"}`;
-                    }
-
-                    if (sort && sort.price) {
-                        query += `&sort=${sort.price === "ascend" ? "price" : "-price"}`;
+                        query += "&sort=-updatedAt";
                     }
 
                     const res = await getBooksAPI(query);
@@ -209,7 +200,6 @@ const TableBook = () => {
                         success: true,
                         total: res.data?.meta.total
                     };
-
                 }}
 
                 rowKey="_id"
