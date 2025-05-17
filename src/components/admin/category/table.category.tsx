@@ -11,17 +11,23 @@ const TableCategory = () => {
     const [openModalCreate, setOpenModalCreate] = useState(false);
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [dataUpdate, setDataUpdate] = useState<ICategory | null>(null);
+    const [isDeleteCategory, setIsDeleteCategory] = useState<boolean>(false);
     const actionRef = useRef<ActionType | null>(null);
-    const { message } = App.useApp();
+    const { message, notification } = App.useApp();
 
     const handleDeleteCategory = async (_id: string) => {
+        setIsDeleteCategory(true);
         const res = await deleteCategoryAPI(_id);
         if (res && res.data) {
             message.success('Xóa danh mục thành công');
             refreshTable();
         } else {
-            message.error('Đã có lỗi xảy ra!');
+            notification.error({
+                message: 'Lỗi xoá danh mục',
+                description: res?.message || 'Đã có lỗi xảy ra.',
+            });
         }
+        setIsDeleteCategory(false);
     };
 
     const refreshTable = () => {
@@ -38,13 +44,20 @@ const TableCategory = () => {
             title: 'Id',
             dataIndex: '_id',
             hideInSearch: true,
+            render(dom, entity) {
+                return (
+                    <a href='#' onClick={() => {
+                    }}>{entity._id}</a>
+                )
+            },
         },
         {
             title: 'Tên thể loại',
             dataIndex: 'name',
             sorter: false,
             ellipsis: true,
-            width: 200
+            width: 200,
+            search: true
         },
         {
             title: 'Ngày cập nhật',
@@ -75,6 +88,7 @@ const TableCategory = () => {
                         onConfirm={() => handleDeleteCategory(entity._id)}
                         okText="Xác nhận"
                         cancelText="Hủy"
+                        okButtonProps={{ loading: isDeleteCategory }}
                     >
                         <span style={{ cursor: "pointer", marginLeft: "20px" }}>
                             <DeleteTwoTone twoToneColor="#ff4d4f" />
@@ -91,29 +105,39 @@ const TableCategory = () => {
                 columns={columns}
                 actionRef={actionRef}
                 request={async (params, sort, filter) => {
-                    let query = `current=${params.current || 1}&pageSize=${params.pageSize || 10}`;
-                    if (params.name) {
-                        query += `&name=/${params.name}/i`;
-                    }
-                    if (sort && sort.updatedAt) {
-                        query += `&sort=${sort.updatedAt === "ascend" ? "updatedAt" : "-updatedAt"}`;
-                    } else {
-                        query += "&sort=-updatedAt";
-                    }
                     const res = await getCategoryAPI();
                     if (res && res.data) {
-                        // if (res.data.result && res.data.meta) {
-                        //     return {
-                        //         data: res.data.result,
-                        //         success: true,
-                        //         total: res.data.meta.total,
-                        //     };
-                        // }
-                        // return {
-                        //     data: res.data,
-                        //     success: true,
-                        //     total: res.data.length,
-                        // };
+                        let filteredData = [...res.data];
+
+                        // Filter by name if search is provided
+                        const searchName = params?.name;
+                        if (searchName) {
+                            filteredData = filteredData.filter(item =>
+                                item.name.toLowerCase().includes(searchName.toLowerCase())
+                            );
+                        }
+
+                        // Sort by updatedAt if sort is provided
+                        if (sort && sort.updatedAt) {
+                            filteredData.sort((a, b) => {
+                                const dateA = new Date(a.updatedAt).getTime();
+                                const dateB = new Date(b.updatedAt).getTime();
+                                return sort.updatedAt === 'ascend' ? dateA - dateB : dateB - dateA;
+                            });
+                        }
+
+                        // Calculate pagination
+                        const current = params?.current || 1;
+                        const pageSize = params?.pageSize || 10;
+                        const start = (current - 1) * pageSize;
+                        const end = start + pageSize;
+                        const paginatedData = filteredData.slice(start, end);
+
+                        return {
+                            data: paginatedData,
+                            success: true,
+                            total: filteredData.length,
+                        };
                     }
                     return {
                         data: [],
@@ -128,6 +152,8 @@ const TableCategory = () => {
                 }}
                 pagination={{
                     showSizeChanger: true,
+                    defaultPageSize: 5,
+                    pageSizeOptions: ['5', '10', '20', '50']
                 }}
                 headerTitle="Table Category"
                 toolBarRender={() => [
@@ -137,7 +163,7 @@ const TableCategory = () => {
                         onClick={() => setOpenModalCreate(true)}
                         type="primary"
                     >
-                        Thêm mới
+                        Add new
                     </Button>
                 ]}
             />

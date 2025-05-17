@@ -180,7 +180,7 @@ export const createCategoryAPI = (name: string) => {
 };
 
 export const updateCategoryAPI = (_id: string, name: string) => {
-  return axios.put(`/api/v1/category/${_id}`, { name });
+  return axios.patch(`/api/v1/category/${_id}`, { name });
 };
 
 export const deleteCategoryAPI = (_id: string) => {

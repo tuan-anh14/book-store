@@ -119,6 +119,7 @@ declare global {
   interface ICategory {
     _id: string;
     name: string;
+    updatedAt: string;
   }
 
   interface IResponseImport {
