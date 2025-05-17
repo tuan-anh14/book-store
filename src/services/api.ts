@@ -152,7 +152,7 @@ export const updateUserInfoAPI = (
   _id: string, avatar: string,
   fullName: string, phone: string
 ) => {
-  const urlBackend = "/api/v1/user";
+  const urlBackend = "/api/v1/user/info";
   return axios.put<IBackendRes<IRegister>>(urlBackend, { fullName, phone, avatar, _id });
 };
 
