@@ -1,4 +1,4 @@
-import { deleteUserAPI, getBooksAPI, getUsersAPI } from '@/services/api';
+import { deleteBookAPI, getBooksAPI, getUsersAPI } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -51,7 +51,7 @@ const TableBook = () => {
 
     const handleDeleteBook = async (_id: string) => {
         setIsDeleteBook(true);
-        const res = await deleteUserAPI(_id);
+        const res = await deleteBookAPI(_id);
         if (res && res.data) {
             message.success('Xóa book thành công');
             refreshTable();
@@ -61,6 +61,7 @@ const TableBook = () => {
                 description: res?.message || 'Đã có lỗi xảy ra.',
             });
         }
+        setIsDeleteBook(false);
     };
 
     const refreshTable = () => {
