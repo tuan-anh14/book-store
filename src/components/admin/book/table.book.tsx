@@ -90,23 +90,30 @@ const TableBook = () => {
         {
             title: 'Tên sách',
             dataIndex: 'mainText',
-            sorter: true
+            sorter: true,
+            ellipsis: true,
+            width: 200
         },
         {
             title: 'Thể loại',
             dataIndex: 'category',
             hideInSearch: true,
+            ellipsis: true,
+            width: 150
         },
         {
             title: 'Tác giả',
             dataIndex: 'author',
             sorter: true,
+            ellipsis: true,
+            width: 150
         },
         {
             title: 'Giá tiền',
             dataIndex: 'price',
             hideInSearch: true,
             sorter: true,
+            width: 120,
             render(dom, entity, index, action, schema) {
                 return (
                     <>
@@ -120,11 +127,13 @@ const TableBook = () => {
             dataIndex: 'updatedAt',
             sorter: true,
             valueType: 'date',
-            hideInSearch: true
+            hideInSearch: true,
+            width: 150
         },
         {
             title: 'Action',
             hideInSearch: true,
+            width: 100,
             render(dom, entity, index, action, schema) {
                 return (
                     <>

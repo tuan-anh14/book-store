@@ -43,6 +43,8 @@ const TableCategory = () => {
             title: 'Tên thể loại',
             dataIndex: 'name',
             sorter: false,
+            ellipsis: true,
+            width: 200
         },
         {
             title: 'Ngày cập nhật',
@@ -50,10 +52,12 @@ const TableCategory = () => {
             valueType: 'date',
             search: false,
             sorter: true,
+            width: 150
         },
         {
             title: 'Action',
             hideInSearch: true,
+            width: 100,
             render: (_, entity) => (
                 <>
                     <EditTwoTone
