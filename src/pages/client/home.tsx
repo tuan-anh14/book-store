@@ -107,7 +107,8 @@ const HomePage = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         let f = '';
         if (values?.range?.from >= 0 && values?.range?.to >= 0) {
-            f = `price>=$${values?.range?.from}&price<=$${values?.range?.to}`;
+            // Loại bỏ dấu $ ở đây
+            f = `price>=${values?.range?.from}&price<=${values?.range?.to}`;
             if (values?.category?.length) {
                 const cate = values?.category.join(',');
                 f += `&category=${cate}`;
