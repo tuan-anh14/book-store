@@ -7,6 +7,8 @@ import { App, Button, Popconfirm, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import DetailBook from './detail.book';
 import CreateBook from './create.book';
+import ImportBook from './data/import.book';
+import { CSVLink } from 'react-csv';
 
 
 type TSearch = {
@@ -41,6 +43,8 @@ const TableBook = () => {
     const [dataUpdate, setDataUpdate] = useState<IBookTable | null>(null);
 
     const [isDeleteBook, setIsDeleteBook] = useState<boolean>(false);
+
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
 
     const { message, notification } = App.useApp();
 
@@ -225,13 +229,19 @@ const TableBook = () => {
                         icon={<ExportOutlined />}
                         type="primary"
                     >
-                        Export
+                        <CSVLink
+                            data={currentDataTable}
+                            filename={'export-book.csv'}
+                        >
+                            Export
+                        </CSVLink>
                     </Button>,
 
                     <Button
                         icon={<CloudUploadOutlined />}
                         type="primary"
                         onClick={() => {
+                            setOpenModalImport(true);
                         }}
                     >
                         Import
@@ -261,6 +271,12 @@ const TableBook = () => {
             <CreateBook
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+
+            <ImportBook
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
                 refreshTable={refreshTable}
             />
 

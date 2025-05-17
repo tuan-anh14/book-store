@@ -186,3 +186,14 @@ export const updateCategoryAPI = (_id: string, name: string) => {
 export const deleteCategoryAPI = (_id: string) => {
   return axios.delete(`/api/v1/category/${_id}`);
 };
+
+export const bulkCreateBookAPI = (data: {
+  mainText: string;
+  author: string;
+  category: string;
+  price: number;
+  description: string;
+}[]) => {
+  const urlBackend = "/api/v1/book/bulk-create";
+  return axios.post<IBackendRes<IResponseImport>>(urlBackend, data);
+};
