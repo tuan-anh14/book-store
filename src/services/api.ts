@@ -91,7 +91,8 @@ export const createBookAPI = (
   quantity: number,
   category: string,
   thumbnail: string,
-  slider: string[]
+  slider: string[],
+  description: string
 ) => {
   const urlBackend = "/api/v1/book";
   return axios.post<IBackendRes<IRegister>>(urlBackend, {
@@ -102,6 +103,7 @@ export const createBookAPI = (
     category,
     thumbnail,
     slider,
+    description
   });
 };
 

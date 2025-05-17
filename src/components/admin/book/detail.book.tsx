@@ -109,6 +109,10 @@ const DetailBook = (props: IProps) => {
                         <Badge status="processing" text={dataViewDetail?.category} />
                     </Descriptions.Item>
 
+                    <Descriptions.Item label="Mô tả" span={2}>
+                        {dataViewDetail?.description}
+                    </Descriptions.Item>
+
                     <Descriptions.Item label="Created At">
                         {dayjs(dataViewDetail?.createdAt).format(FORMATE_DATE)}
                     </Descriptions.Item>

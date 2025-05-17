@@ -33,7 +33,8 @@ type FieldType = {
     category: string,
     quantity: number,
     thumbnail: any,
-    slider: any
+    slider: any,
+    description: string
 }
 
 
@@ -84,7 +85,7 @@ const CreateBook = (props: IProps) => {
     const onFinish: FormProps<any>['onFinish'] = async (values) => {
         setIsSubmit(true);
 
-        const { mainText, author, price, quantity, category } = values;
+        const { mainText, author, price, quantity, category, description } = values;
         const thumbnail = fileListThumbnail?.[0]?.name ?? "";
         const slider = fileListSlider?.map((item) => item.name) ?? [];
 
@@ -95,7 +96,8 @@ const CreateBook = (props: IProps) => {
             quantity,
             category,
             thumbnail,
-            slider
+            slider,
+            description
         );
 
         if (res && res.data) {
@@ -285,6 +287,16 @@ const CreateBook = (props: IProps) => {
                                 rules={[{ required: true, message: 'Vui lòng nhập số lượng!' }]}
                             >
                                 <InputNumber min={1} style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                labelCol={{ span: 24 }}
+                                label="Mô tả"
+                                name="description"
+                                rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}
+                            >
+                                <Input.TextArea rows={4} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>

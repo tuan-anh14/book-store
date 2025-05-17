@@ -114,7 +114,7 @@ const TableBook = () => {
             hideInSearch: true,
             sorter: true,
             width: 120,
-            render(dom, entity, index, action, schema) {
+            render(dom, entity) {
                 return (
                     <>
                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(entity.price)}
