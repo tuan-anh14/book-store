@@ -1,0 +1,131 @@
+.app-footer {
+    background: #fff;
+    color: #222;
+    font-size: 15px;
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+
+    .footer-container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 16px 16px 16px;
+        gap: 32px;
+        justify-content: space-between;
+    }
+
+    .footer-block {
+        min-width: 220px;
+        flex: 1 1 220px;
+        margin-bottom: 24px;
+
+        h4 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .hotline {
+            font-weight: 600;
+            margin-bottom: 8px;
+
+            a {
+                color: #1890ff;
+            }
+
+            .small-text {
+                font-weight: 400;
+                color: #888;
+                font-size: 13px;
+                margin-left: 4px;
+            }
+        }
+
+        .small-text {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 4px;
+            text-decoration: none;
+
+            &:hover {
+                color: #1890ff;
+            }
+        }
+
+        .security {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 0;
+        }
+
+        .certs {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .payment-icons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+
+            img {
+                height: 32px;
+            }
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+
+            a img {
+                border-radius: 50%;
+            }
+        }
+
+        .app-download {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+
+            .app-links {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        .store-title {
+            margin-top: 24px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+
+    .footer-bottom {
+        text-align: center;
+        color: #888;
+        font-size: 14px;
+        padding: 16px 0 8px 0;
+        border-top: 1px solid #eee;
+        background: #fff;
+    }
+
+    @media (max-width: 900px) {
+        .footer-container {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .footer-block {
+            margin-bottom: 32px;
+        }
+    }
+}
