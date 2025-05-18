@@ -54,27 +54,15 @@ const AppFooter = () => {
                         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/applepay.svg" alt="applepay" height={32} />
                         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlepay.svg" alt="googlepay" height={32} />
                     </div>
-                    <h4 style={{ margin: '24px 0 12px' }}>Dịch vụ giao hàng</h4>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Tiki.vn_logo.svg" width={109} height={33} alt="tikinow-icon" />
-                </div>
-                <div className="footer-block">
                     <h4>Kết nối với chúng tôi</h4>
                     <div className="social-icons">
                         <a href="#" title="Facebook"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" width={32} alt="facebook" /></a>
                         <a href="#" title="Youtube"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg" width={32} alt="youtube" /></a>
                         <a href="#" title="Zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" width={32} alt="zalo" /></a>
                     </div>
-                    <h4 className="store-title">Tải ứng dụng trên điện thoại</h4>
-                    <div className="app-download">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://bookstore.vn" width={80} height={80} alt="qr" />
-                        <div className="app-links">
-                            <a href="#"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/appstore.svg" width={122} alt="appstore" /></a>
-                            <a href="#"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googleplay.svg" width={122} alt="playstore" /></a>
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div className="footer-bottom">© 2024 BookStore. All rights reserved.</div>
+            <div className="footer-bottom">© 2025 BookStore. All rights reserved.</div>
         </footer>
     );
 };
