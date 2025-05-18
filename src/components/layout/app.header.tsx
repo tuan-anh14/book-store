@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { FaReact } from 'react-icons/fa'
-import { FiShoppingCart } from 'react-icons/fi';
-import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, Avatar, Popover, Empty, message } from 'antd';
-import { Dropdown, Space } from 'antd';
+import { Divider, Drawer, Avatar, Popover, Empty, message, Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import './app.header.scss';
 import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
 import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
+import { EnvironmentOutlined } from '@ant-design/icons';
 
 const AppHeader = (props: any) => {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -90,63 +87,85 @@ const AppHeader = (props: any) => {
         )
     }
     return (
-        <>
-            <div className='header-container'>
-                <header className="page-header">
-                    <div className="page-header__top">
-                        <div className="page-header__toggle" onClick={() => {
-                            setOpenDrawer(true)
-                        }}>☰</div>
-                        <div className='page-header__logo'>
-                            <span className='logo'>
-                                <img src="../../assets/logoo.webp" alt="Book Logo" />
-                                <VscSearchFuzzy className='icon-search' />
-                            </span>
-                            <input
-                                className="input-search" type={'text'}
-                                placeholder="Bạn tìm gì hôm nay"
-                            // value={props.searchTerm}
-                            // onChange={(e) => props.setSearchTerm(e.target.value)}
-                            />
-                        </div>
-
+        <div className='header-container tiki-header'>
+            <header className="page-header">
+                <div className="header-main">
+                    {/* Logo + slogan */}
+                    <div className="header-logo-block">
+                        <Link to="/" className="tiki-logo">
+                            <img src="https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png" alt="tiki-logo" width={96} height={40} />
+                            <span className="slogan">Tốt & Nhanh</span>
+                        </Link>
                     </div>
-                    <nav className="page-header__bottom">
-                        <ul id="navigation" className="navigation">
-                            <li className="navigation__item">
+                    {/* Search */}
+                    <div className="header-search-block">
+                        <div className="search-box">
+                            <img className="icon-search" src="https://salt.tikicdn.com/ts/upload/33/d0/37/6fef2e788f00a16dc7d5a1dfc5d0e97a.png" alt="icon-search" />
+                            <input className="input-search" type={'text'} placeholder="Truyện ma ..." />
+                            <button className="search-btn">Tìm kiếm</button>
+                        </div>
+                    </div>
+                    {/* Shortcut + Giao đến */}
+                    <div className="header-right-block">
+                        <div className="header-shortcut-block">
+                            <div className="shortcut-item" onClick={() => navigate('/')}>
+                                <img src="https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png" alt="home" />
+                                <span>Trang chủ</span>
+                            </div>
+                            <div className="shortcut-item">
                                 <Popover
                                     className="popover-carts"
-                                    placement="topRight"
+                                    placement="bottomRight"
                                     rootClassName="popover-carts"
                                     title={"Sản phẩm mới thêm"}
                                     content={contentPopover}
                                     arrow={true}>
-                                    <Badge
-                                        count={carts?.length ?? 0}
-                                        size={"small"}
-                                        showZero
-                                    >
-                                        <FiShoppingCart className='icon-cart' />
-                                    </Badge>
+                                    <div style={{ position: 'relative' }}>
+                                        <img className="cart-icon" src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png" alt="cart" />
+                                        <span className="cart-count">{carts?.length ?? 0}</span>
+                                    </div>
                                 </Popover>
-                            </li>
-                            <li className="navigation__item mobile"><Divider type='vertical' /></li>
-                            <li className="navigation__item mobile">
+                            </div>
+                            <div className="shortcut-item">
                                 {!isAuthenticated ?
-                                    <span onClick={() => navigate('/login')}> Tài Khoản</span>
+                                    <div className="account-shortcut" onClick={() => navigate('/login')}>
+                                        <img src="https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png" alt="account" />
+                                        <span>Tài khoản</span>
+                                    </div>
                                     :
                                     <Dropdown menu={{ items }} trigger={['click']}>
-                                        <Space >
+                                        <Space className="account-shortcut" style={{ cursor: 'pointer' }}>
                                             <Avatar src={urlAvatar} />
                                             {user?.fullName}
                                         </Space>
                                     </Dropdown>
                                 }
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-            </div>
+                            </div>
+                        </div>
+                        <div className="header-delivery-zone">
+                            <EnvironmentOutlined style={{ color: '#1890ff', fontSize: 20, marginRight: 6 }} />
+                            <span className="delivery-label">Giao đến:</span>
+                            <span className="delivery-address">
+                                {/* {user?.address ? <b>{user.address}</b> : <span style={{ color: '#888' }}>Chưa xác định</span>} */}
+                                <span style={{ color: '#888' }}>Chưa xác định</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {/* Dải link nhanh */}
+                <div className="header-quicklinks">
+                    <a href="#">điện gia dụng</a>
+                    <a href="#">xe cộ</a>
+                    <a href="#">mẹ & bé</a>
+                    <a href="#">khỏe đẹp</a>
+                    <a href="#">nhà cửa</a>
+                    <a href="#">sách</a>
+                    <a href="#">thể thao</a>
+                    <a href="#">định giá cổ phiếu</a>
+                    <a href="#">sách kinh tế</a>
+                    <a href="#">tâm lý học về tiền</a>
+                </div>
+            </header>
             <Drawer
                 title="Menu chức năng"
                 placement="left"
@@ -165,7 +184,7 @@ const AppHeader = (props: any) => {
                 setIsModalOpen={setOpenManageAccount}
             />
 
-        </>
+        </div>
     )
 };
 
