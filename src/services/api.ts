@@ -226,3 +226,18 @@ export const deleteBookAPI = (_id: string) => {
   const urlBackend = `/api/v1/book/${_id}`;
   return axios.delete<IBackendRes<IRegister>>(urlBackend);
 };
+
+export const getCommentsByBookAPI = (bookId: string) => {
+  return axios.get(`/api/v1/comment/book/${bookId}`);
+};
+
+export const createCommentAPI = (data: {
+  content: string;
+  user_id: string;
+  book_id: string;
+  star: number;
+  feeling?: string;
+  image?: string;
+}) => {
+  return axios.post('/api/v1/comment', data);
+};
