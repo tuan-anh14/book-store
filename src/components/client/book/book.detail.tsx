@@ -1,22 +1,22 @@
-import { Row, Col, Rate, Divider, Button, message, App, List, Avatar, Input, Upload, Image, Form } from 'antd';
+import { Row, Col, Rate, Divider, Button, message, App, List, Avatar, Input, Upload, Image, Form, Popover } from 'antd';
 import 'styles/book.scss';
 import ImageGallery from 'react-image-gallery';
 
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, SmileOutlined, PictureOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import type { ReactImageGalleryItem } from 'react-image-gallery';
 import { useEffect, useRef, useState } from 'react';
 import ModalGallery from './modal.gallery';
 import { useCurrentApp } from '@/components/context/app.context';
-import { getCommentsByBookAPI, createCommentAPI } from '@/services/api';
+import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/services/api';
+import EmojiPicker from 'emoji-picker-react';
+import BookComments from './book.comment';
 
 interface IProps {
     currentBook: IBookTable | null;
 }
 
 type UserAction = 'MINUS' | 'PLUS';
-
-const FEELINGS = ['😍', '😁', '😐', '😢', '😡'];
 
 const BookDetail = (props: IProps) => {
     const { currentBook } = props;
@@ -35,7 +35,7 @@ const BookDetail = (props: IProps) => {
     const { carts, setCarts, user } = useCurrentApp();
     const { message } = App.useApp();
 
-    const refGallery = useRef<ImageGallery>(null); // hoặc cụ thể hơn: useRef<ImageGallery | null>(null);
+    const refGallery = useRef<ImageGallery>(null);
     const [comments, setComments] = useState<any[]>([]);
     const [loadingComment, setLoadingComment] = useState(false);
     const [imageUrl, setImageUrl] = useState<string | undefined>();
@@ -43,12 +43,13 @@ const BookDetail = (props: IProps) => {
     const [filter, setFilter] = useState<string>('latest');
     const [page, setPage] = useState<number>(1);
     const pageSize = 10;
-    const filteredComments = comments.filter(c => {
+    const filteredComments = (comments || []).filter(c => {
         if (filter === 'latest') return true;
         if (filter === 'hasImage' && c.image) return true;
         if (['5', '4', '3', '2', '1'].includes(filter)) return String(c.star) === filter;
         return false;
     });
+    const [showFullDescription, setShowFullDescription] = useState(false);
 
     useEffect(() => {
         if (currentBook) {
@@ -151,7 +152,7 @@ const BookDetail = (props: IProps) => {
         if (!currentBook?._id) return;
         setLoadingComment(true);
         const res = await getCommentsByBookAPI(currentBook._id);
-        setComments(res.data);
+        setComments(res.data || []);
         setLoadingComment(false);
     };
 
@@ -166,19 +167,13 @@ const BookDetail = (props: IProps) => {
         }
         await createCommentAPI({
             ...values,
-            // book_id: currentBook._id,
+            book_id: currentBook?._id,
             user_id: user.id,
             image: imageUrl,
         });
         form.resetFields();
         setImageUrl(undefined);
         fetchComments();
-    };
-
-    const handleUpload = (info: any) => {
-        if (info.file.status === 'done' && info.file.response?.data?.fileName) {
-            setImageUrl(`${import.meta.env.VITE_BACKEND_URL}/images/comment/${info.file.response.data.fileName}`);
-        }
     };
 
     return (
@@ -235,200 +230,70 @@ const BookDetail = (props: IProps) => {
                                 </button>
                                 <button className='now'>Mua ngay</button>
                             </div>
-                            {/* Mô tả sách */}
-                            {currentBook?.description && (
-                                <div style={{ marginTop: 24, color: '#444', fontSize: 15 }}>
-                                    <b>Mô tả:</b>
-                                    <div style={{ marginTop: 4 }}>{currentBook.description}</div>
+                            {/* Thông tin chi tiết sách */}
+                            <div style={{ marginTop: 32, borderTop: '1px solid #eee', paddingTop: 24 }}>
+                                <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Thông tin chi tiết</h3>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                                    <div>
+                                        <span style={{ color: '#666' }}>Tác giả:</span>
+                                        <span style={{ marginLeft: 8 }}>{currentBook?.author}</span>
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#666' }}>Nhà xuất bản:</span>
+                                        <span style={{ marginLeft: 8 }}>{'Chưa cập nhật'}</span>
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#666' }}>Số trang:</span>
+                                        <span style={{ marginLeft: 8 }}>{'Chưa cập nhật'}</span>
+                                    </div>
+                                    <div>
+                                        <span style={{ color: '#666' }}>Ngày xuất bản:</span>
+                                        <span style={{ marginLeft: 8 }}>{'Chưa cập nhật'}</span>
+                                    </div>
                                 </div>
-                            )}
+                                {currentBook?.description && (
+                                    <div style={{ marginTop: 24 }}>
+                                        <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Mô tả sản phẩm</h3>
+                                        <div
+                                            style={{
+                                                color: '#444',
+                                                fontSize: 15,
+                                                lineHeight: 1.6,
+                                                whiteSpace: 'pre-line',
+                                                background: '#fafbfc',
+                                                borderRadius: 12,
+                                                padding: 20,
+                                                boxShadow: '0 1px 4px #f0f1f2',
+                                                maxWidth: 600,
+                                                margin: '0 auto',
+                                                position: 'relative',
+                                                overflow: 'hidden',
+                                                display: '-webkit-box',
+                                                WebkitBoxOrient: 'vertical',
+                                                WebkitLineClamp: showFullDescription ? 'unset' : 4,
+                                                height: showFullDescription ? 'auto' : '6.4em', // 4 lines * 1.6em
+                                                transition: 'height 0.3s',
+                                            }}
+                                        >
+                                            {currentBook.description}
+                                        </div>
+                                        {/* Nút xem thêm/ẩn bớt */}
+                                        {currentBook.description.split('\n').length > 4 || currentBook.description.length > 200 ? (
+                                            <div style={{ textAlign: 'center', marginTop: 8 }}>
+                                                <span
+                                                    style={{ color: '#1890ff', cursor: 'pointer', fontWeight: 500 }}
+                                                    onClick={() => setShowFullDescription(v => !v)}
+                                                >
+                                                    {showFullDescription ? 'Ẩn bớt' : 'Xem thêm'}
+                                                </span>
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                )}
+                            </div>
                         </Col>
                     </Row>
-                    {/* Divider ngăn cách */}
-                    <Divider orientation="left" style={{ margin: '40px 0 24px 0', fontWeight: 600, fontSize: 18 }}>Khách hàng đánh giá</Divider>
-                    {/* Đánh giá & bình luận */}
-                    {/* Tổng quan đánh giá, bộ lọc, ảnh, danh sách bình luận, phân trang, form đánh giá */}
-                    {/* Tổng quan đánh giá */}
-                    <div style={{ background: '#fff', borderRadius: 8, padding: 24, marginBottom: 24 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', width: '100%', paddingBottom: 16 }}>
-                            {/* Tổng quan */}
-                            <div>
-                                <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 8 }}>Tổng quan</div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                                    <div style={{ fontSize: 40, fontWeight: 700, color: '#ffb400' }}> {
-                                        comments.length ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length).toFixed(1) : '0.0'
-                                    }</div>
-                                    <Rate
-                                        disabled
-                                        value={comments.length ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length) : 0}
-                                        style={{ fontSize: 24, color: '#ffce3d' }}
-                                    />
-                                </div>
-                                <div style={{ color: '#888', marginTop: 8 }}>({comments.length} đánh giá)</div>
-                                {/* Phân bố sao */}
-                                <div style={{ marginTop: 16 }}>
-                                    {[5, 4, 3, 2, 1].map(star => {
-                                        const count = comments.filter(c => c.star === star).length;
-                                        const percent = comments.length ? Math.round((count / comments.length) * 100) : 0;
-                                        return (
-                                            <div key={star} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                                                <Rate disabled value={star} count={5} style={{ fontSize: 14, color: '#ffce3d' }} />
-                                                <div style={{ width: 120, height: 8, background: '#eee', borderRadius: 4, margin: '0 8px', overflow: 'hidden' }}>
-                                                    <div style={{ width: `${percent}%`, height: 8, background: '#ffb400' }} />
-                                                </div>
-                                                <span style={{ minWidth: 24 }}>{count}</span>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                            {/* Bộ lọc và ảnh */}
-                            <div>
-                                {/* Bộ lọc */}
-                                <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                                    {[
-                                        { label: 'Mới nhất', value: 'latest' },
-                                        { label: 'Có hình ảnh', value: 'hasImage' },
-                                        { label: '5 sao', value: '5' },
-                                        { label: '4 sao', value: '4' },
-                                        { label: '3 sao', value: '3' },
-                                        { label: '2 sao', value: '2' },
-                                        { label: '1 sao', value: '1' },
-                                    ].map(f => (
-                                        <Button
-                                            key={f.value}
-                                            type={filter === f.value ? 'primary' : 'default'}
-                                            size="small"
-                                            onClick={() => setFilter(f.value)}
-                                        >
-                                            {f.label}
-                                        </Button>
-                                    ))}
-                                </div>
-                                {/* Ảnh đánh giá */}
-                                <div style={{ marginBottom: 8 }}>
-                                    <div style={{ fontWeight: 500, marginBottom: 4 }}>Tất cả hình ảnh ({comments.filter(c => c.image).length})</div>
-                                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                        {comments.filter(c => c.image).map((c, idx) => (
-                                            <Image key={idx} src={c.image} width={60} height={60} style={{ objectFit: 'cover', borderRadius: 4 }} />
-                                        ))}
-                                        {comments.filter(c => c.image).length === 0 && <span style={{ color: '#888' }}>Chưa có hình ảnh</span>}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Danh sách bình luận + phân trang */}
-                    <div style={{ background: '#fff', borderRadius: 8, padding: 24, marginBottom: 24 }}>
-                        {filteredComments.length === 0 && (
-                            <div style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', margin: '16px 0' }}>Chưa có bình luận</div>
-                        )}
-                        {filteredComments.slice((page - 1) * pageSize, page * pageSize).map(item => (
-                            <div key={item._id} style={{ display: 'flex', gap: 16, borderBottom: '1px solid #f2f2f2', padding: '16px 0' }}>
-                                <Avatar src={item.user_id?.avatar} size={48} />
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                        <b>{item.user_id?.fullName}</b>
-                                        <Rate disabled value={item.star} style={{ fontSize: 14 }} />
-                                        <span style={{ color: '#888', fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</span>
-                                    </div>
-                                    <div style={{ margin: '8px 0' }}>{item.content}</div>
-                                    {item.feeling && <div style={{ fontSize: 18 }}>{item.feeling}</div>}
-                                    {item.image && <Image width={80} src={item.image} style={{ marginTop: 4 }} />}
-                                    <div style={{ display: 'flex', gap: 16, marginTop: 8 }}>
-                                        <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}>
-                                            Hữu ích
-                                        </Button>
-                                        <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/82/f0/7f/7353641630f811453e875bb5450065d8.png" width={20} />}>
-                                            Bình luận
-                                        </Button>
-                                        <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/3f/fa/d4/7057dfb58b682b1b0a2b9683228863ee.png" width={20} />}>
-                                            Chia sẻ
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        {/* Phân trang */}
-                        {filteredComments.length > pageSize && (
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-                                <Button disabled={page === 1} onClick={() => setPage(page - 1)} style={{ marginRight: 8 }}>Trước</Button>
-                                {Array.from({ length: Math.ceil(filteredComments.length / pageSize) }, (_, i) => (
-                                    <Button
-                                        key={i + 1}
-                                        type={page === i + 1 ? 'primary' : 'default'}
-                                        size="small"
-                                        onClick={() => setPage(i + 1)}
-                                        style={{ margin: '0 2px' }}
-                                    >
-                                        {i + 1}
-                                    </Button>
-                                ))}
-                                <Button disabled={page === Math.ceil(filteredComments.length / pageSize)} onClick={() => setPage(page + 1)} style={{ marginLeft: 8 }}>Sau</Button>
-                            </div>
-                        )}
-                    </div>
-                    <Form
-                        form={form}
-                        onFinish={handleCommentFinish}
-                        layout="vertical"
-                        style={{ background: '#fff', padding: 16, borderRadius: 8, marginBottom: 24 }}
-                        disabled={!user}
-                    >
-                        <Form.Item name="star" label="Đánh giá" rules={[{ required: true }]}> <Rate /> </Form.Item>
-                        <Form.Item name="content" label="Nội dung" rules={[{ required: true, message: 'Vui lòng nhập nội dung!' }]}> <Input.TextArea rows={3} /> </Form.Item>
-                        <Form.Item name="feeling" label="Cảm xúc">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                {FEELINGS.map(f => (
-                                    <span
-                                        key={f}
-                                        style={{
-                                            cursor: 'pointer',
-                                            fontSize: 24,
-                                            border: form.getFieldValue('feeling') === f ? '2px solid #1890ff' : '1px solid #eee',
-                                            borderRadius: 6,
-                                            padding: 2,
-                                            background: form.getFieldValue('feeling') === f ? '#e6f7ff' : undefined,
-                                            transition: 'all 0.2s',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: 40,
-                                            height: 40
-                                        }}
-                                        onClick={() => form.setFieldsValue({ feeling: f })}
-                                    >
-                                        {f}
-                                    </span>
-                                ))}
-                                <Input
-                                    style={{ width: 60, marginLeft: 8, textAlign: 'center' }}
-                                    value={form.getFieldValue('feeling') || ''}
-                                    readOnly
-                                    placeholder="Chọn"
-                                />
-                            </div>
-                        </Form.Item>
-                        <Form.Item label="Ảnh (nếu có)">
-                            <Upload
-                                name="file"
-                                action={`${import.meta.env.VITE_BACKEND_URL}/api/v1/files/upload`}
-                                onChange={handleUpload}
-                                showUploadList={false}
-                            >
-                                <Button>Upload</Button>
-                            </Upload>
-                            {imageUrl && <Image width={80} src={imageUrl} />}
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">Gửi đánh giá</Button>
-                        </Form.Item>
-                    </Form>
-                    {!user && (
-                        <div style={{ color: 'red', marginBottom: 16, textAlign: 'center' }}>
-                            Bạn cần đăng nhập để đánh giá
-                        </div>
-                    )}
+                    <BookComments bookId={currentBook?._id || ''} user={user} />
                 </div>
             </div>
             <ModalGallery
