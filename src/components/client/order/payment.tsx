@@ -5,10 +5,11 @@ import { Input } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { FormProps } from 'antd';
 import { createOrderAPI } from '@/services/api';
+import { useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 
-type UserMethod = "COD" | "BANKING";
+type UserMethod = "COD" | "VNPAY";
 
 type FieldType = {
     fullName: string;
@@ -24,6 +25,7 @@ interface IProps {
 const Payment = (props: IProps) => {
     const { carts, setCarts, user } = useCurrentApp();
     const [totalPrice, setTotalPrice] = useState(0);
+    const navigate = useNavigate();
 
     const [form] = Form.useForm();
     const [isSubmit, setIsSubmit] = useState(false);
@@ -56,11 +58,9 @@ const Payment = (props: IProps) => {
     const handleRemoveBook = (_id: string) => {
         const cartStorage = localStorage.getItem("carts");
         if (cartStorage) {
-            //update
             const carts = JSON.parse(cartStorage) as ICart[];
             const newCarts = carts.filter(item => item._id !== _id);
             localStorage.setItem("carts", JSON.stringify(newCarts));
-            //sync React Context
             setCarts(newCarts);
         }
     };
@@ -72,6 +72,17 @@ const Payment = (props: IProps) => {
             quantity: item.quantity,
             bookName: item.detail.mainText,
         }));
+
+        if (method === "VNPAY") {
+            localStorage.setItem('checkout_carts', JSON.stringify(carts));
+            localStorage.setItem('checkout_info', JSON.stringify({
+                fullName,
+                phone,
+                address
+            }));
+            navigate('/checkout');
+            return;
+        }
 
         setIsSubmit(true);
         const res = await createOrderAPI({
@@ -159,7 +170,7 @@ const Payment = (props: IProps) => {
                                     <Radio.Group>
                                         <Space direction="vertical">
                                             <Radio value="COD">Thanh toán khi nhận hàng</Radio>
-                                            <Radio value="BANKING">Chuyển khoản ngân hàng</Radio>
+                                            <Radio value="VNPAY">Thanh toán qua VNPAY</Radio>
                                         </Space>
                                     </Radio.Group>
                                 </Form.Item>

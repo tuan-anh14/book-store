@@ -24,6 +24,8 @@ import BookPage from './pages/client/book';
 import OrderPage from './pages/client/order';
 import HistoryPage from './pages/client/history';
 import ManageCategoryPage from 'pages/admin/manage.category';
+import CheckoutPage from './pages/client/checkout';
+import PaymentResultPage from './pages/client/payment_result';
 
 const router = createBrowserRouter([
   {
@@ -54,7 +56,15 @@ const router = createBrowserRouter([
         path: "/checkout",
         element: (
           <ProtectedRoute>
-            <div>checkout page</div>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/payment-result",
+        element: (
+          <ProtectedRoute>
+            <PaymentResultPage />
           </ProtectedRoute>
         ),
       },
@@ -120,7 +130,6 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-
     ]
   },
   {
@@ -131,7 +140,6 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
-
 ]);
 
 createRoot(document.getElementById('root')!).render(
