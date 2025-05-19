@@ -26,6 +26,7 @@ import HistoryPage from './pages/client/history';
 import ManageCategoryPage from 'pages/admin/manage.category';
 import CheckoutPage from './pages/client/checkout';
 import PaymentResultPage from './pages/client/payment_result';
+import ChatBot from './components/chatbot/ChatBot';
 
 const router = createBrowserRouter([
   {
@@ -151,5 +152,6 @@ createRoot(document.getElementById('root')!).render(
         </ConfigProvider>
       </AppProvider>
     </App>
+    <ChatBot apiKey={import.meta.env.VITE_GEMINI_API_KEY} />
   </StrictMode>,
 )
