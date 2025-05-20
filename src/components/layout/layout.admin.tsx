@@ -9,6 +9,7 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     FolderOutlined,
+    CommentOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar, Result, Button } from 'antd';
 import { Outlet } from "react-router-dom";
@@ -74,6 +75,11 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/order'>Manage Orders</Link>,
             key: 'order',
             icon: <DollarCircleOutlined />
+        },
+        {
+            label: <Link to='/admin/comment'>Manage Comments</Link>,
+            key: 'comment',
+            icon: <CommentOutlined />
         },
 
     ];

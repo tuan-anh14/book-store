@@ -26,7 +26,8 @@ import HistoryPage from './pages/client/history';
 import ManageCategoryPage from 'pages/admin/manage.category';
 import CheckoutPage from './pages/client/checkout';
 import PaymentResultPage from './pages/client/payment_result';
-import ChatBot from './components/chatbot/ChatBot';
+import ChatBot from './components/chatbot/chatbot';
+import ManageCommentPage from './pages/admin/manage.comment';
 
 const router = createBrowserRouter([
   {
@@ -130,6 +131,14 @@ const router = createBrowserRouter([
             <div>admin page</div>
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "comment",
+        element: (
+          <ProtectedRoute>
+            <ManageCommentPage />
+          </ProtectedRoute>
+        )
       },
     ]
   },

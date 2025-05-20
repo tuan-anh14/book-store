@@ -127,6 +127,24 @@ declare global {
     countError: number;
     detail: any;
   }
+
+  interface ICommentTable {
+    _id: string;
+    user: {
+      _id: string;
+      fullName: string;
+      email: string;
+    };
+    book: {
+      _id: string;
+      mainText: string;
+    };
+    content: string;
+    star: number;
+    image?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }
 }
 
 declare module "*.png" {

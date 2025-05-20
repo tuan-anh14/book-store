@@ -240,3 +240,8 @@ export const createCommentAPI = (data: {
 }) => {
   return axios.post('/api/v1/comment', data);
 };
+
+export const getAllCommentsAPI = (query: string) => {
+  const urlBackend = `/api/v1/comment?${query}`;
+  return axios.get<IBackendRes<IModelPaginate<ICommentTable>>>(urlBackend);
+};

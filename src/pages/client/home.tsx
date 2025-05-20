@@ -5,7 +5,7 @@ import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pag
 import type { FormProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Popup from '@/components/popup/Popup';
+import Popup from '@/components/popup/popup';
 import popupImg from '@/assets/popup.jpg';
 
 import 'styles/home.scss';
