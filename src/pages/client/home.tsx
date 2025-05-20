@@ -67,7 +67,7 @@ const HomePage = () => {
 
     useEffect(() => {
         const count = Number(localStorage.getItem('popupHomeCount') || '0');
-        if (count < 3) {
+        if (count < 10) {
             setShowPopup(true);
             localStorage.setItem('popupHomeCount', String(count + 1));
         }
