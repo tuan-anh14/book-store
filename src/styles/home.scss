@@ -70,3 +70,70 @@
         }
     }
 }
+
+.home-popup {
+    width: 320px;
+    height: 420px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.home-popup-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 16px 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.home-popup-btn {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 36px;
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.home-popup-btn:hover {
+    background: #1557b0;
+}
+
+.homepage-bg {
+    background: #efefef;
+    padding: 20px 0;
+}
+
+.homepage-container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.homepage-sidebar {
+    padding: 20px;
+    background: #fff;
+    border-radius: 1px;
+}
+
+.homepage-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.homepage-sidebar-title {
+    font-weight: 500;
+}

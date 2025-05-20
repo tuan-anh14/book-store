@@ -5,6 +5,8 @@ import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pag
 import type { FormProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Popup from '@/components/popup/Popup';
+import popupImg from '@/assets/popup.jpg';
 
 import 'styles/home.scss';
 
@@ -34,6 +36,7 @@ const HomePage = () => {
     const [filter, setFilter] = useState<string>("");
     const [sortQuery, setSortQuery] = useState<string>("sort=-sold");
     const [showMobileFilter, setShowMobileFilter] = useState<boolean>(false);
+    const [showPopup, setShowPopup] = useState(false);
 
     const [form] = Form.useForm();
 
@@ -57,9 +60,18 @@ const HomePage = () => {
 
         initCategory();
     }, []);
+
     useEffect(() => {
         fetchBook();
     }, [current, pageSize, filter, sortQuery]);
+
+    useEffect(() => {
+        const count = Number(localStorage.getItem('popupHomeCount') || '0');
+        if (count < 3) {
+            setShowPopup(true);
+            localStorage.setItem('popupHomeCount', String(count + 1));
+        }
+    }, []);
 
     const fetchBook = async () => {
         setIsLoading(true);
@@ -148,20 +160,30 @@ const HomePage = () => {
 
     return (
         <>
-            <div style={{ background: '#efefef', padding: "20px 0" }}>
-                <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+            <Popup isVisible={showPopup} onClose={() => setShowPopup(false)}>
+                <div
+                    className="home-popup"
+                    style={{ background: `url(${popupImg}) center/cover no-repeat` }}
+                >
+                    <div className="home-popup-content">
+                        <button className="home-popup-btn">Xem ngay</button>
+                    </div>
+                </div>
+            </Popup>
+            <div className="homepage-bg">
+                <div className="homepage-container">
                     <Row gutter={[20, 20]}>
                         <Col md={4} sm={0} xs={0}>
-                            <div style={{ padding: "20px", background: '#fff', borderRadius: "1px" }}>
-                                <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                                    <span> <FilterTwoTone />
-                                        <span style={{ fontWeight: 500 }}> Bộ lọc tìm kiếm </span>
+                            <div className="homepage-sidebar">
+                                <div className="homepage-sidebar-header">
+                                    <span>
+                                        <FilterTwoTone />
+                                        <span className="homepage-sidebar-title"> Bộ lọc tìm kiếm </span>
                                     </span>
                                     <ReloadOutlined title="Reset" onClick={() => {
                                         form.resetFields();
                                         setFilter('');
-                                    }
-                                    } />
+                                    }} />
                                 </div>
                                 <Divider />
                                 <Form
