@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Rate, Divider, Button, message, Avatar, Input, Upload, Image, Form, Popover } from 'antd';
-import { SmileOutlined, PictureOutlined } from '@ant-design/icons';
+import { SmileOutlined, PictureOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import EmojiPicker from 'emoji-picker-react';
 import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/services/api';
+import type { UploadFile, UploadProps } from 'antd';
+import { MAX_UPLOAD_IMAGE_SIZE } from '@/services/helper';
 
 interface BookCommentsProps {
     bookId: string;
@@ -12,7 +14,8 @@ interface BookCommentsProps {
 const BookComments = ({ bookId, user }: BookCommentsProps) => {
     const [comments, setComments] = useState<any[]>([]);
     const [loadingComment, setLoadingComment] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string | undefined>();
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [loadingUpload, setLoadingUpload] = useState(false);
     const [form] = Form.useForm();
     const [filter, setFilter] = useState<string>('latest');
     const [page, setPage] = useState<number>(1);
@@ -39,34 +42,54 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
         // eslint-disable-next-line
     }, [bookId]);
 
+    const beforeUpload: UploadProps['beforeUpload'] = (file: File) => {
+        const isJpgOrPngOrWebp = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
+        if (!isJpgOrPngOrWebp) {
+            message.error('Bạn chỉ có thể upload file JPG/PNG/WebP!');
+        }
+        const isLt2M = file.size / 1024 / 1024 < MAX_UPLOAD_IMAGE_SIZE;
+        if (!isLt2M) {
+            message.error(`Ảnh phải nhỏ hơn ${MAX_UPLOAD_IMAGE_SIZE}MB!`);
+        }
+        return isJpgOrPngOrWebp && isLt2M || Upload.LIST_IGNORE;
+    };
+
+    const handleUploadFile = async (file: File) => {
+        setLoadingUpload(true);
+        try {
+            const res = await uploadFileAPI(file, 'comment');
+            if (res?.data?.fileName) {
+                const url = `${import.meta.env.VITE_BACKEND_URL}/images/comment/${res.data.fileName}`;
+                setImageUrls(prev => [...prev, url]);
+            }
+        } catch (error) {
+            message.error('Upload ảnh thất bại!');
+        }
+        setLoadingUpload(false);
+    };
+
     const handleCommentFinish = async (values: any) => {
         if (!user) {
             message.error('Bạn cần đăng nhập để bình luận!');
             return;
         }
-        // Ép kiểu star về number và kiểm tra hợp lệ
         const star = Number(values.star);
         if (!star || star < 1 || star > 5) {
             message.error('Vui lòng chọn đánh giá!');
             return;
         }
-        // Lấy user_id đúng (ưu tiên _id, fallback id)
         const user_id = user._id || user.id;
-        // Payload chuẩn
         const payload = {
-            content: content, // chỉ lấy nội dung thực sự
+            content: content,
             star,
             book_id: bookId,
             user_id,
-            image: imageUrl,
+            images: imageUrls,
         };
-        console.log('Form values:', values);
-        console.log('Star:', star);
-        console.log('Payload gửi lên backend:', payload);
         await createCommentAPI(payload);
         form.resetFields();
         setContent('');
-        setImageUrl(undefined);
+        setImageUrls([]);
         fetchComments();
     };
 
@@ -132,12 +155,12 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                         </div>
                         {/* Ảnh đánh giá */}
                         <div style={{ marginBottom: 8 }}>
-                            <div style={{ fontWeight: 500, marginBottom: 4 }}>Tất cả hình ảnh ({comments.filter(c => c.image).length})</div>
+                            <div style={{ fontWeight: 500, marginBottom: 4 }}>Tất cả hình ảnh ({comments.reduce((sum, c) => sum + (c.images?.length || 0), 0)})</div>
                             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {comments.filter(c => c.image).map((c, idx) => (
-                                    <Image key={idx} src={c.image} width={60} height={60} style={{ objectFit: 'cover', borderRadius: 4 }} />
+                                {comments.flatMap(c => c.images || []).map((image, idx) => (
+                                    <Image key={idx} src={image} width={60} height={60} style={{ objectFit: 'cover', borderRadius: 4 }} />
                                 ))}
-                                {comments.filter(c => c.image).length === 0 && <span style={{ color: '#888' }}>Chưa có hình ảnh</span>}
+                                {comments.reduce((sum, c) => sum + (c.images?.length || 0), 0) === 0 && <span style={{ color: '#888' }}>Chưa có hình ảnh</span>}
                             </div>
                         </div>
                     </div>
@@ -165,7 +188,13 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 <span style={{ color: '#888', fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</span>
                             </div>
                             <div style={{ margin: '8px 0' }}>{item.content}</div>
-                            {item.image && <Image width={80} src={item.image} style={{ marginTop: 4 }} />}
+                            {item.images && item.images.length > 0 && (
+                                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                                    {item.images.map((image: string, idx: number) => (
+                                        <Image key={idx} width={80} src={image} style={{ border: '1px solid #eee', borderRadius: 4 }} />
+                                    ))}
+                                </div>
+                            )}
                             <div style={{ display: 'flex', gap: 16, marginTop: 8 }}>
                                 <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}>
                                     Hữu ích
@@ -227,13 +256,11 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 rows={3}
                                 value={content}
                                 onChange={e => {
-                                    // Chỉ set content là nội dung thực sự, không dính file
                                     setContent(e.target.value.replace(/^C:\\fakepath\\[^\s]+$/, ''));
                                     form.setFieldsValue({ content: e.target.value.replace(/^C:\\fakepath\\[^\s]+$/, '') });
                                 }}
                                 style={{ paddingRight: 80 }}
                             />
-                            {/* Icon emoji */}
                             <Popover
                                 content={<EmojiPicker onEmojiClick={(emojiObj) => {
                                     const current = content || '';
@@ -254,21 +281,12 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                     }}
                                 />
                             </Popover>
-                            {/* Icon upload ảnh */}
                             <Upload
                                 name="file"
-                                customRequest={({ file, onSuccess }) => {
-                                    uploadFileAPI(file, 'comment').then(res => {
-                                        const fileName = (res?.data as any)?.fileName;
-                                        if (fileName) {
-                                            const url = `${import.meta.env.VITE_BACKEND_URL}/images/comment/${fileName}`;
-                                            setImageUrl(url);
-                                            onSuccess && onSuccess(res, file);
-                                        }
-                                    }).catch(() => message.error('Upload ảnh thất bại!'));
-                                }}
+                                customRequest={({ file }) => handleUploadFile(file as File)}
                                 showUploadList={false}
                                 accept="image/*"
+                                beforeUpload={beforeUpload}
                             >
                                 <PictureOutlined
                                     style={{
@@ -284,21 +302,25 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                             </Upload>
                         </div>
                     </Form.Item>
-                    {imageUrl && (
-                        <div style={{ marginTop: 8, position: 'relative', display: 'inline-block' }}>
-                            <Image width={80} src={imageUrl} style={{ border: '1px solid #eee', borderRadius: 4 }} />
-                            <Button
-                                size="small"
-                                danger
-                                style={{ position: 'absolute', top: 0, right: 0, padding: 0, width: 20, height: 20, borderRadius: '50%' }}
-                                onClick={() => setImageUrl(undefined)}
-                            >
-                                x
-                            </Button>
+                    {imageUrls.length > 0 && (
+                        <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                            {imageUrls.map((url, index) => (
+                                <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
+                                    <Image width={80} src={url} style={{ border: '1px solid #eee', borderRadius: 4 }} />
+                                    <Button
+                                        size="small"
+                                        danger
+                                        style={{ position: 'absolute', top: 0, right: 0, padding: 0, width: 20, height: 20, borderRadius: '50%' }}
+                                        onClick={() => setImageUrls(prev => prev.filter((_, i) => i !== index))}
+                                    >
+                                        x
+                                    </Button>
+                                </div>
+                            ))}
                         </div>
                     )}
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">Gửi bình luận</Button>
+                        <Button type="primary" htmlType="submit" loading={loadingComment}>Gửi bình luận</Button>
                     </Form.Item>
                 </Form>
             ) : (

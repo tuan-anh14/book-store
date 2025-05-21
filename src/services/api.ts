@@ -236,7 +236,7 @@ export const createCommentAPI = (data: {
   user_id: string;
   book_id: string;
   star: number;
-  image?: string;
+  images?: string[];
 }) => {
   return axios.post('/api/v1/comment', data);
 };
