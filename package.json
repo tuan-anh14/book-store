@@ -28,6 +28,7 @@
     "react-image-gallery": "1.4.0",
     "react-router-dom": "6.27.0",
     "react-spinners": "^0.15.0",
+    "recharts": "^2.15.3",
     "sass": "1.80.4",
     "styled-components": "^6.1.18",
     "uuid": "^11.0.3",

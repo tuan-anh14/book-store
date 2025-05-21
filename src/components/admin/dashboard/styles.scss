@@ -1,0 +1,27 @@
+.dashboard {
+    padding: 24px;
+
+    &__row {
+        margin-bottom: 24px;
+    }
+
+    &__card {
+        height: 100%;
+
+        .ant-card-head {
+            border-bottom: none;
+        }
+
+        .ant-statistic {
+            &-title {
+                font-size: 16px;
+                color: rgba(0, 0, 0, 0.45);
+            }
+
+            &-content {
+                font-size: 24px;
+                font-weight: 600;
+            }
+        }
+    }
+}

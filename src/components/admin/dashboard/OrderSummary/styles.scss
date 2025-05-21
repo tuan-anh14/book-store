@@ -1,0 +1,17 @@
+.order-summary {
+    height: 100%;
+
+    .ant-statistic {
+        margin-bottom: 8px;
+
+        &-content {
+            font-size: 32px;
+            font-weight: 700;
+        }
+    }
+
+    .ant-space {
+        font-size: 16px;
+        font-weight: 500;
+    }
+}

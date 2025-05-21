@@ -1,0 +1,40 @@
+.customer-reviews {
+    &__rating {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .ant-rate {
+            font-size: 24px;
+        }
+
+        .ant-typography {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
+    }
+
+    &__progress {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .ant-progress {
+                width: 300px;
+            }
+        }
+    }
+
+    &__button {
+        margin-top: 16px;
+        text-align: center;
+    }
+}
