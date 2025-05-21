@@ -87,6 +87,7 @@ declare global {
     description: string;
     createdAt: Date;
     updatedAt: Date;
+    comments?: ICommentTable[];
   }
 
   interface ICart {

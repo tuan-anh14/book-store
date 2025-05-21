@@ -198,11 +198,23 @@ const BookDetail = (props: IProps) => {
                             <div className='author'>Tác giả: <a href='#'>{currentBook?.author}</a> </div>
                             <div className='title'>{currentBook?.mainText}</div>
                             <div className='rating'>
-                                <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 12 }} />
+                                <Rate
+                                    value={currentBook?.comments?.length
+                                        ? Math.round(currentBook.comments.reduce((sum, c) => sum + (c.star || 0), 0) / currentBook.comments.length)
+                                        : 0
+                                    }
+                                    disabled
+                                    style={{ color: '#ffce3d', fontSize: 12 }}
+                                />
                                 <span className='sold'>
                                     <Divider type="vertical" />
                                     Đã bán {currentBook?.sold ?? 0}
                                 </span>
+                                {currentBook?.comments && currentBook.comments.length > 0 && (
+                                    <span style={{ marginLeft: 8, color: '#666' }}>
+                                        ({currentBook.comments.length} đánh giá)
+                                    </span>
+                                )}
                             </div>
                             <div className='price'>
                                 <span className='currency'>

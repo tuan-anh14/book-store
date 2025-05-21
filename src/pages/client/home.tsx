@@ -1,5 +1,5 @@
 import MobileFilter from '@/components/client/book/mobile.filter';
-import { getBooksAPI, getCategoryAPI } from '@/services/api';
+import { getBooksAPI, getCategoryAPI, getCommentsByBookAPI } from '@/services/api';
 import { FilterTwoTone, ReloadOutlined } from '@ant-design/icons';
 import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin } from 'antd';
 import type { FormProps } from 'antd';
@@ -40,6 +40,9 @@ const HomePage = () => {
 
     const [form] = Form.useForm();
 
+    const [starFilter, setStarFilter] = useState<number | null>(null);
+    const [bookComments, setBookComments] = useState<{ [key: string]: any[] }>({});
+
     useEffect(() => {
         const initCategory = async () => {
             try {
@@ -67,15 +70,15 @@ const HomePage = () => {
 
     useEffect(() => {
         const count = Number(localStorage.getItem('popupHomeCount') || '0');
-        if (count < 10) {
-            setShowPopup(true);
-            localStorage.setItem('popupHomeCount', String(count + 1));
-        }
+        // if (count < 10) {
+        setShowPopup(true);
+        localStorage.setItem('popupHomeCount', String(count + 1));
+        // }
     }, []);
 
     const fetchBook = async () => {
         setIsLoading(true);
-        let query = `current=${current}&pageSize=${pageSize}`;
+        let query = `current=${current}&pageSize=${pageSize}&populate=comments`;
         if (filter) {
             query += `&${filter}`;
         }
@@ -158,6 +161,40 @@ const HomePage = () => {
         },
     ];
 
+    // Lọc sách theo số sao nếu có chọn bộ lọc
+    const filteredBooks = starFilter
+        ? listBook.filter(item => {
+            const comments = bookComments[item._id] || [];
+            const avgRating = comments.length > 0
+                ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length)
+                : 0;
+            return Math.round(avgRating) >= starFilter;
+        })
+        : listBook;
+
+    const fetchCommentsForBook = async (bookId: string) => {
+        try {
+            const res = await getCommentsByBookAPI(bookId);
+            if (res?.data) {
+                setBookComments(prev => ({
+                    ...prev,
+                    [bookId]: res.data
+                }));
+            }
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+        }
+    };
+
+    useEffect(() => {
+        // Fetch comments for each book when listBook changes
+        if (listBook.length > 0) {
+            listBook.forEach(book => {
+                fetchCommentsForBook(book._id);
+            });
+        }
+    }, [listBook]);
+
     return (
         <>
             <Popup isVisible={showPopup} onClose={() => setShowPopup(false)}>
@@ -183,6 +220,7 @@ const HomePage = () => {
                                     <ReloadOutlined title="Reset" onClick={() => {
                                         form.resetFields();
                                         setFilter('');
+                                        setStarFilter(null);
                                     }} />
                                 </div>
                                 <Divider />
@@ -252,26 +290,15 @@ const HomePage = () => {
                                         label="Đánh giá"
                                         labelCol={{ span: 24 }}
                                     >
-                                        <div>
-                                            <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text"></span>
-                                        </div>
-                                        <div>
-                                            <Rate value={4} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={3} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={2} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={1} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
+                                        {[5, 4, 3, 2, 1].map(star => (
+                                            <div key={star} style={{ cursor: 'pointer' }} onClick={() => setStarFilter(star)}>
+                                                <Rate value={star} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
+                                                <span className="ant-rate-text">  trở lên</span>
+                                            </div>
+                                        ))}
+                                        {starFilter && (
+                                            <Button size="small" style={{ marginTop: 8 }} onClick={() => setStarFilter(null)}>Bỏ lọc</Button>
+                                        )}
                                     </Form.Item>
                                 </Form>
                             </div>
@@ -298,29 +325,56 @@ const HomePage = () => {
                                         </Col>
                                     </Row>
                                     <Row className='customize-row'>
-                                        {listBook?.map((item, index) => {
-                                            return (
-                                                <div
-                                                    onClick={() => navigate(`/book/${item._id}`)}
-                                                    className="column" key={`book-${index}`}>
-                                                    <div className='wrapper'>
-                                                        <div className='thumbnail'>
-                                                            <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`} alt={item.mainText} />
-                                                        </div>
-                                                        <div className='text' title={item.mainText}>
-                                                            {item.mainText}
-                                                        </div>
-                                                        <div className='price'>
-                                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
-                                                        </div>
-                                                        <div className='rating'>
-                                                            <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
-                                                            <span>Đã bán {item.sold ?? 0}</span>
+                                        {filteredBooks?.length === 0 ? (
+                                            <div style={{
+                                                width: '100%',
+                                                textAlign: 'center',
+                                                padding: '40px 0',
+                                                color: '#666',
+                                                fontSize: '16px'
+                                            }}>
+                                                Không có sản phẩm
+                                            </div>
+                                        ) : (
+                                            filteredBooks?.map((item, index) => {
+                                                const comments = bookComments[item._id] || [];
+                                                const avgRating = comments.length > 0
+                                                    ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length)
+                                                    : 0;
+                                                const totalComments = comments.length;
+                                                return (
+                                                    <div
+                                                        onClick={() => navigate(`/book/${item._id}`)}
+                                                        className="column" key={`book-${index}`}>
+                                                        <div className='wrapper'>
+                                                            <div className='thumbnail'>
+                                                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`} alt={item.mainText} />
+                                                            </div>
+                                                            <div className='text' title={item.mainText}>
+                                                                {item.mainText}
+                                                            </div>
+                                                            <div className='price'>
+                                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+                                                            </div>
+                                                            <div className='rating'>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                                    <div style={{ fontSize: 16, fontWeight: 700, color: '#ffb400' }}>
+                                                                        {avgRating.toFixed(1)}
+                                                                    </div>
+                                                                    <Rate value={Number(avgRating.toFixed(1))} allowHalf disabled style={{ color: '#ffce3d', fontSize: 14 }} />
+                                                                </div>
+                                                                <div style={{ color: '#888', fontSize: 12, marginTop: 4 }}>
+                                                                    ({totalComments} đánh giá)
+                                                                </div>
+                                                                <div style={{ color: '#666', fontSize: 12, marginTop: 4 }}>
+                                                                    Đã bán {item.sold ?? 0}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })}
+                                                );
+                                            })
+                                        )}
                                     </Row>
                                     <div style={{ marginTop: 30 }}></div>
                                     <Row style={{ display: "flex", justifyContent: "center" }}>
