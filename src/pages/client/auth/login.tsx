@@ -1,10 +1,17 @@
-import { App, Button, Divider, Form, Input } from 'antd';
+import { App, Button, Divider, Form, Input, Space, theme } from 'antd';
 import type { FormProps } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './login.scss';
 import { loginAPI } from '@/services/api';
 import { useCurrentApp } from '@/components/context/app.context';
+import {
+    AlipayCircleOutlined,
+    LockOutlined,
+    UserOutlined,
+    WeiboCircleOutlined,
+} from '@ant-design/icons';
+import { setAlpha } from '@ant-design/pro-components';
 
 type FieldType = {
     username: string;
@@ -15,7 +22,16 @@ const LoginPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
     const navigate = useNavigate();
-    const { setIsAuthenticated, setUser } = useCurrentApp()
+    const { setIsAuthenticated, setUser } = useCurrentApp();
+    const { token } = theme.useToken();
+
+    const iconStyles = {
+        marginInlineStart: '16px',
+        color: setAlpha(token.colorTextBase, 0.2),
+        fontSize: '24px',
+        verticalAlign: 'middle',
+        cursor: 'pointer',
+    };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { username, password } = values;
@@ -42,7 +58,6 @@ const LoginPage = () => {
         }, 2000);
     };
 
-
     return (
         <div className='login-page'>
             <main className='main'>
@@ -50,41 +65,50 @@ const LoginPage = () => {
                     <section className='wrapper'>
                         <div className='heading'>
                             <h2 className='text text-large'>Đăng nhập</h2>
-                            <Divider />
+                            <p className='text text-normal'>Chào mừng bạn đến với BookStore</p>
                         </div>
                         <Form
                             name='form-login'
                             onFinish={onFinish}
                             autoComplete='off'
+                            size='large'
                         >
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Email"
                                 name="username"
                                 rules={[
                                     { required: true, message: 'Email không được để trống!' },
                                     { type: "email", message: "Email không đúng định dạng!" }
                                 ]}
                             >
-                                <Input />
+                                <Input
+                                    prefix={<UserOutlined className="prefixIcon" />}
+                                    placeholder="Email của bạn"
+                                />
                             </Form.Item>
 
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Mật khẩu"
                                 name="password"
                                 rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
                             >
-                                <Input.Password />
+                                <Input.Password
+                                    prefix={<LockOutlined className="prefixIcon" />}
+                                    placeholder="Mật khẩu của bạn"
+                                />
                             </Form.Item>
 
                             <Form.Item>
-                                <Button type='primary' htmlType='submit' loading={isSubmit}>
+                                <Button type='primary' htmlType='submit' loading={isSubmit} block>
                                     Đăng nhập
                                 </Button>
                             </Form.Item>
 
-                            <Divider>Or</Divider>
+                            <div className="other-login">
+                                <Divider>Hoặc đăng nhập với</Divider>
+                                <Space>
+                                    <AlipayCircleOutlined style={iconStyles} />
+                                    <WeiboCircleOutlined style={iconStyles} />
+                                </Space>
+                            </div>
 
                             <p className='text text-normal' style={{ textAlign: "center" }}>
                                 Chưa có tài khoản? {" "}

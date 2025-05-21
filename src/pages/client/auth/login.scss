@@ -16,11 +16,18 @@
 
     .heading {
         margin-bottom: 20px;
+        text-align: center;
 
         .text-large {
             font-size: 26px;
             font-weight: bold;
             color: #000;
+            margin-bottom: 8px;
+        }
+
+        .text-normal {
+            font-size: 14px;
+            color: #666;
         }
     }
 
@@ -28,16 +35,16 @@
         width: 100%;
     }
 
-    .ant-form-item-label label {
-        font-weight: bold;
-        color: #444;
-    }
-
-    .ant-input,
-    .ant-input-password {
+    .ant-input-affix-wrapper {
         border-radius: 6px;
         height: 40px;
         font-size: 14px;
+        padding: 4px 11px;
+
+        .prefixIcon {
+            color: rgba(0, 0, 0, 0.25);
+            margin-right: 8px;
+        }
     }
 
     .ant-btn-primary {
@@ -48,6 +55,10 @@
         background: #4c6ef5;
         border: none;
         transition: 0.3s ease-in-out;
+
+        &:hover {
+            background: #3b5bdb;
+        }
     }
 
     .text-normal {
@@ -60,9 +71,23 @@
         font-weight: bold;
         text-decoration: none;
         transition: 0.3s ease-in-out;
+
+        &:hover {
+            color: #3b5bdb;
+        }
     }
 
     .ant-divider {
         color: #666;
+        margin: 24px 0;
+    }
+
+    .other-login {
+        text-align: center;
+        margin: 24px 0;
+
+        .ant-space {
+            margin-top: 16px;
+        }
     }
 }
