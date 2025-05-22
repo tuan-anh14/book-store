@@ -245,3 +245,8 @@ export const getAllCommentsAPI = (query: string) => {
   const urlBackend = `/api/v1/comment?${query}`;
   return axios.get<IBackendRes<IModelPaginate<ICommentTable>>>(urlBackend);
 };
+
+export const deleteCommentAPI = (_id: string) => {
+  const urlBackend = `/api/v1/comment/${_id}`;
+  return axios.delete<IBackendRes<IRegister>>(urlBackend);
+};

@@ -1,4 +1,4 @@
-import TableComment from '@/components/admin/comment';
+import TableComment from '@/components/admin/comment/table.comment';
 
 const ManageCommentPage = () => {
     return (
