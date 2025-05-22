@@ -7,10 +7,13 @@ import { useCurrentApp } from 'components/context/app.context';
 import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
 import { EnvironmentOutlined } from '@ant-design/icons';
+import SearchResults from '../client/search/SearchResults';
 
 const AppHeader = (props: any) => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const [openManageAccount, setOpenManageAccount] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showSearchResults, setShowSearchResults] = useState(false);
 
     const { isAuthenticated, user, setUser, setIsAuthenticated, carts } = useCurrentApp();
 
@@ -101,9 +104,25 @@ const AppHeader = (props: any) => {
                     <div className="header-search-block">
                         <div className="search-box">
                             <img className="icon-search" src="https://salt.tikicdn.com/ts/upload/33/d0/37/6fef2e788f00a16dc7d5a1dfc5d0e97a.png" alt="icon-search" />
-                            <input className="input-search" type={'text'} placeholder="Truyện ma ..." />
+                            <input
+                                className="input-search"
+                                type={'text'}
+                                placeholder="Tìm kiếm sách..."
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setShowSearchResults(true);
+                                }}
+                                onFocus={() => setShowSearchResults(true)}
+                            />
                             <button className="search-btn">Tìm kiếm</button>
                         </div>
+                        {showSearchResults && (
+                            <SearchResults
+                                searchQuery={searchQuery}
+                                onClose={() => setShowSearchResults(false)}
+                            />
+                        )}
                     </div>
                     {/* Shortcut + Giao đến */}
                     <div className="header-right-block">
