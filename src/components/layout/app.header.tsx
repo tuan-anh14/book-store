@@ -7,7 +7,7 @@ import { useCurrentApp } from 'components/context/app.context';
 import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
 import { EnvironmentOutlined } from '@ant-design/icons';
-import SearchResults from '../client/search/SearchResults';
+import SearchResults from '../client/search/search.result';
 
 const AppHeader = (props: any) => {
     const [openDrawer, setOpenDrawer] = useState(false);
