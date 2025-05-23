@@ -297,3 +297,11 @@ export const deleteCommentAPI = (_id: string) => {
   const urlBackend = `/api/v1/comment/${_id}`;
   return axios.delete<IBackendRes<IRegister>>(urlBackend);
 };
+
+export const getMonthlyRevenueAPI = () => {
+  const urlBackend = `/api/v1/dashboard/monthly-revenue`;
+  return axios.get<IBackendRes<Array<{
+    month: string;
+    revenue: number;
+  }>>>(urlBackend);
+};
