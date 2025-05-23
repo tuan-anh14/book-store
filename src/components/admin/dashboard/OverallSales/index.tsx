@@ -1,18 +1,56 @@
-import { Card, Typography, Space, Tag } from "antd";
+import { Card, Typography, Space, Tag, Spin } from "antd";
 import { ArrowUpOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { useEffect, useState } from 'react';
+import { getOverallSalesAPI } from 'services/api';
 import './styles.scss';
 
 const { Title } = Typography;
 
-const data = [
-    { name: 'Thanh toán trực tiếp', value: 15486 },
-    { name: 'VNPAY', value: 9000 },
-];
-
 const COLORS = ['#5B8FF9', '#5AD8A6'];
 
 const OverallSales = () => {
+    const [loading, setLoading] = useState(false);
+    const [salesData, setSalesData] = useState<Array<{
+        type: string;
+        totalAmount: number;
+        count: number;
+    }>>([]);
+
+    const fetchSalesData = async () => {
+        setLoading(true);
+        try {
+            const res = await getOverallSalesAPI();
+            if (res && res.data) {
+                setSalesData(res.data);
+            }
+        } catch (error) {
+            console.error('Error fetching sales data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchSalesData();
+    }, []);
+
+    const totalAmount = salesData.reduce((sum, item) => sum + item.totalAmount, 0);
+    const formattedData = salesData.map(item => ({
+        name: item.type,
+        value: item.totalAmount
+    }));
+
+    if (loading) {
+        return (
+            <Card bordered={false} className="overall-sales">
+                <div style={{ textAlign: 'center', padding: '20px' }}>
+                    <Spin size="large" />
+                </div>
+            </Card>
+        );
+    }
+
     return (
         <Card
             title="Overall sales"
@@ -22,19 +60,19 @@ const OverallSales = () => {
         >
             <div className="ant-flex ant-flex-align-stretch ant-flex-gap-middle ant-flex-vertical">
                 <Space align="center">
-                    <Title level={3} style={{ margin: 0 }}>$ <span>24,486</span></Title>
+                    <Title level={3} style={{ margin: 0 }}><span>{totalAmount.toLocaleString()}</span> VNĐ</Title>
                     <Tag color="green" style={{ fontWeight: 500, fontSize: 16 }}>
-                        <ArrowUpOutlined /> 8.7%
+                        <ArrowUpOutlined /> {salesData.length} payment methods
                     </Tag>
                 </Space>
                 <div style={{ height: 300 }}>
                     <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={data}>
+                        <BarChart data={formattedData}>
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Tooltip />
                             <Bar dataKey="value">
-                                {data.map((entry, index) => (
+                                {formattedData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Bar>
