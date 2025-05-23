@@ -177,6 +177,53 @@ export const getDashboardAPI = () => {
   }>>(urlBackend);
 };
 
+
+export const getTotalRevenueAPI = () => {
+  const urlBackend = `/api/v1/dashboard/revenue`;
+  return axios.get<IBackendRes<{
+    totalRevenue: number;
+  }>>(urlBackend);
+};
+
+export const getOverallSalesAPI = () => {
+  const urlBackend = `/api/v1/dashboard/sales`;
+  return axios.get<IBackendRes<Array<{
+    type: string;
+    totalAmount: number;
+    count: number;
+  }>>>(urlBackend);
+};
+
+export const getOrdersByStatusAPI = () => {
+  const urlBackend = `/api/v1/dashboard/orders/status`;
+  return axios.get<IBackendRes<Array<{
+    status: string;
+    count: number;
+  }>>>(urlBackend);
+};
+
+export const getCustomerReviewsAPI = () => {
+  const urlBackend = `/api/v1/dashboard/reviews`;
+  return axios.get<IBackendRes<{
+    totalReviews: number;
+    averageRating: number;
+    ratingDistribution: Array<{
+      rating: number;
+      count: number;
+    }>;
+  }>>(urlBackend);
+};
+
+export const getCategorySalesAPI = () => {
+  const urlBackend = `/api/v1/dashboard/categories/sales`;
+  return axios.get<IBackendRes<Array<{
+    categoryId: string;
+    categoryName: string;
+    totalSales: number;
+    totalBooks: number;
+  }>>>(urlBackend);
+};
+
 export const createCategoryAPI = (name: string) => {
   return axios.post('/api/v1/category', { name });
 };
