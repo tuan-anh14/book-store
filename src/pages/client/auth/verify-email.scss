@@ -1,4 +1,4 @@
-.login-page {
+.verify-email-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,26 +77,20 @@
         }
     }
 
-    .ant-divider {
-        color: #666;
-        margin: 24px 0;
-    }
-
-    .other-login {
+    .resend-code {
         text-align: center;
-        margin: 24px 0;
+        margin: 16px 0;
 
-        .ant-space {
-            margin-top: 16px;
-        }
-    }
-
-    .forgot-password {
-        text-align: right;
-        margin-bottom: 16px;
-
-        .text-link {
+        .ant-btn-link {
+            padding: 0;
+            height: auto;
             font-size: 14px;
+            color: #4c6ef5;
+            font-weight: bold;
+
+            &:hover {
+                color: #3b5bdb;
+            }
         }
     }
 }

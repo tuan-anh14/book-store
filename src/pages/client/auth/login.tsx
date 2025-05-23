@@ -96,6 +96,12 @@ const LoginPage = () => {
                                 />
                             </Form.Item>
 
+                            <div className="forgot-password">
+                                <Link to="/forgot-password" className='text-link'>
+                                    Quên mật khẩu?
+                                </Link>
+                            </div>
+
                             <Form.Item>
                                 <Button type='primary' htmlType='submit' loading={isSubmit} block>
                                     Đăng nhập

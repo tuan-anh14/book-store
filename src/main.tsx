@@ -8,6 +8,8 @@ import {
 import AboutPage from 'pages/client/about';
 import LoginPage from 'pages/client/auth/login';
 import RegisterPage from 'pages/client/auth/register';
+import ForgotPasswordPage from 'pages/client/auth/forgot-password';
+import VerifyEmailPage from 'pages/client/auth/verify-email';
 import 'styles/global.scss'
 import HomePage from 'pages/client/home';
 import { App, ConfigProvider } from 'antd';
@@ -149,6 +151,14 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmailPage />,
   },
 ]);
 
