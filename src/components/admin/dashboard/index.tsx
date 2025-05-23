@@ -39,9 +39,6 @@ const AdminDashboard = () => {
                     </Card>
                 </Col>
                 <Col span={6}>
-                    <OrderSummary />
-                </Col>
-                <Col span={6}>
                     <Card title="Tổng Đơn hàng" bordered={false} className="dashboard__card">
                         <Statistic
                             title="Tổng Đơn hàng"
@@ -58,6 +55,9 @@ const AdminDashboard = () => {
                             formatter={formatter}
                         />
                     </Card>
+                </Col>
+                <Col span={6}>
+                    <OrderSummary />
                 </Col>
             </Row>
             <Row gutter={[40, 40]}>
