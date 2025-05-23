@@ -3,11 +3,11 @@ import { Card, Col, Row, Statistic } from "antd";
 import { useEffect, useState } from "react";
 import CountUp from 'react-countup';
 import CustomerReviews from './customerreviews';
-import Categories from './categories';
 import OrderSummary from './OrderSummary';
 import OverallSales from './overallsales';
 import OrdersByStatus from './OrdersByStatus';
 import './styles.scss';
+import MonthlyRevenue from "./MonthlyRevenue";
 
 const AdminDashboard = () => {
     const [dataDashboard, setDataDashboard] = useState({
@@ -69,12 +69,12 @@ const AdminDashboard = () => {
                 </Col>
             </Row>
 
-            <Row gutter={[40, 40]}>
+            <Row gutter={[40, 40]} className="dashboard__row">
                 <Col span={12}>
                     <CustomerReviews />
                 </Col>
                 <Col span={12}>
-                    <Categories />
+                    <MonthlyRevenue />
                 </Col>
             </Row>
         </div>

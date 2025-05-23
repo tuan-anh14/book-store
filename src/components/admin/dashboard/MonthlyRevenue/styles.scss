@@ -1,0 +1,13 @@
+.monthly-revenue {
+    height: 100%;
+
+    .ant-card-body {
+        height: calc(100% - 57px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ant-flex {
+        height: 100%;
+    }
+}
