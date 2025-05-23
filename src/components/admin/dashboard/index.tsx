@@ -8,6 +8,7 @@ import OverallSales from './overallsales';
 import OrdersByStatus from './orders_by_status';
 import './styles.scss';
 import MonthlyRevenue from "./monthly_revenue";
+import ExportReport from "./ExportReport";
 
 const AdminDashboard = () => {
     const [dataDashboard, setDataDashboard] = useState({
@@ -76,6 +77,13 @@ const AdminDashboard = () => {
                 <Col span={12}>
                     <CustomerReviews />
                 </Col>
+            </Row>
+
+            <Row gutter={[40, 40]} className="dashboard__row">
+                <Col span={12}>
+                    <ExportReport />
+                </Col>
+
             </Row>
         </div>
     );
