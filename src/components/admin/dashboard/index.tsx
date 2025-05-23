@@ -60,7 +60,7 @@ const AdminDashboard = () => {
                     <OrderSummary />
                 </Col>
             </Row>
-            <Row gutter={[40, 40]}>
+            <Row gutter={[40, 40]} className="dashboard__row">
                 <Col span={12}>
                     <OverallSales />
                 </Col>
@@ -68,6 +68,7 @@ const AdminDashboard = () => {
                     <OrdersByStatus />
                 </Col>
             </Row>
+
             <Row gutter={[40, 40]}>
                 <Col span={12}>
                     <CustomerReviews />

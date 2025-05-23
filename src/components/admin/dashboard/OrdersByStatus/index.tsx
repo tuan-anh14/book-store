@@ -56,11 +56,13 @@ const OrdersByStatus = () => {
             extra={<QuestionCircleOutlined />}
             className="orders-by-status"
         >
-            <div style={{ height: 400 }}>
-                <Tag color="green" style={{ fontWeight: 500, fontSize: 16 }}>
-                    <ArrowUpOutlined /> {ordersData.length} status methods
-                </Tag>
-                <ResponsiveContainer width="100%" height={400}>
+            <div style={{ height: 400, display: "flex", flexDirection: "column" }}>
+                <div style={{ marginBottom: 16 }}>
+                    <Tag color="green" style={{ fontWeight: 500, fontSize: 16 }}>
+                        <ArrowUpOutlined /> {ordersData.length} status methods
+                    </Tag>
+                </div>
+                <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={formattedData}>
                         <XAxis dataKey="name" />
                         <YAxis />
@@ -74,6 +76,7 @@ const OrdersByStatus = () => {
                 </ResponsiveContainer>
             </div>
         </Card>
+
     );
 };
 
