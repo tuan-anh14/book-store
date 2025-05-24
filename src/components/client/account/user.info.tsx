@@ -28,10 +28,11 @@ const UserInfo = () => {
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${userAvatar}`;
 
+
     useEffect(() => {
         if (user) {
             form.setFieldsValue({
-                _id: user.id,
+                _id: user._id,
                 email: user.email,
                 phone: user.phone,
                 fullName: user.fullName,
@@ -74,6 +75,7 @@ const UserInfo = () => {
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        console.log("Form values:", values);
         const { fullName, phone, _id } = values;
         setIsSubmit(true);
         const res = await updateUserInfoAPI(_id, userAvatar, fullName, phone);
@@ -87,9 +89,6 @@ const UserInfo = () => {
                 phone
             });
             message.success("Cập nhật thông tin user thành công");
-
-            //force renew token
-            localStorage.removeItem("access_token");
         } else {
             notification.error({
                 message: "Đã có lỗi xảy ra",
@@ -127,12 +126,10 @@ const UserInfo = () => {
                         autoComplete="off"
                         layout="vertical"
                     >
-                        <Form.Item<FieldType>
-                            hidden
-                            name="_id"
-                        >
-                            <Input disabled hidden />
+                        <Form.Item<FieldType> name="_id" style={{ display: 'none' }}>
+                            <Input />
                         </Form.Item>
+
 
                         <Form.Item<FieldType>
                             label="Email"
