@@ -199,20 +199,28 @@ const BookDetail = (props: IProps) => {
                             <div className='title'>{currentBook?.mainText}</div>
                             <div className='rating'>
                                 <Rate
-                                    value={currentBook?.comments?.length
-                                        ? Math.round(currentBook.comments.reduce((sum, c) => sum + (c.star || 0), 0) / currentBook.comments.length)
-                                        : 0
-                                    }
                                     disabled
-                                    style={{ color: '#ffce3d', fontSize: 12 }}
+                                    allowHalf
+                                    value={
+                                        comments.length
+                                            ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length)
+                                            : 0
+                                    }
+                                    style={{ color: '#ffce3d', fontSize: 18 }}
                                 />
+                                <span style={{ marginLeft: 8, color: '#ffb400', fontWeight: 600 }}>
+                                    {comments.length
+                                        ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length).toFixed(1)
+                                        : '0.0'
+                                    }/5
+                                </span>
                                 <span className='sold'>
                                     <Divider type="vertical" />
                                     Đã bán {currentBook?.sold ?? 0}
                                 </span>
-                                {currentBook?.comments && currentBook.comments.length > 0 && (
+                                {comments.length > 0 && (
                                     <span style={{ marginLeft: 8, color: '#666' }}>
-                                        ({currentBook.comments.length} đánh giá)
+                                        ({comments.length} đánh giá)
                                     </span>
                                 )}
                             </div>
