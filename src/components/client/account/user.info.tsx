@@ -32,6 +32,7 @@ const UserInfo = () => {
     useEffect(() => {
         if (user) {
             form.setFieldsValue({
+                //@ts-ignore
                 _id: user._id,
                 email: user.email,
                 phone: user.phone,
