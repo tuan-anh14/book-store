@@ -234,9 +234,6 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}>
                                     Hữu ích
                                 </Button>
-                                <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/82/f0/7f/7353641630f811453e875bb5450065d8.png" width={20} />}>
-                                    Bình luận
-                                </Button>
                                 <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/3f/fa/d4/7057dfb58b682b1b0a2b9683228863ee.png" width={20} />}>
                                     Chia sẻ
                                 </Button>
