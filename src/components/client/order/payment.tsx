@@ -73,84 +73,92 @@ const Payment = (props: IProps) => {
             bookName: item.detail.mainText,
         }));
 
-        if (method === "VNPAY") {
-            localStorage.setItem('checkout_carts', JSON.stringify(carts));
-            localStorage.setItem('checkout_info', JSON.stringify({
-                fullName,
-                phone,
-                address
-            }));
-            navigate('/checkout');
-            return;
-        }
-
         setIsSubmit(true);
-        const res = await createOrderAPI({
-            name: fullName,
-            address,
-            phone,
-            totalPrice,
-            type: method,
-            detail,
-        });
-        if (res?.data) {
-            localStorage.removeItem('carts');
-            setCarts([]);
-            message.success('Mua hàng thành công!');
-            props.setCurrentStep(2);
-        } else {
+
+        try {
+            // Tạo order trước khi redirect đến VNPay hoặc xử lý COD
+            const res = await createOrderAPI({
+                name: fullName,
+                address,
+                phone,
+                totalPrice,
+                type: method,
+                detail,
+            });
+
+            if (res?.data) {
+                if (method === "VNPAY") {
+                    // Lưu thông tin để tracking
+                    localStorage.setItem('checkout_carts', JSON.stringify(carts));
+                    localStorage.setItem('checkout_info', JSON.stringify({
+                        fullName,
+                        phone,
+                        address
+                    }));
+                    localStorage.setItem('order_created_vnpay', '1');
+
+                    // Redirect đến VNPay với order đã tạo
+                    navigate('/checkout');
+                } else {
+                    // COD - xử lý như cũ
+                    localStorage.removeItem('carts');
+                    setCarts([]);
+                    message.success('Mua hàng thành công!');
+                    props.setCurrentStep(2);
+                }
+            } else {
+                notification.error({
+                    message: "Có lỗi xảy ra",
+                    description: res.message && Array.isArray(res.message) ? res.message[0] : res.message,
+                    duration: 5,
+                });
+            }
+        } catch (error) {
             notification.error({
                 message: "Có lỗi xảy ra",
-                description: res.message && Array.isArray(res.message) ? res.message[0] : res.message,
+                description: "Không thể tạo đơn hàng. Vui lòng thử lại.",
                 duration: 5,
             });
         }
+
         setIsSubmit(false);
     };
-
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
                 <Row gutter={[20, 20]}>
                     <Col md={16} xs={24}>
-                        {carts?.map((book, index) => (
-                            <div key={index}>
-                                {carts?.map((book, index) => {
-                                    const currentBookPrice = book?.detail?.price ?? 0;
-                                    return (
-                                        <div className='order-book' key={`index-${index}`}>
-                                            <div className='book-content'>
-                                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail.thumbnail}`} />
-                                                <div className='title'>
-                                                    {book?.detail?.mainText}
-                                                </div>
-                                                <div className='price'>
-                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice)}
-                                                </div>
-                                            </div>
-                                            <div className='action'>
-                                                <div className='quantity'>
-                                                    <InputNumber
-                                                        value={book?.quantity}
-                                                    />
-                                                </div>
-                                                <div className='sum'>
-                                                    Tổng: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * book?.quantity)}
-                                                </div>
-                                                <DeleteTwoTone
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => handleRemoveBook(book._id)}
-                                                    twoToneColor="#eb2f96"
-                                                />
-                                            </div>
+                        {carts?.map((book, index) => {
+                            const currentBookPrice = book?.detail?.price ?? 0;
+                            return (
+                                <div className='order-book' key={`index-${index}`}>
+                                    <div className='book-content'>
+                                        <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail.thumbnail}`} />
+                                        <div className='title'>{book?.detail?.mainText}</div>
+                                        <div className='price'>
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice)}
                                         </div>
-                                    )
-                                })
-
-                                }
-                            </div>
-                        ))}
+                                    </div>
+                                    <div className='action'>
+                                        <div className='quantity'>
+                                            <InputNumber
+                                                value={book?.quantity}
+                                            // Có thể thêm onChange để cập nhật số lượng tại đây nếu muốn
+                                            />
+                                        </div>
+                                        <div className='sum'>
+                                            Tổng: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * book?.quantity)}
+                                        </div>
+                                        <DeleteTwoTone
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => handleRemoveBook(book._id)}
+                                            twoToneColor="#eb2f96"
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                         <div>
                             <button style={{ cursor: "pointer" }} onClick={() => props.setCurrentStep(0)}>
                                 Quay trở lại
@@ -215,7 +223,6 @@ const Payment = (props: IProps) => {
                 </Row>
             </div>
         </div>
-
     )
 }
 

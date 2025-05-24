@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Card, Result, Button } from 'antd';
+import { Card, Result, Button, App } from 'antd';
 import { SmileOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import { createOrderAPI } from '@/services/api';
+import { useCurrentApp } from '@/components/context/app.context';
 
 function PaymentResult() {
     const [paymentStatus, setPaymentStatus] = useState<'success' | 'error' | 'loading'>('loading');
     const location = useLocation();
     const navigate = useNavigate();
+    const { setCarts } = useCurrentApp();
+    // const { message, notification } = App.useApp();
 
     useEffect(() => {
         const checkPaymentStatus = async () => {
@@ -17,41 +19,30 @@ function PaymentResult() {
                 const { data } = await axios.get(
                     `${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/check_payment?${searchParams.toString()}`
                 );
+
                 if (data.data.message === 'Thanh toán thành công') {
-                    // Luôn xóa giỏ hàng local
+                    // Chỉ cần xóa dữ liệu tạm thời và cập nhật state
+                    // Order đã được tạo ở bước trước khi redirect đến VNPay
                     localStorage.removeItem('carts');
                     localStorage.removeItem('checkout_carts');
                     localStorage.removeItem('checkout_info');
-                    // Kiểm tra flag đã tạo order chưa
-                    if (!localStorage.getItem('order_created_vnpay')) {
-                        const carts = JSON.parse(localStorage.getItem('checkout_carts') || '[]');
-                        const info = JSON.parse(localStorage.getItem('checkout_info') || '{}');
-                        const totalPrice = carts.reduce((sum: any, item: any) => sum + item.detail.price * item.quantity, 0);
-                        await createOrderAPI({
-                            name: info.fullName,
-                            address: info.address,
-                            phone: info.phone,
-                            totalPrice,
-                            type: 'VNPAY',
-                            detail: carts.map((item: any) => ({
-                                _id: item._id,
-                                quantity: item.quantity,
-                                bookName: item.detail.mainText,
-                            })),
-                        });
-                        // Đánh dấu đã tạo order
-                        localStorage.setItem('order_created_vnpay', '1');
-                    }
+                    localStorage.removeItem('order_created_vnpay');
+
+                    // Cập nhật state giỏ hàng
+                    setCarts([]);
+
                     setPaymentStatus('success');
                 } else {
                     setPaymentStatus('error');
                 }
             } catch (error) {
+                console.error('Payment check error:', error);
                 setPaymentStatus('error');
             }
         };
+
         checkPaymentStatus();
-    }, [location.search]);
+    }, [location.search, setCarts]);
 
     return (
         <div

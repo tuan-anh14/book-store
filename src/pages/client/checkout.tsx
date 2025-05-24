@@ -125,7 +125,6 @@ function Checkout() {
                             style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: '20px' }}
                         >
                             <Radio value={"VNPAY"}>VNPAY</Radio>
-                            <Radio value={"COD"}>Ship COD</Radio>
                         </Radio.Group>
 
                         <Button
