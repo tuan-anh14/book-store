@@ -10,6 +10,8 @@ import {
     MenuUnfoldOutlined,
     FolderOutlined,
     CommentOutlined,
+    LogoutOutlined,
+    HomeOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar, Result, Button } from 'antd';
 import { Outlet } from "react-router-dom";
@@ -86,21 +88,14 @@ const LayoutAdmin = () => {
 
     const itemsDropdown = [
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => alert("me")}
-            >Quản lý tài khoản</label>,
-            key: 'account',
-        },
-        {
-            label: <Link to={'/'}>Trang chủ</Link>,
+            label: <Link to={'/'}><HomeOutlined /> Trang chủ</Link>,
             key: 'home',
         },
         {
             label: <label
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleLogout()}
-            >Đăng xuất</label>,
+            ><LogoutOutlined /> Đăng xuất</label>,
             key: 'logout',
         },
 

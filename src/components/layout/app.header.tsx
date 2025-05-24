@@ -6,7 +6,15 @@ import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
 import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
-import { EnvironmentOutlined } from '@ant-design/icons';
+import {
+    EnvironmentOutlined,
+    UserOutlined,
+    HistoryOutlined,
+    LogoutOutlined,
+    SettingOutlined,
+    HomeOutlined,
+    ShoppingCartOutlined
+} from '@ant-design/icons';
 import SearchResults from '../client/search/search.result';
 import logoBook from '@/assets/logo_book.jpg';
 
@@ -29,33 +37,52 @@ const AppHeader = (props: any) => {
             message.success("Đăng xuất thành công.");
             navigate("/");
         }
-
     }
 
     let items = [
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => setOpenManageAccount(true)}
-            >Quản lý tài khoản</label>,
+            label: (
+                <label
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                    onClick={() => setOpenManageAccount(true)}
+                >
+                    <UserOutlined />
+                    Quản lý tài khoản
+                </label>
+            ),
             key: 'account',
         },
         {
-            label: <Link to="/history">Lịch sử mua hàng</Link>,
+            label: (
+                <Link to="/history" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <HistoryOutlined />
+                    Lịch sử mua hàng
+                </Link>
+            ),
             key: 'history',
         },
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
+            label: (
+                <label
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                    onClick={() => handleLogout()}
+                >
+                    <LogoutOutlined />
+                    Đăng xuất
+                </label>
+            ),
             key: 'logout',
         },
-
     ];
+
     if (user?.role === 'ADMIN') {
         items.unshift({
-            label: <Link to='/admin'>Trang quản trị</Link>,
+            label: (
+                <Link to='/admin' style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <SettingOutlined />
+                    Trang quản trị
+                </Link>
+            ),
             key: 'admin',
         })
     }
@@ -90,6 +117,7 @@ const AppHeader = (props: any) => {
             </div>
         )
     }
+
     return (
         <div className='header-container tiki-header'>
             <header className="page-header">
@@ -128,7 +156,7 @@ const AppHeader = (props: any) => {
                     <div className="header-right-block">
                         <div className="header-shortcut-block">
                             <div className="shortcut-item" onClick={() => navigate('/')}>
-                                <img src="https://salt.tikicdn.com/ts/upload/b4/90/74/6baaecfa664314469ab50758e5ee46ca.png" alt="home" />
+                                <HomeOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
                                 <span>Trang chủ</span>
                             </div>
                             <div className="shortcut-item">
@@ -140,7 +168,10 @@ const AppHeader = (props: any) => {
                                     content={contentPopover}
                                     arrow={true}>
                                     <div style={{ position: 'relative' }}>
-                                        <img className="cart-icon" src="https://salt.tikicdn.com/ts/upload/51/e2/92/8ca7e2cc5ede8c09e34d1beb50267f4f.png" alt="cart" />
+                                        <ShoppingCartOutlined
+                                            style={{ fontSize: '20px', color: '#1890ff' }}
+                                            className="cart-icon"
+                                        />
                                         <span className="cart-count">{carts?.length ?? 0}</span>
                                     </div>
                                 </Popover>
@@ -148,7 +179,7 @@ const AppHeader = (props: any) => {
                             <div className="shortcut-item">
                                 {!isAuthenticated ?
                                     <div className="account-shortcut" onClick={() => navigate('/login')}>
-                                        <img src="https://salt.tikicdn.com/ts/upload/07/d5/94/d7b6a3bd7d57d37ef6e437aa0de4821b.png" alt="account" />
+                                        <UserOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
                                         <span>Tài khoản</span>
                                     </div>
                                     :
@@ -191,10 +222,19 @@ const AppHeader = (props: any) => {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}
             >
-                <p>Quản lý tài khoản</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                    <UserOutlined />
+                    <span>Quản lý tài khoản</span>
+                </div>
                 <Divider />
 
-                <p onClick={() => handleLogout()}>Đăng xuất</p>
+                <div
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0', cursor: 'pointer' }}
+                    onClick={() => handleLogout()}
+                >
+                    <LogoutOutlined />
+                    <span>Đăng xuất</span>
+                </div>
                 <Divider />
             </Drawer>
 
