@@ -8,6 +8,7 @@ import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
 import { EnvironmentOutlined } from '@ant-design/icons';
 import SearchResults from '../client/search/search.result';
+import logoBook from '@/assets/logo_book.jpg';
 
 const AppHeader = (props: any) => {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -96,8 +97,7 @@ const AppHeader = (props: any) => {
                     {/* Logo + slogan */}
                     <div className="header-logo-block">
                         <Link to="/" className="tiki-logo">
-                            <img src="https://salt.tikicdn.com/ts/upload/0e/07/78/ee828743c9afa9792cf20d75995e134e.png" alt="tiki-logo" width={96} height={40} />
-                            <span className="slogan">Tốt & Nhanh</span>
+                            <img src={logoBook} alt="book-logo" style={{ width: 120, height: 'auto', objectFit: 'contain' }} />
                         </Link>
                     </div>
                     {/* Search */}
