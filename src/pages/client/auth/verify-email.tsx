@@ -1,9 +1,10 @@
 import { App, Button, Form, Input, message } from 'antd';
 import type { FormProps } from 'antd';
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './verify-email.scss';
-import { MailOutlined, SafetyOutlined } from '@ant-design/icons';
+import { verifyEmailAPI } from '@/services/api';
+import { SafetyOutlined } from '@ant-design/icons';
 
 type FieldType = {
     code: string;
@@ -12,17 +13,27 @@ type FieldType = {
 const VerifyEmailPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message: messageApi } = App.useApp();
-    const [searchParams] = useSearchParams();
-    const email = searchParams.get('email');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const email = location.state?.email;
+
+    if (!email) {
+        navigate('/register');
+        return null;
+    }
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         try {
-            // TODO: Gọi API xác thực email
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            messageApi.success('Xác thực email thành công!');
-        } catch (error) {
-            messageApi.error('Có lỗi xảy ra, vui lòng thử lại sau!');
+            const res = await verifyEmailAPI(email, values.code);
+            if (res.data) {
+                messageApi.success('Xác thực email thành công!');
+                navigate('/login');
+            } else {
+                messageApi.error(res.message || 'Có lỗi xảy ra!');
+            }
+        } catch (error: any) {
+            messageApi.error(error.response?.data?.message || 'Có lỗi xảy ra!');
         } finally {
             setIsSubmit(false);
         }

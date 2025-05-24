@@ -3,6 +3,7 @@ import type { FormProps } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './forgot-password.scss';
+import { forgotPasswordAPI } from '@/services/api';
 import { MailOutlined } from '@ant-design/icons';
 
 type FieldType = {
@@ -16,11 +17,14 @@ const ForgotPasswordPage = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         try {
-            // TODO: Gọi API gửi email reset password
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            messageApi.success('Vui lòng kiểm tra email của bạn để đặt lại mật khẩu!');
-        } catch (error) {
-            messageApi.error('Có lỗi xảy ra, vui lòng thử lại sau!');
+            const res = await forgotPasswordAPI(values.email);
+            if (res.data) {
+                messageApi.success('Vui lòng kiểm tra email của bạn để đặt lại mật khẩu!');
+            } else {
+                messageApi.error(res.message || 'Có lỗi xảy ra!');
+            }
+        } catch (error: any) {
+            messageApi.error(error.response?.data?.message || 'Có lỗi xảy ra!');
         } finally {
             setIsSubmit(false);
         }

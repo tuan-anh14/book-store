@@ -9,11 +9,11 @@ export const loginAPI = (username: string, password: string) => {
   })
 }
 
-export const registerAPI = (fullName: string, email: string, password: string, phone: string) => {
-  const urlBackend = "/api/v1/auth/register";
-  return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone }, {
-  });
-}
+// export const registerAPI = (fullName: string, email: string, password: string, phone: string) => {
+//   const urlBackend = "/api/v1/auth/register";
+//   return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone }, {
+//   });
+// }
 
 export const fetchAccountAPI = () => {
   const urlBackend = "/api/v1/auth/account";
@@ -304,4 +304,19 @@ export const getMonthlyRevenueAPI = () => {
     month: string;
     revenue: number;
   }>>>(urlBackend);
+};
+
+export const registerWithVerificationAPI = (fullName: string, email: string, password: string, phone: string) => {
+  const urlBackend = "/api/v1/auth/register";
+  return axios.post<IBackendRes<IRegister>>(urlBackend, { fullName, email, password, phone });
+};
+
+export const verifyEmailAPI = (email: string, code: string) => {
+  const urlBackend = "/api/v1/auth/verify-email";
+  return axios.post<IBackendRes<IRegister>>(urlBackend, { email, code });
+};
+
+export const forgotPasswordAPI = (email: string) => {
+  const urlBackend = "/api/v1/auth/forgot-password";
+  return axios.post<IBackendRes<IRegister>>(urlBackend, { email });
 };

@@ -3,7 +3,7 @@ import type { FormProps } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './register.scss';
-import { registerAPI } from '@/services/api';
+import { registerWithVerificationAPI } from '@/services/api';
 import {
     UserOutlined,
     LockOutlined,
@@ -27,8 +27,8 @@ const RegisterPage = () => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         const { email, fullName, password, phone } = values;
-        setTimeout(async () => {
-            const res = await registerAPI(
+        try {
+            const res = await registerWithVerificationAPI(
                 fullName,
                 email,
                 password,
@@ -36,13 +36,16 @@ const RegisterPage = () => {
             );
 
             if (res.data) {
-                message.success("Đăng ký user thành công.");
-                navigate("/login");
+                message.success("Đăng ký thành công. Vui lòng kiểm tra email để xác thực!");
+                navigate("/verify-email", { state: { email } });
             } else {
                 message.error(res.message)
             }
-            setIsSubmit(false)
-        }, 2000);
+        } catch (error: any) {
+            message.error(error.response?.data?.message || "Có lỗi xảy ra!");
+        } finally {
+            setIsSubmit(false);
+        }
     };
 
     return (
