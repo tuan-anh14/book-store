@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Rate, Divider, Button, message, Avatar, Input, Upload, Image, Form, Popover } from 'antd';
-import { SmileOutlined, PictureOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { SmileOutlined, PictureOutlined } from '@ant-design/icons';
 import EmojiPicker from 'emoji-picker-react';
 import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/services/api';
-import type { UploadFile, UploadProps } from 'antd';
+import type { UploadProps } from 'antd';
 import { MAX_UPLOAD_IMAGE_SIZE } from '@/services/helper';
+import { App } from 'antd';
 
 interface BookCommentsProps {
     bookId: string;
@@ -21,6 +22,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
     const [page, setPage] = useState<number>(1);
     const pageSize = 5;
     const [content, setContent] = useState('');
+    const { notification } = App.useApp();
 
     const filteredComments = (comments || []).filter(c => {
         if (filter === 'latest') return true;
@@ -73,25 +75,58 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
             message.error('Bạn cần đăng nhập để bình luận!');
             return;
         }
+
         const star = Number(values.star);
         if (!star || star < 1 || star > 5) {
             message.error('Vui lòng chọn đánh giá!');
             return;
         }
+
+        setLoadingComment(true);
+
         const user_id = user._id || user.id;
         const payload = {
-            content: content,
+            content: content.trim(),
             star,
             book_id: bookId,
             user_id,
             images: imageUrls,
         };
-        await createCommentAPI(payload);
-        form.resetFields();
-        setContent('');
-        setImageUrls([]);
-        fetchComments();
+
+        createCommentAPI(payload).then((result) => {
+            const data = result?.data || result;
+            // @ts-ignore: Unreachable code error
+            if (result.statusCode === 201) {
+                notification.success({
+                    message: "Thành công",
+                    description: "Bình luận đã được gửi thành công!",
+                });
+                form.resetFields();
+                setContent('');
+                setImageUrls([]);
+                fetchComments();
+                // @ts-ignore: Unreachable code error
+            } else if (result.statusCode === 400) {
+                notification.error({
+                    message: "Không thể gửi bình luận",
+                    description: result.data.message || "Bạn cần phải mua sách rồi mới được đánh giá!",
+                });
+            } else {
+                notification.error({
+                    message: "Không thể gửi bình luận",
+                    description: result.data.message || "Bạn cần phải mua sách rồi mới được đánh giá!",
+                });
+            }
+        }).catch((error) => {
+            notification.error({
+                message: "Không thể gửi bình luận",
+                description: error?.response?.data?.message || "Bạn cần phải mua sách rồi mới được đánh giá!",
+            });
+        }).finally(() => {
+            setLoadingComment(false);
+        });
     };
+
 
     return (
         <>
@@ -224,9 +259,16 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 {i + 1}
                             </Button>
                         ))}
-                        <Button disabled={page === Math.ceil(filteredComments.length / pageSize)} onClick={() => setPage(page + 1)} style={{ marginLeft: 8 }}>Sau</Button>
+                        <Button
+                            disabled={page === Math.ceil(filteredComments.length / pageSize)}
+                            onClick={() => setPage(page + 1)}
+                            style={{ marginLeft: 8 }}
+                        >
+                            Sau
+                        </Button>
                     </div>
                 )}
+
             </div>
             {/* Form gửi bình luận */}
             <Divider orientation="left" style={{ margin: '40px 0 24px 0', fontWeight: 600, fontSize: 18 }}>Viết bình luận</Divider>
