@@ -5,7 +5,10 @@ import { ChatHeaderProps } from '../../types/chat';
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onMinimize, onMaximize }) => {
   return (
     <div className="chatbot-header">
-      <h3 className="chatbot-title">Trợ lý AI Gemini</h3>
+      <div className="chatbot-title-container">
+        <h3 className="chatbot-title">Trợ lý AI Gemini</h3>
+        <span className="chatbot-disclaimer">Thông tin mang tính chất tham khảo</span>
+      </div>
       <div className="chatbot-btn-group">
         <button className="chatbot-icon-btn" onClick={onMinimize} title="Thu nhỏ">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

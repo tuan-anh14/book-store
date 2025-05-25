@@ -95,11 +95,23 @@
     border-bottom: 1px solid #e0e0e0;
 }
 
+.chatbot-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .chatbot-title {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #1a1a1a;
+}
+
+.chatbot-disclaimer {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
 }
 
 .chatbot-btn-group {
