@@ -142,7 +142,7 @@ declare global {
     };
     content: string;
     star: number;
-    image?: string;
+    images?: string[];
     createdAt: Date;
     updatedAt: Date;
   }

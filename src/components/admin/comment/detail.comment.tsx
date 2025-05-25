@@ -1,6 +1,11 @@
-import { Descriptions, Drawer } from "antd";
+import { Descriptions, Drawer, Divider, Image, Upload } from "antd";
 import dayjs from "dayjs";
 import { FORMATE_DATE } from "@/services/helper";
+import { useEffect, useState } from "react";
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 interface IProps {
     openViewDetail: boolean;
@@ -17,10 +22,56 @@ const DetailComment = (props: IProps) => {
         setDataViewDetail,
     } = props;
 
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+    useEffect(() => {
+        if (dataViewDetail?.images && dataViewDetail.images.length > 0) {
+            const imgFiles: UploadFile[] = dataViewDetail.images.map((img) => {
+                const isFullUrl = img.startsWith('http');
+                return {
+                    uid: uuidv4(),
+                    name: img,
+                    status: 'done',
+                    url: isFullUrl ? img : `${import.meta.env.VITE_BACKEND_URL}/images/comment/${img}`,
+                };
+            });
+            setFileList(imgFiles);
+        } else {
+            setFileList([]);
+        }
+    }, [dataViewDetail]);
+
     const onClose = () => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
+        setFileList([]);
     }
+
+    const getBase64 = (file: FileType): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+
+    const handleCancel = () => setPreviewOpen(false);
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj as FileType);
+        }
+
+        setPreviewImage(file.url || (file.preview as string));
+        setPreviewOpen(true);
+    };
+
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
 
     return (
         <>
@@ -49,6 +100,35 @@ const DetailComment = (props: IProps) => {
                         {dayjs(dataViewDetail?.updatedAt).format(FORMATE_DATE)}
                     </Descriptions.Item>
                 </Descriptions>
+
+                <Divider orientation="left">Ảnh Bình luận</Divider>
+                <div style={{ padding: '20px' }}>
+                    <Upload
+                        action="#"
+                        listType="picture-card"
+                        fileList={fileList}
+                        onPreview={handlePreview}
+                        showUploadList={{ showRemoveIcon: false }}
+                        disabled={true}
+                    >
+                        {fileList.length >= 1 ? null : (
+                            <div style={{ color: '#aaa', fontSize: 12 }}>
+                                Không có ảnh bình luận
+                            </div>
+                        )}
+                    </Upload>
+                </div>
+                {previewImage && (
+                    <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                            visible: previewOpen,
+                            onVisibleChange: (visible) => setPreviewOpen(visible),
+                            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        }}
+                        src={previewImage}
+                    />
+                )}
             </Drawer>
         </>
     )

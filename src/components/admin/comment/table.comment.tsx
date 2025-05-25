@@ -69,13 +69,15 @@ const TableComment = () => {
         },
         {
             title: 'User',
-            dataIndex: ['user', 'fullName'],
+            dataIndex: 'user.fullName',
+            valueType: 'text',
             render: (_, record) => record.user?.fullName || '',
             sorter: true,
         },
         {
             title: 'Book',
-            dataIndex: ['book', 'mainText'],
+            dataIndex: 'book.mainText',
+            valueType: 'text',
             render: (_, record) => record.book?.mainText || '',
             sorter: true,
         },
@@ -146,10 +148,10 @@ const TableComment = () => {
                             query += `&content=/${params.content}/i`;
                         }
                         if (params.user) {
-                            query += `&user=/${params.user}/i`;
+                            query += `&user.fullName=/${params.user}/i`;
                         }
                         if (params.book) {
-                            query += `&book=/${params.book}/i`;
+                            query += `&book.mainText=/${params.book}/i`;
                         }
                     }
 
@@ -162,7 +164,6 @@ const TableComment = () => {
                     } else {
                         query += "&sort=-createdAt";
                     }
-
                     const res = await getAllCommentsAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
