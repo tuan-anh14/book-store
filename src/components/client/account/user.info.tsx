@@ -32,12 +32,12 @@ const UserInfo = () => {
     useEffect(() => {
         if (user) {
             form.setFieldsValue({
-                //@ts-ignore
                 _id: user._id,
                 email: user.email,
                 phone: user.phone,
                 fullName: user.fullName,
             });
+            console.log("User info form initialized with:", user);
         }
     }, [user, form]);
 

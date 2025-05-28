@@ -1,6 +1,7 @@
 import { Row, Col, Rate, Divider, Button, message, App, List, Avatar, Input, Upload, Image, Form, Popover } from 'antd';
 import 'styles/book.scss';
 import ImageGallery from 'react-image-gallery';
+import { useNavigate } from 'react-router-dom'; // Thêm import này
 
 import { MinusOutlined, PlusOutlined, SmileOutlined, PictureOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
@@ -20,6 +21,7 @@ type UserAction = 'MINUS' | 'PLUS';
 
 const BookDetail = (props: IProps) => {
     const { currentBook } = props;
+    const navigate = useNavigate(); // Thêm hook navigate
     const [imageGallery, setImageGallery] = useState<
         {
             original: string;
@@ -145,7 +147,31 @@ const BookDetail = (props: IProps) => {
             setCarts(data);
         }
         message.success("Thêm vào giỏ hàng thành công!");
+    }
 
+    // Thêm function mới cho chức năng Mua ngay
+    const handleBuyNow = () => {
+        // Kiểm tra user đã đăng nhập chưa
+        if (!user) {
+            message.error("Vui lòng đăng nhập để mua hàng!");
+            return;
+        }
+
+        // Kiểm tra sách có tồn tại không
+        if (!currentBook) {
+            message.error("Không tìm thấy thông tin sách!");
+            return;
+        }
+
+        // Thêm vào giỏ hàng trước
+        handleAddToCart();
+
+        // Chuyển hướng đến trang order sau một khoảng thời gian ngắn
+        // để đảm bảo việc thêm vào giỏ hàng đã hoàn tấtthành
+        setTimeout(() => {
+            navigate('/order'); // Thay đổi đường dẫn này theo routing của bạn
+            // hoặc có thể là: navigate('/checkout') tùy theo cấu trúc routing
+        }, 500);
     }
 
     const fetchComments = async () => {
@@ -248,7 +274,8 @@ const BookDetail = (props: IProps) => {
                                     <BsCartPlus className='icon-cart' />
                                     <span>Thêm vào giỏ hàng</span>
                                 </button>
-                                <button className='now'>Mua ngay</button>
+                                {/* Sửa đổi button Mua ngay */}
+                                <button className='now' onClick={handleBuyNow}>Mua ngay</button>
                             </div>
                             {/* Thông tin chi tiết sách */}
                             <div style={{ marginTop: 32, borderTop: '1px solid #eee', paddingTop: 24 }}>

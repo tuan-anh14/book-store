@@ -81,7 +81,7 @@ const HistoryPage = () => {
 
     return (
         <div style={{ margin: 50 }}>
-            <div>Lịch sử mua hàng</div>
+            <div style={{ fontSize: 20, fontWeight: 600 }}>Lịch sử mua hàng</div>
             <Divider />
             <Table
                 bordered

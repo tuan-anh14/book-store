@@ -195,6 +195,11 @@ const HomePage = () => {
         }
     }, [listBook]);
 
+    const handlePopupButtonClick = () => {
+        setShowPopup(false); // Đóng popup trước
+        navigate('/book/682d4c146c76be99fb301947'); // Chuyển hướng đến trang sách
+    };
+
     return (
         <>
             <Popup isVisible={showPopup} onClose={() => setShowPopup(false)}>
@@ -203,7 +208,12 @@ const HomePage = () => {
                     style={{ background: `url(${popupImg}) center/cover no-repeat` }}
                 >
                     <div className="home-popup-content">
-                        <button className="home-popup-btn">Xem ngay</button>
+                        <button
+                            className="home-popup-btn"
+                            onClick={handlePopupButtonClick}
+                        >
+                            Xem ngay
+                        </button>
                     </div>
                 </div>
             </Popup>
