@@ -14,6 +14,7 @@ type FieldType = {
     email: string;
     fullName: string;
     phone: string;
+    address: string;
 };
 
 
@@ -36,6 +37,7 @@ const UserInfo = () => {
                 email: user.email,
                 phone: user.phone,
                 fullName: user.fullName,
+                address: user.address,
             });
             console.log("User info form initialized with:", user);
         }
@@ -77,9 +79,9 @@ const UserInfo = () => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         console.log("Form values:", values);
-        const { fullName, phone, _id } = values;
+        const { fullName, phone, _id, address } = values;
         setIsSubmit(true);
-        const res = await updateUserInfoAPI(_id, userAvatar, fullName, phone);
+        const res = await updateUserInfoAPI(_id, userAvatar, fullName, phone, address);
 
         if (res && res.data) {
             //update react context
@@ -87,7 +89,8 @@ const UserInfo = () => {
                 ...user!,
                 avatar: userAvatar,
                 fullName,
-                phone
+                phone,
+                address
             });
             message.success("Cập nhật thông tin user thành công");
         } else {
@@ -152,6 +155,13 @@ const UserInfo = () => {
                             label="Số điện thoại"
                             name="phone"
                             rules={[{ required: true, message: 'Số điện thoại không được để trống!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
+                            label="Địa chỉ"
+                            name="address"
                         >
                             <Input />
                         </Form.Item>

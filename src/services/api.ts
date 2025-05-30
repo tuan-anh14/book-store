@@ -150,10 +150,10 @@ export const getHistoryAPI = () => {
 
 export const updateUserInfoAPI = (
   _id: string, avatar: string,
-  fullName: string, phone: string
+  fullName: string, phone: string, address: string
 ) => {
   const urlBackend = "/api/v1/user/info";
-  return axios.put<IBackendRes<IRegister>>(urlBackend, { fullName, phone, avatar, _id });
+  return axios.put<IBackendRes<IRegister>>(urlBackend, { fullName, phone, avatar, _id, address });
 };
 
 export const updateUserPasswordAPI = (

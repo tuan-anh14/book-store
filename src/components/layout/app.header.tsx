@@ -87,6 +87,8 @@ const AppHeader = (props: any) => {
         })
     }
 
+    console.log(user)
+
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
     const contentPopover = () => {
@@ -196,8 +198,8 @@ const AppHeader = (props: any) => {
                             <EnvironmentOutlined style={{ color: '#1890ff', fontSize: 20, marginRight: 6 }} />
                             <span className="delivery-label">Giao đến:</span>
                             <span className="delivery-address">
-                                {/* {user?.address ? <b>{user.address}</b> : <span style={{ color: '#888' }}>Chưa xác định</span>} */}
-                                <span style={{ color: '#888' }}>Chưa xác định</span>
+                                {user?.address ? <b>{user.address}</b> : <span style={{ color: '#888' }}>Chưa xác định</span>}
+                                {/* <span style={{ color: '#888' }}>Chưa xác định</span> */}
                             </span>
                         </div>
                     </div>

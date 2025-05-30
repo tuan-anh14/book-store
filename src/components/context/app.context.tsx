@@ -29,7 +29,9 @@ export const AppProvider = (props: TProps) => {
         const fetchAccount = async () => {
             const res = await fetchAccountAPI();
             const carts = localStorage.getItem("carts");
+            console.log("API Response:", res);
             if (res.data) {
+                console.log("Setting user data:", res.data.user);
                 setUser(res.data.user);
                 setIsAuthenticated(true);
                 if (carts) {
