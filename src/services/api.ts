@@ -338,3 +338,7 @@ export const createSupportRequestAPI = (data: {
 export const getSupportRequestsAPI = (query: string) => {
   return axios.get(`/api/v1/support-request?${query}`);
 };
+
+export const deleteSupportRequestAPI = (_id: string) => {
+  return axios.delete(`/api/v1/support-request/${_id}`);
+};

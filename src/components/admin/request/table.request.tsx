@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
 import { ProTable, ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, Popconfirm, Tag, App } from 'antd';
-import { getSupportRequestsAPI } from '@/services/api';
+import { Button, Popconfirm, Tag, App, Space } from 'antd';
+import { getSupportRequestsAPI, deleteSupportRequestAPI } from '@/services/api';
 import DetailRequest from './detail.request';
+import { EyeTwoTone, DeleteTwoTone } from '@ant-design/icons';
+
 
 const TableRequest = () => {
     const actionRef = useRef<ActionType | null>(null);
@@ -30,7 +32,7 @@ const TableRequest = () => {
             ellipsis: true,
         },
         {
-            title: 'Vấn đề chính',
+            title: 'Vấn đề chính ',
             dataIndex: 'mainIssue',
             width: 150,
             ellipsis: true,
@@ -57,21 +59,45 @@ const TableRequest = () => {
             hideInSearch: true,
             width: 100,
             render: (_, entity) => (
-                <>
-                    <Button
-                        size="small"
-                        type="link"
+                <Space>
+                    <EyeTwoTone
+                        twoToneColor="#1890ff"
+                        style={{ cursor: "pointer" }}
                         onClick={() => {
                             setDataViewDetail(entity);
                             setOpenViewDetail(true);
                         }}
+                    />
+                    <Popconfirm
+                        placement="leftTop"
+                        title={"Xác nhận xóa khiếu nại"}
+                        description={"Bạn có chắc chắn muốn xóa khiếu nại này ?"}
+                        onConfirm={() => handleDeleteRequest(entity._id)}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
                     >
-                        Xem chi tiết
-                    </Button>
-                </>
+                        <DeleteTwoTone
+                            twoToneColor="#ff4d4f"
+                            style={{ cursor: "pointer" }}
+                        />
+                    </Popconfirm>
+                </Space>
             ),
         },
     ];
+
+    const handleDeleteRequest = async (_id: string) => {
+        const res = await deleteSupportRequestAPI(_id);
+        if (res && res.data) {
+            message.success('Xóa khiếu nại thành công');
+            actionRef.current?.reload();
+        } else {
+            notification.error({
+                message: 'Lỗi xoá khiếu nại',
+                description: res?.message || 'Đã có lỗi xảy ra.',
+            });
+        }
+    };
 
     return (
         <>
@@ -87,9 +113,9 @@ const TableRequest = () => {
                     const res = await getSupportRequestsAPI(query);
                     if (res.data) {
                         setMeta({
-                            current: params.current,
-                            pageSize: params.pageSize,
-                            total: res.data.total,
+                            current: params.current ?? 1,
+                            pageSize: params.pageSize ?? 5,
+                            total: res.data.total ?? 0,
                         });
                     }
                     return {
