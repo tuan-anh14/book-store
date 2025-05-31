@@ -9,6 +9,8 @@ import {
     LockOutlined,
     MailOutlined,
     PhoneOutlined,
+    GoogleCircleFilled,
+    FacebookFilled,
 } from '@ant-design/icons';
 
 type FieldType = {
@@ -115,10 +117,10 @@ const RegisterPage = () => {
                             <div className="other-login">
                                 <Divider>Hoặc đăng ký với</Divider>
                                 <Space>
-                                    <Button type="default" icon={<UserOutlined />} block>
+                                    <Button type="default" icon={<GoogleCircleFilled style={{ color: '#DB4437', fontSize: '24px' }} />} block>
                                         Google
                                     </Button>
-                                    <Button type="default" icon={<UserOutlined />} block>
+                                    <Button type="default" icon={<FacebookFilled style={{ color: '#4267B2', fontSize: '24px' }} />} block>
                                         Facebook
                                     </Button>
                                 </Space>

@@ -10,6 +10,8 @@ import {
     LockOutlined,
     UserOutlined,
     WeiboCircleOutlined,
+    GoogleCircleFilled,
+    FacebookFilled,
 } from '@ant-design/icons';
 import { setAlpha } from '@ant-design/pro-components';
 
@@ -111,8 +113,12 @@ const LoginPage = () => {
                             <div className="other-login">
                                 <Divider>Hoặc đăng nhập với</Divider>
                                 <Space>
-                                    <AlipayCircleOutlined style={iconStyles} />
-                                    <WeiboCircleOutlined style={iconStyles} />
+                                    <Button type="default" icon={<GoogleCircleFilled style={{ color: '#DB4437', fontSize: '24px' }} />} block>
+                                        Google
+                                    </Button>
+                                    <Button type="default" icon={<FacebookFilled style={{ color: '#4267B2', fontSize: '24px' }} />} block>
+                                        Facebook
+                                    </Button>
                                 </Space>
                             </div>
 
