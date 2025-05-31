@@ -2,11 +2,19 @@ import { Button, Card, Typography, Space, Row, Col } from 'antd';
 import { PhoneOutlined, MessageOutlined, MailOutlined, ShoppingCartOutlined, UserOutlined, CarOutlined, SafetyCertificateOutlined, GiftOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import './support.center.scss';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ChatBot from '../../chatbot/chatbot';
 
 const { Title, Text } = Typography;
 
 const SupportCenter = () => {
     const navigate = useNavigate();
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const handleChatClick = () => {
+        setIsChatOpen(true);
+    };
+
     return (
         <div className="support-center">
             <div className="support-center__header">
@@ -25,13 +33,9 @@ const SupportCenter = () => {
                     </Col>
                     <Col xs={24} sm={8}>
                         <Card className="support-center__contact-item">
-                            <img
-                                src="https://salt.tikicdn.com/ts/ta/4e/cd/92/b3593adaf274fc49a6ace088ff96471b.png"
-                                alt="chat"
-                                className="support-center__contact-image"
-                            />
-                            <Text className="support-center__contact-label">Gặp Trợ lý cá nhân</Text>
-                            <Button type="primary" className="support-center__contact-button">Chat ngay</Button>
+                            <MessageOutlined className="support-center__contact-icon" />
+                            <Text className="support-center__contact-label">Chat với BookStore</Text>
+                            <Button type="primary" className="support-center__contact-button" onClick={handleChatClick}>Chat ngay</Button>
                             <Text className="support-center__contact-description">8h-21h kể cả Thứ 7, CN</Text>
                         </Card>
                     </Col>
@@ -74,9 +78,9 @@ const SupportCenter = () => {
                     <Col xs={24} sm={8}>
                         <Card className="support-center__info-item">
                             <CarOutlined className="support-center__info-icon" />
-                            <Title level={5} className="support-center__info-title">Đơn hàng và vận chuyển</Title>
+                            <Title level={5} className="support-center__info-title">Vận chuyển và giao hàng</Title>
                             <Text className="support-center__info-description">
-                                Chính sách đổi trả, cách kích hoạt bảo hành, hướng dẫn đổi trả online ...
+                                Chính sách vận chuyển, thời gian giao hàng, phí vận chuyển...
                             </Text>
                             <Button type="link" className="support-center__info-cta">
                                 Xem chi tiết
@@ -86,7 +90,7 @@ const SupportCenter = () => {
                     <Col xs={24} sm={8}>
                         <Card className="support-center__info-item">
                             <SafetyCertificateOutlined className="support-center__info-icon" />
-                            <Title level={5} className="support-center__info-title">Đổi trả, bảo hành và hồi hoàn</Title>
+                            <Title level={5} className="support-center__info-title">Đổi trả và bảo hành</Title>
                             <Text className="support-center__info-description">
                                 Chính sách đổi trả, cách kích hoạt bảo hành, hướng dẫn đổi trả online ...
                             </Text>
@@ -98,9 +102,9 @@ const SupportCenter = () => {
                     <Col xs={24} sm={8}>
                         <Card className="support-center__info-item">
                             <GiftOutlined className="support-center__info-icon" />
-                            <Title level={5} className="support-center__info-title">Dịch vụ và chương trình</Title>
+                            <Title level={5} className="support-center__info-title">Chương trình khuyến mãi</Title>
                             <Text className="support-center__info-description">
-                                Chính sách của các dịch vụ và chương trình dành cho khách hàng
+                                Thông tin về các chương trình khuyến mãi và ưu đãi dành cho khách hàng
                             </Text>
                             <Button type="link" className="support-center__info-cta">
                                 Xem chi tiết
@@ -112,7 +116,7 @@ const SupportCenter = () => {
                             <InfoCircleOutlined className="support-center__info-icon" />
                             <Title level={5} className="support-center__info-title">Thông tin về BookStore</Title>
                             <Text className="support-center__info-description">
-                                Quy chế hoạt động và chính sách của sàn thương mại điện tử BookStore
+                                Quy chế hoạt động và chính sách của BookStore
                             </Text>
                             <Button type="link" className="support-center__info-cta">
                                 Xem chi tiết
@@ -121,6 +125,13 @@ const SupportCenter = () => {
                     </Col>
                 </Row>
             </div>
+
+            <ChatBot
+                apiKey={'YOUR_GEMINI_API_KEY'}
+                open={isChatOpen}
+                onClose={() => setIsChatOpen(false)}
+            />
+
         </div>
     );
 };

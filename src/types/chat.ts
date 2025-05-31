@@ -7,6 +7,8 @@ export interface Message {
 
 export interface ChatBotProps {
     apiKey: string;
+    open: boolean;
+    onClose: () => void;
 }
 
 export interface ChatMessageProps {

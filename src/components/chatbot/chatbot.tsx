@@ -7,26 +7,22 @@ import ChatHeader from './chat.header';
 import ChatMessage from './chat.message';
 import ChatInput from './chat.input';
 
-const ChatBot: React.FC<ChatBotProps> = ({ apiKey }) => {
+const ChatBot: React.FC<ChatBotProps> = ({ apiKey, open, onClose }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isMinimized, setIsMinimized] = useState(false);
     const [isMaximized, setIsMaximized] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const geminiService = useRef(new GeminiService(apiKey));
     const [hasShownWelcome, setHasShownWelcome] = useState(false);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
 
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
 
+    // Trigger welcome message when the chatbot is opened
     useEffect(() => {
-        if (isVisible && !hasShownWelcome) {
+        if (open && !hasShownWelcome) {
             const welcomeMessage: Message = {
                 id: uuidv4(),
                 content: 'Chào mừng bạn đến với BookStore! Tôi có thể giúp gì cho bạn?',
@@ -35,8 +31,19 @@ const ChatBot: React.FC<ChatBotProps> = ({ apiKey }) => {
             };
             setMessages([welcomeMessage]);
             setHasShownWelcome(true);
+        } else if (!open) {
+            // Reset state when closed
+            setMessages([]);
+            setHasShownWelcome(false);
+            setIsMinimized(false);
+            setIsMaximized(false);
+            setIsLoading(false);
         }
-    }, [isVisible, hasShownWelcome]);
+    }, [open, hasShownWelcome]); // Depend on open and hasShownWelcome
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     const handleSendMessage = async (content: string) => {
         const userMessage: Message = {
@@ -72,26 +79,28 @@ const ChatBot: React.FC<ChatBotProps> = ({ apiKey }) => {
         }
     };
 
+    // Call the external onClose prop when closing
     const handleClose = () => {
-        setIsVisible(false);
-        setMessages([]);
-        setHasShownWelcome(false);
+        onClose();
     };
 
     let containerClass = 'chatbot-container';
     if (isMaximized) containerClass += ' maximized';
     if (isMinimized) containerClass += ' minimized';
-    if (!isVisible) containerClass += ' hide';
+    // Control the 'hide' class based on the 'open' prop
+    if (!open) containerClass += ' hide';
 
     return (
         <>
-            <button className="assistant-button" onClick={() => setIsVisible(true)}>
+            {/* The component will be rendered conditionally by the parent */}
+            {/* We don't need an internal button to toggle visibility anymore */}
+            {/* <button className="assistant-button" onClick={() => setIsVisible(true)}>
                 <img src="https://salt.tikicdn.com/ts/ta/f8/a1/bf/95b4110dc1fba3d9b48dfc6c60be4a90.png" alt="Trợ lý" />
                 <span>Trợ lý</span>
-            </button>
+            </button> */}
             <div className={containerClass}>
                 <ChatHeader
-                    onClose={handleClose}
+                    onClose={handleClose} // Use the new handleClose that calls the prop
                     onMinimize={() => setIsMinimized(!isMinimized)}
                     onMaximize={() => setIsMaximized(!isMaximized)}
                 />
