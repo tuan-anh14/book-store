@@ -204,18 +204,42 @@ const AppHeader = (props: any) => {
                         </div>
                     </div>
                 </div>
-                {/* Dải link nhanh */}
-                <div className="header-quicklinks">
-                    <a href="#">điện gia dụng</a>
-                    <a href="#">xe cộ</a>
-                    <a href="#">mẹ & bé</a>
-                    <a href="#">khỏe đẹp</a>
-                    <a href="#">nhà cửa</a>
-                    <a href="#">sách</a>
-                    <a href="#">thể thao</a>
-                    <a href="#">định giá cổ phiếu</a>
-                    <a href="#">sách kinh tế</a>
-                    <a href="#">tâm lý học về tiền</a>
+                {/* Cam kết */}
+                <div style={{ backgroundColor: 'white' }} className="commitment-section">
+                    <div className="commitment-link">
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            <div style={{ color: '#003EA1' }} className="commitment-title">Cam kết</div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/96/76/a3/16324a16c76ee4f507d5777608dab831.png" alt="icon-0" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>100% hàng thật</div>
+                            </div>
+                            <div style={{ width: '1px', height: '20px', background: '#EBEBF0' }}></div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/11/09/ec/456a2a8c308c2de089a34bbfef1c757b.png" alt="icon-1" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>Freeship mọi đơn</div>
+                            </div>
+                            <div style={{ width: '1px', height: '20px', background: '#EBEBF0' }}></div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/0b/f2/19/c03ae8f46956eca66845fb9aaadeca1e.png" alt="icon-2" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>Hoàn 200% nếu hàng giả</div>
+                            </div>
+                            <div style={{ width: '1px', height: '20px', background: '#EBEBF0' }}></div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/3a/f4/7d/86ca29927e9b360dcec43dccb85d2061.png" alt="icon-3" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>30 ngày đổi trả</div>
+                            </div>
+                            <div style={{ width: '1px', height: '20px', background: '#EBEBF0' }}></div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/87/98/77/fc33e3d472fc4ce4bae8c835784b707a.png" alt="icon-4" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>Giao nhanh 2h</div>
+                            </div>
+                            <div style={{ width: '1px', height: '20px', background: '#EBEBF0' }}></div>
+                            <div style={{ display: 'flex', gap: '4px', paddingInline: '6px', alignItems: 'center' }}>
+                                <img src="https://salt.tikicdn.com/ts/upload/6a/81/06/0675ef5512c275a594d5ec1d58c37861.png" alt="icon-5" width="20" height="20" />
+                                <div style={{ color: '#27272A', fontSize: '12px', fontWeight: '500', whiteSpace: 'nowrap' }}>Giá siêu rẻ</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
             <Drawer

@@ -6,6 +6,7 @@ import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/service
 import type { UploadProps } from 'antd';
 import { MAX_UPLOAD_IMAGE_SIZE } from '@/services/helper';
 import { App } from 'antd';
+import './book.comment.scss';
 
 interface BookCommentsProps {
     bookId: string;
@@ -132,13 +133,13 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
         <>
             <Divider orientation="left" style={{ margin: '40px 0 24px 0', fontWeight: 600, fontSize: 18 }}>Khách hàng đánh giá</Divider>
             {/* Tổng quan đánh giá, bộ lọc, ảnh */}
-            <div style={{ background: '#fff', borderRadius: 8, padding: 24, marginBottom: 24 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', width: '100%', paddingBottom: 16 }}>
+            <div className="book-comment__overview">
+                <div className="book-comment__overview-container">
                     {/* Tổng quan */}
                     <div>
-                        <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 8 }}>Tổng quan</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                            <div style={{ fontSize: 40, fontWeight: 700, color: '#ffb400' }}>{
+                        <div className="book-comment__overview-title">Tổng quan</div>
+                        <div className="book-comment__overview-rating">
+                            <div className="book-comment__overview-rating-number">{
                                 comments.length ? (comments.reduce((sum, c) => sum + (c.star || 0), 0) / comments.length).toFixed(1) : '0.0'
                             }</div>
                             <Rate
@@ -147,17 +148,17 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 style={{ fontSize: 24, color: '#ffce3d' }}
                             />
                         </div>
-                        <div style={{ color: '#888', marginTop: 8 }}>({comments.length} đánh giá)</div>
+                        <div className="book-comment__overview-rating-count">({comments.length} đánh giá)</div>
                         {/* Phân bố sao */}
-                        <div style={{ marginTop: 16 }}>
+                        <div className="book-comment__overview-distribution">
                             {[5, 4, 3, 2, 1].map(star => {
                                 const count = comments.filter(c => c.star === star).length;
                                 const percent = comments.length ? Math.round((count / comments.length) * 100) : 0;
                                 return (
-                                    <div key={star} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+                                    <div key={star} className="book-comment__overview-distribution-item">
                                         <Rate disabled value={star} count={5} style={{ fontSize: 14, color: '#ffce3d' }} />
-                                        <div style={{ width: 120, height: 8, background: '#eee', borderRadius: 4, margin: '0 8px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${percent}%`, height: 8, background: '#ffb400' }} />
+                                        <div className="book-comment__overview-distribution-item-bar">
+                                            <div className="book-comment__overview-distribution-item-bar-fill" style={{ width: `${percent}%` }} />
                                         </div>
                                         <span style={{ minWidth: 24 }}>{count}</span>
                                     </div>
@@ -168,7 +169,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                     {/* Bộ lọc và ảnh */}
                     <div>
                         {/* Bộ lọc */}
-                        <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                        <div className="book-comment__filter">
                             {[
                                 { label: 'Mới nhất', value: 'latest' },
                                 { label: 'Có hình ảnh', value: 'hasImage' },
@@ -189,9 +190,9 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                             ))}
                         </div>
                         {/* Ảnh đánh giá */}
-                        <div style={{ marginBottom: 8 }}>
-                            <div style={{ fontWeight: 500, marginBottom: 4 }}>Tất cả hình ảnh ({comments.reduce((sum, c) => sum + (c.images?.length || 0), 0)})</div>
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <div className="book-comment__images">
+                            <div className="book-comment__images-title">Tất cả hình ảnh ({comments.reduce((sum, c) => sum + (c.images?.length || 0), 0)})</div>
+                            <div className="book-comment__images-container">
                                 {comments.flatMap(c => c.images || []).map((image, idx) => (
                                     <Image key={idx} src={image} width={60} height={60} style={{ objectFit: 'cover', borderRadius: 4 }} />
                                 ))}
@@ -202,12 +203,12 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                 </div>
             </div>
             {/* Danh sách bình luận + phân trang */}
-            <div style={{ background: '#fff', borderRadius: 8, padding: 24, marginBottom: 24 }}>
+            <div className="book-comment__list">
                 {filteredComments.length === 0 && (
-                    <div style={{ color: '#888', fontStyle: 'italic', textAlign: 'center', margin: '16px 0' }}>Chưa có bình luận</div>
+                    <div className="book-comment__list-empty">Chưa có bình luận</div>
                 )}
                 {filteredComments.slice((page - 1) * pageSize, page * pageSize).map(item => (
-                    <div key={item._id} style={{ display: 'flex', gap: 16, borderBottom: '1px solid #f2f2f2', padding: '16px 0' }}>
+                    <div key={item._id} className="book-comment__list-item">
                         <Avatar
                             src={
                                 item.user_id?.avatar
@@ -217,20 +218,26 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                             size={48}
                         />
                         <div style={{ flex: 1 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div className="book-comment__list-item-header">
                                 <b>{item.user_id?.fullName}</b>
                                 <Rate disabled value={item.star} style={{ fontSize: 14 }} />
-                                <span style={{ color: '#888', fontSize: 12 }}>{new Date(item.createdAt).toLocaleString()}</span>
+                                <span className="book-comment__list-item-time">{new Date(item.createdAt).toLocaleString()}</span>
+                                <div className="book-comment__verified-badge">
+                                    <span className="book-comment__verified-badge-icon">
+                                        <span className="book-comment__verified-badge-icon-check">✓</span>
+                                    </span>
+                                    Đã mua hàng
+                                </div>
                             </div>
-                            <div style={{ margin: '8px 0' }}>{item.content}</div>
+                            <div className="book-comment__list-item-content">{item.content}</div>
                             {item.images && item.images.length > 0 && (
-                                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                                <div className="book-comment__list-item-images">
                                     {item.images.map((image: string, idx: number) => (
                                         <Image key={idx} width={80} src={image} style={{ border: '1px solid #eee', borderRadius: 4 }} />
                                     ))}
                                 </div>
                             )}
-                            <div style={{ display: 'flex', gap: 16, marginTop: 8 }}>
+                            <div className="book-comment__list-item-actions">
                                 <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}>
                                     Hữu ích
                                 </Button>
@@ -243,7 +250,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                 ))}
                 {/* Phân trang */}
                 {filteredComments.length > pageSize && (
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+                    <div className="book-comment__pagination">
                         <Button disabled={page === 1} onClick={() => setPage(page - 1)} style={{ marginRight: 8 }}>Trước</Button>
                         {Array.from({ length: Math.ceil(filteredComments.length / pageSize) }, (_, i) => (
                             <Button
@@ -265,7 +272,6 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                         </Button>
                     </div>
                 )}
-
             </div>
             {/* Form gửi bình luận */}
             <Divider orientation="left" style={{ margin: '40px 0 24px 0', fontWeight: 600, fontSize: 18 }}>Viết bình luận</Divider>
@@ -274,7 +280,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                     form={form}
                     onFinish={handleCommentFinish}
                     layout="vertical"
-                    style={{ background: '#fff', padding: 16, borderRadius: 8, marginBottom: 24 }}
+                    className="book-comment__form"
                 >
                     <Form.Item
                         name="star"
@@ -290,7 +296,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                         label="Nội dung"
                         rules={[{ required: true, message: 'Vui lòng nhập nội dung!' }]}
                     >
-                        <div style={{ position: 'relative' }}>
+                        <div className="book-comment__form-textarea">
                             <Input.TextArea
                                 rows={3}
                                 value={content}
@@ -308,17 +314,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 }} />}
                                 trigger="click"
                             >
-                                <SmileOutlined
-                                    style={{
-                                        position: 'absolute',
-                                        right: 40,
-                                        bottom: 8,
-                                        fontSize: 22,
-                                        color: '#ffb400',
-                                        cursor: 'pointer',
-                                        opacity: 0.8
-                                    }}
-                                />
+                                <SmileOutlined className="book-comment__form-textarea-emoji" />
                             </Popover>
                             <Upload
                                 name="file"
@@ -327,29 +323,19 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 accept="image/*"
                                 beforeUpload={beforeUpload}
                             >
-                                <PictureOutlined
-                                    style={{
-                                        position: 'absolute',
-                                        right: 8,
-                                        bottom: 8,
-                                        fontSize: 22,
-                                        color: '#1890ff',
-                                        cursor: 'pointer',
-                                        opacity: 0.8
-                                    }}
-                                />
+                                <PictureOutlined className="book-comment__form-textarea-upload" />
                             </Upload>
                         </div>
                     </Form.Item>
                     {imageUrls.length > 0 && (
-                        <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <div className="book-comment__form-images">
                             {imageUrls.map((url, index) => (
-                                <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
+                                <div key={index} className="book-comment__form-images-item">
                                     <Image width={80} src={url} style={{ border: '1px solid #eee', borderRadius: 4 }} />
                                     <Button
                                         size="small"
                                         danger
-                                        style={{ position: 'absolute', top: 0, right: 0, padding: 0, width: 20, height: 20, borderRadius: '50%' }}
+                                        className="book-comment__form-images-item-remove"
                                         onClick={() => setImageUrls(prev => prev.filter((_, i) => i !== index))}
                                     >
                                         x
@@ -363,7 +349,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                     </Form.Item>
                 </Form>
             ) : (
-                <div style={{ color: 'red', marginBottom: 16, textAlign: 'center', background: '#fff', padding: 16, borderRadius: 8 }}>
+                <div className="book-comment__login-required">
                     Bạn cần đăng nhập để đánh giá
                 </div>
             )}
