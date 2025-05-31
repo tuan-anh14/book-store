@@ -188,6 +188,7 @@ createRoot(document.getElementById('root')!).render(
         <ConfigProvider locale={enUS}>
           <RouterProvider router={router} />
         </ConfigProvider>
+        <ChatBot apiKey={import.meta.env.VITE_GEMINI_API_KEY} />
       </AppProvider>
     </App>
   </StrictMode>,

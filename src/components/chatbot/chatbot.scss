@@ -190,3 +190,56 @@
     background-color: #f0f0f0;
     color: #000;
 }
+
+// Chat Input Styles
+.chat-input-container {
+    padding: 16px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #fff;
+}
+
+.chat-input-form {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.chat-input-textarea {
+    flex: 1;
+    min-height: 40px;
+    max-height: 120px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.4;
+    outline: none;
+
+    &:focus {
+        border-color: #1a73e8;
+    }
+}
+
+.chat-input-send-button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: #1a73e8;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #1557b0;
+    }
+
+    &:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+    }
+}

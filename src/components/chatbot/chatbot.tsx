@@ -100,14 +100,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ apiKey }) => {
                 {!isMinimized && (
                     <>
                         <div className="messages-container">
-                            {messages.length === 0 && (
-                                <div className="welcome-message">
-                                    <img
-                                        src="https://salt.tikicdn.com/ts/tikimsp/9c/a5/89/bd9f768fd2b4b6037159e7d8fa5595f0.png"
-                                        alt="Welcome"
-                                    />
-                                </div>
-                            )}
+                            {messages.length === 0}
                             {messages.map(message => (
                                 <ChatMessage key={message.id} message={message} />
                             ))}
