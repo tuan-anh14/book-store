@@ -23,7 +23,9 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
     const [page, setPage] = useState<number>(1);
     const pageSize = 5;
     const [content, setContent] = useState('');
+    const [showSharePopup, setShowSharePopup] = useState(false);
     const { notification } = App.useApp();
+    const [helpfulComments, setHelpfulComments] = useState<{ [key: string]: boolean }>({});
 
     const filteredComments = (comments || []).filter(c => {
         if (filter === 'latest') return true;
@@ -128,6 +130,43 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
         });
     };
 
+    const handleCopyLink = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            message.success('Đã sao chép link!');
+        });
+    };
+
+    const handleShare = (type: string) => {
+        const url = window.location.href;
+        let shareUrl = '';
+
+        switch (type) {
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                break;
+            case 'messenger':
+                shareUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=YOUR_APP_ID`;
+                break;
+            case 'telegram':
+                shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}`;
+                break;
+            case 'zalo':
+                shareUrl = `https://zalo.me/share?u=${encodeURIComponent(url)}`;
+                break;
+        }
+
+        if (shareUrl) {
+            window.open(shareUrl, '_blank');
+        }
+    };
+
+    const handleHelpfulClick = (commentId: string) => {
+        setHelpfulComments(prev => ({
+            ...prev,
+            [commentId]: !prev[commentId]
+        }));
+    };
 
     return (
         <>
@@ -238,10 +277,19 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                                 </div>
                             )}
                             <div className="book-comment__list-item-actions">
-                                <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}>
+                                <Button
+                                    size="small"
+                                    icon={<img src="https://salt.tikicdn.com/ts/upload/10/9f/8b/54e5f6b084fb9e3445036b4646bc48b5.png" width={20} />}
+                                    onClick={() => handleHelpfulClick(item._id)}
+                                    type={helpfulComments[item._id] ? 'primary' : 'default'}
+                                >
                                     Hữu ích
                                 </Button>
-                                <Button size="small" icon={<img src="https://salt.tikicdn.com/ts/upload/3f/fa/d4/7057dfb58b682b1b0a2b9683228863ee.png" width={20} />}>
+                                <Button
+                                    size="small"
+                                    icon={<img src="https://salt.tikicdn.com/ts/upload/3f/fa/d4/7057dfb58b682b1b0a2b9683228863ee.png" width={20} />}
+                                    onClick={() => setShowSharePopup(true)}
+                                >
                                     Chia sẻ
                                 </Button>
                             </div>
@@ -351,6 +399,58 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
             ) : (
                 <div className="book-comment__login-required">
                     Bạn cần đăng nhập để đánh giá
+                </div>
+            )}
+
+            {/* Share Popup */}
+            {showSharePopup && (
+                <div className="book-comment__share-popup" onClick={() => setShowSharePopup(false)}>
+                    <div className="book-comment__share-popup-content" onClick={e => e.stopPropagation()}>
+                        <div className="book-comment__share-popup-content-header">
+                            <div className="book-comment__share-popup-content-header-title">
+                                Chia sẻ với bạn bè!
+                            </div>
+                            <img
+                                src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/close-black.svg"
+                                className="book-comment__share-popup-content-header-close"
+                                onClick={() => setShowSharePopup(false)}
+                                alt="close"
+                            />
+                        </div>
+                        <div className="book-comment__share-popup-content-copy">
+                            <span className="book-comment__share-popup-content-copy-url">
+                                {window.location.href}
+                            </span>
+                            <button
+                                className="book-comment__share-popup-content-copy-button"
+                                onClick={handleCopyLink}
+                            >
+                                <img
+                                    src="https://salt.tikicdn.com/cache/w500/ts/brickv2og/82/9a/44/c6f38efd1336d95be366e5dfbb600f23.png"
+                                    alt="copy"
+                                />
+                                <span>Sao chép</span>
+                            </button>
+                        </div>
+                        <ul className="book-comment__share-popup-content-social">
+                            <li className="book-comment__share-popup-content-social-item" onClick={() => handleShare('facebook')}>
+                                <img src="https://salt.tikicdn.com/cache/w100/ts/upload/7b/06/71/32738d3827021cc973aac49d53945160.png" alt="facebook" />
+                                <span>FaceBook</span>
+                            </li>
+                            <li className="book-comment__share-popup-content-social-item" onClick={() => handleShare('messenger')}>
+                                <img src="https://salt.tikicdn.com/cache/w100/ts/upload/e6/fb/b4/31e2d7b0fed5775c999dfb5e5bc0ab38.png" alt="messenger" />
+                                <span>Messenger</span>
+                            </li>
+                            <li className="book-comment__share-popup-content-social-item" onClick={() => handleShare('telegram')}>
+                                <img src="https://salt.tikicdn.com/cache/w100/ts/upload/36/98/59/a3e7abb1fa23676ab93cc15cae5e1b8a.png" alt="telegram" />
+                                <span>Telegram</span>
+                            </li>
+                            <li className="book-comment__share-popup-content-social-item" onClick={() => handleShare('zalo')}>
+                                <img src="https://salt.tikicdn.com/cache/w100/ts/upload/cc/fd/31/da8a5e0142380cda13b363dfb70eafef.png" alt="zalo" />
+                                <span>Zalo</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             )}
         </>
