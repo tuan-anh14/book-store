@@ -320,3 +320,17 @@ export const forgotPasswordAPI = (email: string) => {
   const urlBackend = "/api/v1/auth/forgot-password";
   return axios.post<IBackendRes<IRegister>>(urlBackend, { email });
 };
+
+// Gửi khiếu nại
+export const createSupportRequestAPI = (data: {
+  mainIssue: string;
+  detailIssue?: string;
+  email: string;
+  phone: string;
+  order_number?: string;
+  subject: string;
+  description: string;
+  file_list?: string[];
+}) => {
+  return axios.post('/api/v1/support-request', data);
+};
