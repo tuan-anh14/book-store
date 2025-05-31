@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { App, Divider, Drawer, Space, Table, Tag } from 'antd';
+import { App, Divider, Drawer, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import dayjs from "dayjs";
 import { FORMATE_DATE_VN } from "@/services/helper";
@@ -35,7 +35,7 @@ const HistoryPage = () => {
             title: 'Trạng thái',
             render: (_item, _record, _index) => (
                 <Tag color={"green"}>
-                    Thành công
+                    PENDING
                 </Tag>
             ),
         },

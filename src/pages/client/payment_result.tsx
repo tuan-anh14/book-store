@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, Result, Button, App } from 'antd';
 import { SmileOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -73,16 +73,19 @@ function PaymentResult() {
 
                 {paymentStatus === 'success' && (
                     <Result
-                        icon={<SmileOutlined style={{ color: '#52c41a', fontSize: 64 }} />}
                         status="success"
-                        title="Thanh toán thành công!"
-                        subTitle="Cảm ơn bạn đã mua hàng. Đơn hàng của bạn sẽ được xử lý sớm nhất."
+                        title="Đặt hàng thành công"
+                        subTitle="Hệ thống đã ghi nhận thông tin đơn hàng của bạn."
                         extra={[
-                            <Button type="primary" key="home" onClick={() => navigate('/')}>
-                                Về trang chủ
+                            <Button key="home">
+                                <Link to="/" type="primary">
+                                    Trang Chủ
+                                </Link>
                             </Button>,
-                            <Button key="order" onClick={() => navigate('/history')}>
-                                Xem lịch sử đơn hàng
+                            <Button key="history">
+                                <Link to="/history" type="primary">
+                                    Lịch sử mua hàng
+                                </Link>
                             </Button>,
                         ]}
                     />

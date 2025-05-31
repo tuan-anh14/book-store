@@ -38,6 +38,7 @@ const Payment = (props: IProps) => {
             form.setFieldsValue({
                 fullName: user.fullName,
                 phone: user.phone,
+                address: user.address || '',
                 method: "COD",
             });
         }
@@ -192,7 +193,7 @@ const Payment = (props: IProps) => {
                                 </Form.Item>
 
                                 <Form.Item<FieldType> label="Địa chỉ" name="address" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
-                                    <TextArea rows={4} />
+                                    <TextArea rows={4} placeholder="Nhập địa chỉ giao hàng" />
                                 </Form.Item>
 
                                 <div className='calculate'>
