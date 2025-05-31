@@ -71,7 +71,7 @@ const TableRequest = () => {
                     <Popconfirm
                         placement="leftTop"
                         title={"Xác nhận xóa khiếu nại"}
-                        description={"Bạn có chắc chắn muốn xóa khiếu nại này ?"}
+                        description={"Bạn có chắc chắn muốn xóa khiếu nại này? Hành động này không thể hoàn tác."}
                         onConfirm={() => handleDeleteRequest(entity._id)}
                         okText="Xác nhận"
                         cancelText="Hủy"

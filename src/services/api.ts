@@ -342,3 +342,11 @@ export const getSupportRequestsAPI = (query: string) => {
 export const deleteSupportRequestAPI = (_id: string) => {
   return axios.delete(`/api/v1/support-request/${_id}`);
 };
+
+export const updateSupportRequestAPI = async (id: string, data: FormData) => {
+  return await axios.patch(`/api/v1/support-request/${id}`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
