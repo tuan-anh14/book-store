@@ -83,7 +83,11 @@ const LayoutAdmin = () => {
             key: 'comment',
             icon: <CommentOutlined />
         },
-
+        {
+            label: <Link to='/admin/request'>Manage Requests</Link>,
+            key: 'request',
+            icon: <ExceptionOutlined />
+        },
     ];
 
     const itemsDropdown = [

@@ -32,6 +32,7 @@ import ChatBot from './components/chatbot/chatbot';
 import ManageCommentPage from './pages/admin/manage.comment';
 import SupportCenter from './components/client/support/support.center';
 import SupportRequest from './components/client/support/support.request';
+import ManageRequestPage from 'pages/admin/manage.request';
 
 const router = createBrowserRouter([
   {
@@ -133,6 +134,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ManageCategoryPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "request",
+        element: (
+          <ProtectedRoute>
+            <ManageRequestPage />
           </ProtectedRoute>
         )
       },

@@ -334,3 +334,7 @@ export const createSupportRequestAPI = (data: {
 }) => {
   return axios.post('/api/v1/support-request', data);
 };
+
+export const getSupportRequestsAPI = (query: string) => {
+  return axios.get(`/api/v1/support-request?${query}`);
+};
