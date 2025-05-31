@@ -30,6 +30,7 @@ import CheckoutPage from './pages/client/checkout';
 import PaymentResultPage from './pages/client/payment_result';
 import ChatBot from './components/chatbot/chatbot';
 import ManageCommentPage from './pages/admin/manage.comment';
+import SupportCenter from './components/client/support/support.center';
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
             <HistoryPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "/support",
+        element: <SupportCenter />,
       }
     ]
   },

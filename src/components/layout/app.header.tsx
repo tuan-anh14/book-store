@@ -13,7 +13,8 @@ import {
     LogoutOutlined,
     SettingOutlined,
     HomeOutlined,
-    ShoppingCartOutlined
+    ShoppingCartOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons';
 import SearchResults from '../client/search/search.result';
 import logoBook from '@/assets/logo_book.jpg';
@@ -60,6 +61,15 @@ const AppHeader = (props: any) => {
                 </Link>
             ),
             key: 'history',
+        },
+        {
+            label: (
+                <Link to="/support" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <QuestionCircleOutlined />
+                    Trung tâm hỗ trợ
+                </Link>
+            ),
+            key: 'support',
         },
         {
             label: (
