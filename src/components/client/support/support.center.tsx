@@ -125,13 +125,6 @@ const SupportCenter = () => {
                     </Col>
                 </Row>
             </div>
-
-            <ChatBot
-                apiKey={'YOUR_GEMINI_API_KEY'}
-                open={isChatOpen}
-                onClose={() => setIsChatOpen(false)}
-            />
-
         </div>
     );
 };
