@@ -1,10 +1,12 @@
 import { Button, Card, Typography, Space, Row, Col } from 'antd';
 import { PhoneOutlined, MessageOutlined, MailOutlined, ShoppingCartOutlined, UserOutlined, CarOutlined, SafetyCertificateOutlined, GiftOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import './support.center.scss';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 const SupportCenter = () => {
+    const navigate = useNavigate();
     return (
         <div className="support-center">
             <div className="support-center__header">
@@ -37,7 +39,7 @@ const SupportCenter = () => {
                         <Card className="support-center__contact-item">
                             <MailOutlined className="support-center__contact-icon" />
                             <Text className="support-center__contact-label">Gửi yêu cầu hỗ trợ</Text>
-                            <Button type="primary" className="support-center__contact-button">Tạo đơn yêu cầu</Button>
+                            <Button type="primary" className="support-center__contact-button" onClick={() => navigate('/support/request')}>Tạo đơn yêu cầu</Button>
                             <Text className="support-center__contact-description">Hoặc email đến hotro@bookstore.vn</Text>
                         </Card>
                     </Col>

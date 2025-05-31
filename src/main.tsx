@@ -31,6 +31,7 @@ import PaymentResultPage from './pages/client/payment_result';
 import ChatBot from './components/chatbot/chatbot';
 import ManageCommentPage from './pages/admin/manage.comment';
 import SupportCenter from './components/client/support/support.center';
+import SupportRequest from './components/client/support/support.request';
 
 const router = createBrowserRouter([
   {
@@ -84,7 +85,11 @@ const router = createBrowserRouter([
       {
         path: "/support",
         element: <SupportCenter />,
-      }
+      },
+      {
+        path: "/support/request",
+        element: <SupportRequest />,
+      },
     ]
   },
   {
