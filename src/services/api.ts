@@ -350,3 +350,47 @@ export const updateSupportRequestAPI = async (id: string, data: FormData) => {
     },
   });
 };
+
+export const getRevenueTrendsAPI = (period: 'day' | 'week' | 'month' = 'day') => {
+  const urlBackend = `/api/v1/analytics/revenue/trends?period=${period}`;
+  return axios.get<IBackendRes<Array<{
+    time: string;
+    revenue: number;
+  }>>>(urlBackend);
+};
+
+export const getTopSellingProductsAPI = (timeframe: 'hour' | 'day' | 'week' | 'month' | 'all' = 'day') => {
+  const urlBackend = `/api/v1/analytics/products/top-selling?timeframe=${timeframe}`;
+  return axios.get<IBackendRes<Array<{
+    bookName: string;
+    totalQuantity: number;
+    totalRevenue: number;
+  }>>>(urlBackend);
+};
+
+export const getSalesPerformanceAPI = () => {
+  const urlBackend = '/api/v1/analytics/sales/performance';
+  return axios.get<IBackendRes<Array<{
+    daily: Array<{ revenue: number; orderCount: number }>;
+    weekly: Array<{ revenue: number; orderCount: number }>;
+    monthly: Array<{ revenue: number; orderCount: number }>;
+  }>>>(urlBackend);
+};
+
+export const getRealTimeRevenueAPI = () => {
+  const urlBackend = '/api/v1/analytics/revenue/realtime';
+  return axios.get<IBackendRes<{
+    currentHour: {
+      revenue: number;
+      orderCount: number;
+    };
+    currentDay: {
+      revenue: number;
+      orderCount: number;
+    };
+    currentMonth: {
+      revenue: number;
+      orderCount: number;
+    };
+  }>>(urlBackend);
+};

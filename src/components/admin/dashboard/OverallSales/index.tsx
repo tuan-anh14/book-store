@@ -53,7 +53,7 @@ const OverallSales = () => {
 
     return (
         <Card
-            title="Overall sales"
+            title="Doanh thu theo các phương thức thanh toán"
             bordered={false}
             extra={<QuestionCircleOutlined />}
             className="overall-sales"

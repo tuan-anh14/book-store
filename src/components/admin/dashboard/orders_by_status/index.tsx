@@ -51,7 +51,7 @@ const OrdersByStatus = () => {
 
     return (
         <Card
-            title="Orders by status"
+            title="Đơn hàng theo trạng thái"
             bordered={false}
             extra={<QuestionCircleOutlined />}
             className="orders-by-status"

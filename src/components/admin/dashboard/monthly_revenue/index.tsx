@@ -55,7 +55,7 @@ const MonthlyRevenue = () => {
 
     return (
         <Card
-            title="Monthly Revenue"
+            title="Doanh thu theo tháng"
             bordered={false}
             extra={<QuestionCircleOutlined />}
             className="monthly-revenue"

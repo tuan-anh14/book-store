@@ -72,7 +72,7 @@ const CustomerReviews = () => {
 
     return (
         <Card
-            title="Customer reviews"
+            title="Đánh giá khách hàng"
             bordered={false}
             extra={<Button type="text" icon={<QuestionCircleOutlined />} />}
         >

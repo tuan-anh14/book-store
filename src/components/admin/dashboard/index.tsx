@@ -1,3 +1,4 @@
+import React from 'react';
 import { getDashboardAPI } from "@/services/api";
 import { Card, Col, Row, Statistic } from "antd";
 import { useEffect, useState } from "react";
@@ -9,6 +10,10 @@ import OrdersByStatus from './orders_by_status';
 import './styles.scss';
 import MonthlyRevenue from "./monthly_revenue";
 import ExportReport from "./ExportReport";
+import RealTimeRevenue from './real_time_revenue';
+import RevenueTrends from './revenue_trends';
+import TopSellingProducts from './top_selling_products';
+import SalesPerformance from './sales_performance';
 
 const AdminDashboard = () => {
     const [dataDashboard, setDataDashboard] = useState({
@@ -61,6 +66,35 @@ const AdminDashboard = () => {
                     <OrderSummary />
                 </Col>
             </Row>
+
+            {/* Doanh thu thời gian thực */}
+            <Row gutter={[16, 16]} className="dashboard__row">
+                <Col span={24}>
+                    <RealTimeRevenue />
+                </Col>
+            </Row>
+
+            {/* Hiệu suất bán hàng */}
+            <Row gutter={[16, 16]} className="dashboard__row">
+                <Col span={24}>
+                    <SalesPerformance />
+                </Col>
+            </Row>
+
+            {/* Xu hướng doanh thu */}
+            <Row gutter={[16, 16]} className="dashboard__row">
+                <Col span={24}>
+                    <RevenueTrends />
+                </Col>
+            </Row>
+
+            {/* Sản phẩm bán chạy nhất */}
+            <Row gutter={[16, 16]} className="dashboard__row">
+                <Col span={24}>
+                    <TopSellingProducts />
+                </Col>
+            </Row>
+
             <Row gutter={[40, 40]} className="dashboard__row">
                 <Col span={12}>
                     <OverallSales />
@@ -83,7 +117,6 @@ const AdminDashboard = () => {
                 <Col span={12}>
                     <ExportReport />
                 </Col>
-
             </Row>
         </div>
     );
