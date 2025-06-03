@@ -84,7 +84,7 @@ const LayoutAdmin = () => {
             icon: <CommentOutlined />
         },
         {
-            label: <Link to='/admin/request'>Manage Requests</Link>,
+            label: <Link to='/admin/request'>Manage Complaints</Link>,
             key: 'request',
             icon: <ExceptionOutlined />
         },
