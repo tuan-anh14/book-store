@@ -30,6 +30,7 @@ const RevenueTrends: React.FC = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                //@ts-ignore
                 const response = await getRevenueTrendsAPI(period) as ApiResponse;
                 console.log("getRevenueTrendsAPI:", response);
                 if (response?.data) {

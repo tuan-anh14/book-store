@@ -25,6 +25,7 @@ const RealTimeRevenue: React.FC = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
+                //@ts-ignore
                 const response = await getRealTimeRevenueAPI() as ApiResponse;
                 console.log("getRealTimeRevenueAPI:", response);
                 if (response?.data) {
@@ -69,6 +70,7 @@ const RealTimeRevenue: React.FC = () => {
                             title="Doanh thu giờ hiện tại"
                             value={totalRevenue}
                             precision={0}
+                            //@ts-ignore
                             formatter={(value) => formatCurrency(value)}
                         />
                         <div style={{ marginTop: 8 }}>

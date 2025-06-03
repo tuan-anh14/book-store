@@ -58,6 +58,7 @@ const SalesPerformance: React.FC = () => {
                             title="Doanh thu ngày"
                             value={data?.daily?.[0]?.revenue || 0}
                             precision={0}
+                            //@ts-ignore
                             formatter={(value) => formatCurrency(value)}
                         />
                         <div style={{ marginTop: 8 }}>
@@ -71,6 +72,7 @@ const SalesPerformance: React.FC = () => {
                             title="Doanh thu tuần"
                             value={data?.weekly?.[0]?.revenue || 0}
                             precision={0}
+                            //@ts-ignore
                             formatter={(value) => formatCurrency(value)}
                         />
                         <div style={{ marginTop: 8 }}>
@@ -84,6 +86,7 @@ const SalesPerformance: React.FC = () => {
                             title="Doanh thu tháng"
                             value={data?.monthly?.[0]?.revenue || 0}
                             precision={0}
+                            //@ts-ignore
                             formatter={(value) => formatCurrency(value)}
                         />
                         <div style={{ marginTop: 8 }}>
