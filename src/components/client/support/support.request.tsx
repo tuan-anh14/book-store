@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Upload, Typography, message, App } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import './support.request.scss';
-import { createSupportRequestAPI, uploadFileAPI } from '@/services/api';
+import { createSupportRequestAPI, uploadFileAPI, getHistoryAPI } from '@/services/api';
+import { useCurrentApp } from '@/components/context/app.context';
+import { IHistory } from '@/types/history';
 
 const { Title } = Typography;
 
@@ -24,7 +26,27 @@ const SupportRequest = () => {
     const [loading, setLoading] = useState(false);
     const [imageUrls, setImageUrls] = useState<string[]>([]);
     const [loadingUpload, setLoadingUpload] = useState(false);
+    const [userOrders, setUserOrders] = useState<IHistory[]>([]);
     const { notification } = App.useApp();
+    const { user } = useCurrentApp();
+
+    useEffect(() => {
+        const fetchUserOrders = async () => {
+            if (user?._id) {
+                try {
+                    const res = await getHistoryAPI();
+                    if (res && res.data) {
+                        // @ts-ignore: Unreachable code error
+                        setUserOrders(res.data);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user orders:', error);
+                    notification.error({ message: 'Không thể lấy danh sách đơn hàng' });
+                }
+            }
+        };
+        fetchUserOrders();
+    }, [user]);
 
     const beforeUpload = (file: File) => {
         const isJpgOrPngOrWebp = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
@@ -109,7 +131,15 @@ const SupportRequest = () => {
                         <Input placeholder="Nhập số điện thoại" />
                     </Form.Item>
                     <Form.Item label="Mã đơn hàng" name="order_number" style={{ marginBottom: 8 }}>
-                        <Input.TextArea rows={1} placeholder="Bạn có thể nhập nhiều mã đơn hàng, cách nhau bằng dấu ','" />
+                        <Select
+                            placeholder="Chọn đơn hàng của bạn"
+                            allowClear
+                            options={userOrders.map((order: any) => ({
+                                label: `Đơn hàng #${order._id.slice(-6)} - ${order.totalPrice.toLocaleString('vi-VN')}đ - ${new Date(order.createdAt).toLocaleDateString('vi-VN')}`,
+                                value: order._id
+                            }))}
+                            loading={loading}
+                        />
                     </Form.Item>
                     <Form.Item label="Tiêu đề" name="subject" style={{ marginBottom: 8 }} rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}>
                         <Input placeholder="Nhập tiêu đề" />
