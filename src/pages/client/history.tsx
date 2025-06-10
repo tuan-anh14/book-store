@@ -3,12 +3,18 @@ import { App, Divider, Drawer, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import dayjs from "dayjs";
 import { FORMATE_DATE_VN } from "@/services/helper";
-import { getHistoryAPI } from "@/services/api";
+import { getUserOrdersAPI } from "@/services/api";
 
+const ORDER_STATUS = {
+    PENDING: { value: 'PENDING', color: 'gold', label: 'Chờ xử lý' },
+    PROCESSING: { value: 'PROCESSING', color: 'blue', label: 'Đang xử lý' },
+    SHIPPED: { value: 'SHIPPED', color: 'cyan', label: 'Đã gửi hàng' },
+    DELIVERED: { value: 'DELIVERED', color: 'green', label: 'Đã giao hàng' },
+    CANCELLED: { value: 'CANCELLED', color: 'red', label: 'Đã hủy' }
+};
 
 const HistoryPage = () => {
-
-    const columns: TableProps<IHistory>['columns'] = [
+    const columns: TableProps<IOrderTable>['columns'] = [
         {
             title: 'STT',
             dataIndex: 'index',
@@ -18,7 +24,7 @@ const HistoryPage = () => {
         {
             title: 'Thời gian',
             dataIndex: 'createdAt',
-            render: (item, record, index) => {
+            render: (item) => {
                 return (
                     dayjs(item).format(FORMATE_DATE_VN)
                 )
@@ -27,17 +33,21 @@ const HistoryPage = () => {
         {
             title: 'Tổng số tiền',
             dataIndex: 'totalPrice',
-            render: (item, _record, _index) => {
+            render: (item) => {
                 return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item);
             }
         },
         {
             title: 'Trạng thái',
-            render: (_item, _record, _index) => (
-                <Tag color={"green"}>
-                    PENDING
-                </Tag>
-            ),
+            dataIndex: 'status',
+            render: (status) => {
+                const statusInfo = ORDER_STATUS[status as keyof typeof ORDER_STATUS] || ORDER_STATUS.PENDING;
+                return (
+                    <Tag color={statusInfo.color}>
+                        {statusInfo.label}
+                    </Tag>
+                );
+            }
         },
         {
             title: 'Chi tiết',
@@ -49,27 +59,28 @@ const HistoryPage = () => {
                 }} href="#">Xem chi tiết</a>
             ),
         },
-
     ];
 
-    const [dataHistory, setDataHistory] = useState<IHistory[]>([]);
+    const [dataOrders, setDataOrders] = useState<IOrderTable[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     const [openDetail, setOpenDetail] = useState<boolean>(false);
-    const [dataDetail, setDataDetail] = useState<IHistory | null>(null);
+    const [dataDetail, setDataDetail] = useState<IOrderTable | null>(null);
 
     const { notification } = App.useApp();
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const res = await getHistoryAPI();
-            if (res && res.data) {
-                setDataHistory(res.data);
-            } else {
+            try {
+                const res = await getUserOrdersAPI();
+                if (res?.data?.result) {
+                    setDataOrders(res.data.result);
+                }
+            } catch (error: any) {
                 notification.error({
                     message: 'Đã có lỗi xảy ra',
-                    description: res?.message,
+                    description: error.message,
                 });
             }
             setLoading(false);
@@ -78,15 +89,14 @@ const HistoryPage = () => {
         fetchData();
     }, []);
 
-
     return (
         <div style={{ margin: 50 }}>
-            <div style={{ fontSize: 20, fontWeight: 600 }}>Lịch sử mua hàng</div>
+            <div style={{ fontSize: 20, fontWeight: 600 }}>Lịch sử đơn hàng</div>
             <Divider />
             <Table
                 bordered
                 columns={columns}
-                dataSource={dataHistory}
+                dataSource={dataOrders}
                 rowKey="_id"
                 loading={loading}
             />
@@ -111,8 +121,8 @@ const HistoryPage = () => {
                         </ul>
                     );
                 })}
-            </Drawer >
-        </div >
+            </Drawer>
+        </div>
     );
 }
 

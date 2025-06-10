@@ -394,3 +394,12 @@ export const getRealTimeRevenueAPI = () => {
     };
   }>>(urlBackend);
 };
+
+export const updateOrderAPI = async (orderId: string, data: { status: string }) => {
+  return axios.patch(`/api/v1/order/${orderId}`, data);
+};
+
+export const getUserOrdersAPI = () => {
+  const urlBackend = `/api/v1/order/user`;
+  return axios.get<IBackendRes<{ result: IOrderTable[] }>>(urlBackend);
+}

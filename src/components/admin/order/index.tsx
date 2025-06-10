@@ -1,14 +1,23 @@
-import { getOrdersAPI } from "@/services/api";
+import { getOrdersAPI, updateOrderAPI } from "@/services/api";
 import { dateRangeValidate } from '@/services/helper';
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { ProTable } from "@ant-design/pro-components";
 import { useRef, useState } from "react";
+import { Select, message, Tag } from 'antd';
 
 type TSearch = {
     name: string;
     address: string;
     createdAt: string,
     createdAtRange: string,
+};
+
+const ORDER_STATUS = {
+    PENDING: { value: 'PENDING', color: 'gold', label: 'Chờ xử lý' },
+    PROCESSING: { value: 'PROCESSING', color: 'blue', label: 'Đang xử lý' },
+    SHIPPED: { value: 'SHIPPED', color: 'cyan', label: 'Đã gửi hàng' },
+    DELIVERED: { value: 'DELIVERED', color: 'green', label: 'Đã giao hàng' },
+    CANCELLED: { value: 'CANCELLED', color: 'red', label: 'Đã hủy' }
 };
 
 const TableOrder = () => {
@@ -19,6 +28,16 @@ const TableOrder = () => {
         pages: 0,
         total: 0,
     });
+
+    const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+        try {
+            await updateOrderAPI(orderId, { status: newStatus });
+            message.success('Cập nhật trạng thái thành công');
+            actionRef.current?.reload();
+        } catch (error) {
+            message.error('Có lỗi xảy ra khi cập nhật trạng thái');
+        }
+    };
 
     const columns: ProColumns<IOrderTable>[] = [
         {
@@ -49,6 +68,25 @@ const TableOrder = () => {
                     style: "currency",
                     currency: "VND",
                 }).format(record.totalPrice),
+        },
+        {
+            title: "Trạng thái",
+            dataIndex: "status",
+            render: (_, record) => (
+                <Select
+                    value={record.status}
+                    style={{ width: 150 }}
+                    onChange={(value) => handleUpdateStatus(record._id, value)}
+                    options={Object.values(ORDER_STATUS).map(status => ({
+                        value: status.value,
+                        label: <Tag color={status.color}>{status.label}</Tag>
+                    }))}
+                />
+            ),
+            renderText: (status) => {
+                const statusConfig = Object.values(ORDER_STATUS).find(s => s.value === status);
+                return statusConfig ? statusConfig.label : status;
+            }
         },
         {
             title: "Created At",
