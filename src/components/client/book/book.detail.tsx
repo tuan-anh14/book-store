@@ -94,36 +94,74 @@ const BookDetail = (props: IProps) => {
     };
 
     const handleChangeButton = (type: UserAction) => {
-        if (type == "MINUS") {
-            if (currentQuantity - 1 <= 0) return;
+        if (!currentBook) return;
+
+        if (type === "MINUS") {
+            if (currentQuantity - 1 <= 0) {
+                message.error("Số lượng tối thiểu là 1");
+                return;
+            }
             setCurrentQuantity(currentQuantity - 1);
         }
-        if (type == "PLUS" && currentBook) {
-            if (currentQuantity === +currentBook.quantity) return;
+        if (type === "PLUS") {
+            if (currentQuantity >= currentBook.quantity) {
+                message.error(`Chỉ còn ${currentBook.quantity} cuốn sách trong kho`);
+                return;
+            }
             setCurrentQuantity(currentQuantity + 1);
         }
     }
 
     const handleChangeInput = (value: string) => {
-        if (!isNaN(+value)) {
-            if (+value > 0 && currentBook && +value < +currentBook.quantity) {
-                setCurrentQuantity(+value);
+        if (!currentBook) return;
+
+        const quantity = +value;
+        if (!isNaN(quantity)) {
+            if (quantity <= 0) {
+                message.error("Số lượng tối thiểu là 1");
+                return;
             }
+            if (quantity > currentBook.quantity) {
+                message.error(`Chỉ còn ${currentBook.quantity} cuốn sách trong kho`);
+                return;
+            }
+            setCurrentQuantity(quantity);
         }
     };
 
     const handleAddToCart = () => {
-        //update localStorage
-        const cartStorage = localStorage.getItem("carts");
-        if (cartStorage && currentBook) {
-            //update
-            const carts = JSON.parse(cartStorage) as ICart[];
+        if (!currentBook) {
+            message.error("Không tìm thấy thông tin sách!");
+            return;
+        }
 
-            //check exist
-            let isExistIndex = carts.findIndex(c => c._id === currentBook?._id);
+        // Kiểm tra số lượng tồn kho
+        if (currentBook.quantity <= 0) {
+            message.error("Sách đã hết hàng!");
+            return;
+        }
+
+        // Kiểm tra số lượng trong giỏ hàng hiện tại
+        const cartStorage = localStorage.getItem("carts");
+        if (cartStorage) {
+            const carts = JSON.parse(cartStorage) as ICart[];
+            const existingItem = carts.find(c => c._id === currentBook._id);
+
+            if (existingItem) {
+                const totalQuantity = existingItem.quantity + currentQuantity;
+                if (totalQuantity > currentBook.quantity) {
+                    message.error(`Chỉ còn ${currentBook.quantity} cuốn sách trong kho. Bạn đã có ${existingItem.quantity} cuốn trong giỏ hàng.`);
+                    return;
+                }
+            } else if (currentQuantity > currentBook.quantity) {
+                message.error(`Chỉ còn ${currentBook.quantity} cuốn sách trong kho.`);
+                return;
+            }
+
+            //update
+            let isExistIndex = carts.findIndex(c => c._id === currentBook._id);
             if (isExistIndex > -1) {
-                carts[isExistIndex].quantity =
-                    carts[isExistIndex].quantity + currentQuantity;
+                carts[isExistIndex].quantity = carts[isExistIndex].quantity + currentQuantity;
             } else {
                 carts.push({
                     quantity: currentQuantity,
@@ -136,10 +174,15 @@ const BookDetail = (props: IProps) => {
             setCarts(carts);
         } else {
             //create
+            if (currentQuantity > currentBook.quantity) {
+                message.error(`Chỉ còn ${currentBook.quantity} cuốn sách trong kho.`);
+                return;
+            }
+
             const data = [{
-                _id: currentBook?._id!,
+                _id: currentBook._id,
                 quantity: currentQuantity,
-                detail: currentBook!
+                detail: currentBook
             }];
             localStorage.setItem("carts", JSON.stringify(data));
 
@@ -194,7 +237,7 @@ const BookDetail = (props: IProps) => {
         await createCommentAPI({
             ...values,
             book_id: currentBook?._id,
-            user_id: user.id,
+            user_id: user._id,
             image: imageUrl,
         });
         form.resetFields();
