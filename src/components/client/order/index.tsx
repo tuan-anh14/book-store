@@ -3,6 +3,7 @@ import { App, Button, Col, Divider, InputNumber, Row } from 'antd';
 import 'styles/order.scss';
 import { DeleteOutlined, DeleteTwoTone } from '@ant-design/icons';
 import { useCurrentApp } from '@/components/context/app.context';
+import { getImageUrl } from '@/services/helper';
 
 
 interface IProps {
@@ -82,7 +83,7 @@ const OrderDetail = (props: IProps) => {
                             return (
                                 <div className='order-book' key={`index-${index}`}>
                                     <div className='book-content'>
-                                        <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item?.detail.thumbnail}`} />
+                                        <img src={getImageUrl(item?.detail.thumbnail, 'book')} />
                                         <div className='title'>
                                             {item?.detail?.mainText}
                                         </div>

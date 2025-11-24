@@ -32,8 +32,8 @@ type FieldType = {
     price: number,
     category: string,
     quantity: number,
-    thumbnail: any,
-    slider: any,
+    thumbnail: UploadFile[],
+    slider: UploadFile[],
     description: string
 }
 
@@ -82,12 +82,13 @@ const CreateBook = (props: IProps) => {
         fetchCategory();
     }, []);
 
-    const onFinish: FormProps<any>['onFinish'] = async (values) => {
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
 
         const { mainText, author, price, quantity, category, description } = values;
-        const thumbnail = fileListThumbnail?.[0]?.name ?? "";
-        const slider = fileListSlider?.map((item) => item.name) ?? [];
+        // Use Cloudinary URLs instead of fileName
+        const thumbnail = fileListThumbnail?.[0]?.url ?? "";
+        const slider = fileListSlider?.map((item) => item.url ?? "").filter(url => url !== "") ?? [];
 
         const res = await createBookAPI(
             mainText,
@@ -167,16 +168,24 @@ const CreateBook = (props: IProps) => {
     };
 
     const handleUploadFile = async (options: RcCustomRequestOptions, type: 'thumbnail' | 'slider') => {
-        const { onSuccess } = options;
-        const file = options.file as UploadFile;
-        const res = await uploadFileAPI(file, "book");
+        const { onSuccess, file } = options;
+        const fileObj = file as File;
+        
+        if (!fileObj || !(fileObj instanceof File)) {
+            message.error('File không hợp lệ');
+            return;
+        }
+        
+        const res = await uploadFileAPI(fileObj, "book");
 
         if (res && res.data) {
-            const uploadedFile: any = {
-                uid: file.uid,
-                name: res.data.fileName,
+            // Use Cloudinary URL directly, store URL in name for database
+            // Note: uid will be set by Upload component in onChange handler
+            const uploadedFile: UploadFile = {
+                uid: `-${Date.now()}`,
+                name: res.data.url, // Store Cloudinary URL in name for database
                 status: 'done',
-                url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${res.data.fileName}`,
+                url: res.data.url, // Use Cloudinary URL for preview
             };
 
             if (type === "thumbnail") {
@@ -193,7 +202,7 @@ const CreateBook = (props: IProps) => {
         }
     }
 
-    const normFile = (e: any) => {
+    const normFile = (e: { fileList?: UploadFile[] } | UploadFile[]) => {
         if (Array.isArray(e)) {
             return e;
         }

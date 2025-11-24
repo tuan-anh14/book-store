@@ -4,17 +4,30 @@ import { SmileOutlined, PictureOutlined } from '@ant-design/icons';
 import EmojiPicker from 'emoji-picker-react';
 import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/services/api';
 import type { UploadProps } from 'antd';
-import { MAX_UPLOAD_IMAGE_SIZE } from '@/services/helper';
+import { MAX_UPLOAD_IMAGE_SIZE, getImageUrl } from '@/services/helper';
 import { App } from 'antd';
 import './book.comment.scss';
 
+interface CommentItem {
+    _id: string;
+    content: string;
+    star: number;
+    images?: string[];
+    user_id?: {
+        _id: string;
+        fullName: string;
+        avatar?: string;
+    };
+    createdAt: string;
+}
+
 interface BookCommentsProps {
     bookId: string;
-    user: any;
+    user: IUser | null;
 }
 
 const BookComments = ({ bookId, user }: BookCommentsProps) => {
-    const [comments, setComments] = useState<any[]>([]);
+    const [comments, setComments] = useState<CommentItem[]>([]);
     const [loadingComment, setLoadingComment] = useState(false);
     const [imageUrls, setImageUrls] = useState<string[]>([]);
     const [loadingUpload, setLoadingUpload] = useState(false);
@@ -29,7 +42,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
 
     const filteredComments = (comments || []).filter(c => {
         if (filter === 'latest') return true;
-        if (filter === 'hasImage' && c.image) return true;
+        if (filter === 'hasImage' && c.images && c.images.length > 0) return true;
         if (['5', '4', '3', '2', '1'].includes(filter)) return String(c.star) === filter;
         return false;
     });
@@ -63,17 +76,19 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
         setLoadingUpload(true);
         try {
             const res = await uploadFileAPI(file, 'comment');
-            if (res?.data?.fileName) {
-                const url = `${import.meta.env.VITE_BACKEND_URL}/images/comment/${res.data.fileName}`;
-                setImageUrls(prev => [...prev, url]);
+            const imageUrl = res?.data?.url;
+            if (imageUrl) {
+                // Use Cloudinary URL directly
+                setImageUrls(prev => [...prev, imageUrl]);
             }
         } catch (error) {
             message.error('Upload ảnh thất bại!');
+        } finally {
+            setLoadingUpload(false);
         }
-        setLoadingUpload(false);
     };
 
-    const handleCommentFinish = async (values: any) => {
+    const handleCommentFinish = async (values: { star: number }) => {
         if (!user) {
             message.error('Bạn cần đăng nhập để bình luận!');
             return;
@@ -87,7 +102,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
 
         setLoadingComment(true);
 
-        const user_id = user._id || user.id;
+        const user_id = user._id;
         const payload = {
             content: content.trim(),
             star,
@@ -251,7 +266,7 @@ const BookComments = ({ bookId, user }: BookCommentsProps) => {
                         <Avatar
                             src={
                                 item.user_id?.avatar
-                                    ? `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${item.user_id.avatar}`
+                                    ? getImageUrl(item.user_id.avatar, 'avatar')
                                     : undefined
                             }
                             size={48}

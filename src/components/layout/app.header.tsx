@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
 import { logoutAPI } from '@/services/api';
 import ManageAccount from '../client/account';
+import { getImageUrl } from '@/services/helper';
 import {
     EnvironmentOutlined,
     UserOutlined,
@@ -99,7 +100,7 @@ const AppHeader = (props: any) => {
 
     console.log(user)
 
-    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+    const urlAvatar = getImageUrl(user?.avatar, 'avatar');
 
     const contentPopover = () => {
         return (
@@ -108,7 +109,7 @@ const AppHeader = (props: any) => {
                     {carts?.map((book, index) => {
                         return (
                             <div className='book' key={`book-${index}`}>
-                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
+                                <img src={getImageUrl(book?.detail?.thumbnail, 'book')} />
                                 <div>{book?.detail?.mainText}</div>
                                 <div className='price'>
                                     {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.detail?.price ?? 0)}

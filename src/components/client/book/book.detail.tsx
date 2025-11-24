@@ -12,6 +12,7 @@ import { useCurrentApp } from '@/components/context/app.context';
 import { getCommentsByBookAPI, createCommentAPI, uploadFileAPI } from '@/services/api';
 import EmojiPicker from 'emoji-picker-react';
 import BookComments from './book.comment';
+import { getImageUrl } from '@/services/helper';
 
 interface IProps {
     currentBook: IBookTable | null;
@@ -63,18 +64,20 @@ const BookDetail = (props: IProps) => {
                 thumbnailClass: string;
             }[] = [];
             if (currentBook.thumbnail) {
+                const thumbnailUrl = getImageUrl(currentBook.thumbnail, 'book');
                 images.push({
-                    original: `${import.meta.env.VITE_BACKEND_URL}/images/book/${currentBook.thumbnail}`,
-                    thumbnail: `${import.meta.env.VITE_BACKEND_URL}/images/book/${currentBook.thumbnail}`,
+                    original: thumbnailUrl,
+                    thumbnail: thumbnailUrl,
                     originalClass: "original-image",
                     thumbnailClass: "thumbnail-image"
                 });
             }
             if (currentBook.slider) {
                 currentBook.slider.forEach((slide: string) => {
+                    const slideUrl = getImageUrl(slide, 'book');
                     images.push({
-                        original: `${import.meta.env.VITE_BACKEND_URL}/images/book/${slide}`,
-                        thumbnail: `${import.meta.env.VITE_BACKEND_URL}/images/book/${slide}`,
+                        original: slideUrl,
+                        thumbnail: slideUrl,
                         originalClass: "original-image",
                         thumbnailClass: "thumbnail-image"
                     });

@@ -12,3 +12,29 @@ export const dateRangeValidate = (dateRange: any) => {
 
   return [startDate, endDate];
 };
+
+/**
+ * Check if a string is a Cloudinary URL
+ */
+export const isCloudinaryUrl = (url: string): boolean => {
+  if (!url) return false;
+  return url.startsWith('http://') || url.startsWith('https://');
+};
+
+/**
+ * Get image URL - handles both Cloudinary URLs and local paths
+ * @param imagePath - Can be a Cloudinary URL or a local filename
+ * @param folderType - Folder type for local paths (e.g., 'book', 'avatar', 'comment')
+ * @returns Full URL to the image
+ */
+export const getImageUrl = (imagePath: string | undefined, folderType: string = 'book'): string => {
+  if (!imagePath) return '';
+  
+  // If it's already a full URL (Cloudinary), return as is
+  if (isCloudinaryUrl(imagePath)) {
+    return imagePath;
+  }
+  
+  // Otherwise, construct local URL (for backward compatibility with old data)
+  return `${import.meta.env.VITE_BACKEND_URL}/images/${folderType}/${imagePath}`;
+};

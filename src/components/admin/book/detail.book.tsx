@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import dayjs from "dayjs";
 
-import { FORMATE_DATE } from "@/services/helper";
+import { FORMATE_DATE, getImageUrl } from "@/services/helper";
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -41,7 +41,7 @@ const DetailBook = (props: IProps) => {
                     uid: uuidv4(),
                     name: dataViewDetail.thumbnail,
                     status: 'done',
-                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataViewDetail.thumbnail}`,
+                    url: getImageUrl(dataViewDetail.thumbnail, 'book'),
                 };
             }
             if (dataViewDetail?.slider && dataViewDetail.slider.length > 0) {
@@ -50,7 +50,7 @@ const DetailBook = (props: IProps) => {
                         uid: uuidv4(),
                         name: item,
                         status: 'done',
-                        url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                        url: getImageUrl(item, 'book'),
                     });
                 });
             }

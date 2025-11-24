@@ -4,7 +4,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { updateBookAPI, getCategoryAPI, uploadFileAPI } from '@/services/api';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
-import { MAX_UPLOAD_IMAGE_SIZE } from '@/services/helper';
+import { MAX_UPLOAD_IMAGE_SIZE, getImageUrl } from '@/services/helper';
 import { UploadChangeParam } from 'antd/es/upload';
 import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
 
@@ -25,8 +25,8 @@ type FieldType = {
     price: number;
     category: string;
     description: string;
-    thumbnail: any;
-    slider: any;
+    thumbnail: UploadFile[];
+    slider: UploadFile[];
 };
 
 const UpdateBook = (props: IProps) => {
@@ -55,24 +55,28 @@ const UpdateBook = (props: IProps) => {
                 description: dataUpdate.description
             });
 
-            // Set thumbnail
+            // Set thumbnail - handle both Cloudinary URLs and local paths
             if (dataUpdate.thumbnail) {
+                const thumbnailUrl = getImageUrl(dataUpdate.thumbnail, 'book');
                 setFileListThumbnail([{
                     uid: '-1',
-                    name: dataUpdate.thumbnail,
+                    name: dataUpdate.thumbnail, // Keep original value (URL or filename)
                     status: 'done' as const,
-                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataUpdate.thumbnail}`
+                    url: thumbnailUrl
                 }]);
             }
 
-            // Set slider images
+            // Set slider images - handle both Cloudinary URLs and local paths
             if (dataUpdate.slider && dataUpdate.slider.length > 0) {
-                const sliderFiles = dataUpdate.slider.map((image, index) => ({
-                    uid: `-${index + 1}`,
-                    name: image,
-                    status: 'done' as const,
-                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${image}`
-                }));
+                const sliderFiles = dataUpdate.slider.map((image, index) => {
+                    const imageUrl = getImageUrl(image, 'book');
+                    return {
+                        uid: `-${index + 1}`,
+                        name: image, // Keep original value (URL or filename)
+                        status: 'done' as const,
+                        url: imageUrl
+                    };
+                });
                 setFileListSlider(sliderFiles);
             }
         }
@@ -139,16 +143,24 @@ const UpdateBook = (props: IProps) => {
     };
 
     const handleUploadFile = async (options: RcCustomRequestOptions, type: 'thumbnail' | 'slider') => {
-        const { onSuccess } = options;
-        const file = options.file as UploadFile;
-        const res = await uploadFileAPI(file, "book");
+        const { onSuccess, file } = options;
+        const fileObj = file as File;
+        
+        if (!fileObj || !(fileObj instanceof File)) {
+            message.error('File không hợp lệ');
+            return;
+        }
+        
+        const res = await uploadFileAPI(fileObj, "book");
 
         if (res && res.data) {
-            const uploadedFile: any = {
-                uid: file.uid,
-                name: res.data.fileName,
+            // Use Cloudinary URL directly, store URL in name for database
+            // Note: uid will be set by Upload component in onChange handler
+            const uploadedFile: UploadFile = {
+                uid: `-${Date.now()}`,
+                name: res.data.url, // Store Cloudinary URL in name for database
                 status: 'done',
-                url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${res.data.fileName}`,
+                url: res.data.url, // Use Cloudinary URL for preview
             };
 
             if (type === "thumbnail") {
@@ -167,8 +179,9 @@ const UpdateBook = (props: IProps) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { _id, mainText, author, price, category, description } = values;
-        const thumbnail = fileListThumbnail?.[0]?.name ?? "";
-        const slider = fileListSlider?.map((item) => item.name) ?? [];
+        // Use Cloudinary URLs instead of fileName
+        const thumbnail = fileListThumbnail?.[0]?.url ?? "";
+        const slider = fileListSlider?.map((item) => item.url ?? "").filter(url => url !== "") ?? [];
 
         setIsSubmit(true);
 

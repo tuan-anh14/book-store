@@ -5,8 +5,8 @@ import { App, Avatar, Button, Col, Form, Input, Row, Upload } from "antd";
 import { useEffect, useState } from "react";
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
-import type { UploadFile } from 'antd';
 import { FormProps } from "antd/lib";
+import { getImageUrl } from "@/services/helper";
 
 
 type FieldType = {
@@ -27,7 +27,8 @@ const UserInfo = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
 
-    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${userAvatar}`;
+    // Handle both Cloudinary URLs and local paths
+    const urlAvatar = getImageUrl(userAvatar, 'avatar');
 
 
     useEffect(() => {
@@ -44,12 +45,20 @@ const UserInfo = () => {
     }, [user, form]);
 
     const handleUploadFile = async (options: RcCustomRequestOptions) => {
-        const { onSuccess } = options;
-        const file = options.file as UploadFile;
-        const res = await uploadFileAPI(file, "avatar");
+        const { onSuccess, file } = options;
+        const fileObj = file as File;
+        
+        if (!fileObj || !(fileObj instanceof File)) {
+            message.error('File không hợp lệ');
+            return;
+        }
+        
+        const res = await uploadFileAPI(fileObj, "avatar");
 
         if (res && res.data) {
-            const newAvatar = res.data.fileName;
+            // Use Cloudinary URL or fileName for backward compatibility
+            // If backend stores full URL, use url; if it stores fileName, use fileName
+            const newAvatar = res.data.url || res.data.fileName;
             setUserAvatar(newAvatar);
 
             if (onSuccess) {

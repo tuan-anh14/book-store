@@ -16,6 +16,7 @@ import {
 import { Layout, Menu, Dropdown, Space, Avatar, Result, Button } from 'antd';
 import { Outlet } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '@/services/helper';
 import { useCurrentApp } from '../context/app.context';
 import type { MenuProps } from 'antd';
 import { logoutAPI } from '@/services/api';
@@ -105,7 +106,7 @@ const LayoutAdmin = () => {
 
     ];
 
-    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+    const urlAvatar = getImageUrl(user?.avatar, 'avatar');
 
     if (isAuthenticated == false) {
         return (

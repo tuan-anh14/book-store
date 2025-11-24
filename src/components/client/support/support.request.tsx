@@ -64,18 +64,27 @@ const SupportRequest = () => {
         setLoadingUpload(true);
         try {
             const res = await uploadFileAPI(file, 'support');
-            if (res?.data?.fileName) {
-                const url = `${import.meta.env.VITE_BACKEND_URL}/images/support/${res.data.fileName}`;
-                setImageUrls(prev => [...prev, url]);
+            const imageUrl = res?.data?.url;
+            if (imageUrl) {
+                // Use Cloudinary URL directly
+                setImageUrls(prev => [...prev, imageUrl]);
                 notification.success({ message: 'Upload ảnh thành công!' });
             }
         } catch {
             notification.error({ message: 'Upload ảnh thất bại!' });
+        } finally {
+            setLoadingUpload(false);
         }
-        setLoadingUpload(false);
     };
 
-    const handleSubmit = async (values: any) => {
+    const handleSubmit = async (values: {
+        email: string;
+        phone: string;
+        order_number?: string;
+        subject: string;
+        description: string;
+        detailIssue?: string;
+    }) => {
         setLoading(true);
         setTimeout(async () => {
             try {
@@ -134,7 +143,7 @@ const SupportRequest = () => {
                         <Select
                             placeholder="Chọn đơn hàng của bạn"
                             allowClear
-                            options={userOrders.map((order: any) => ({
+                            options={userOrders.map((order: IHistory) => ({
                                 label: `Đơn hàng #${order._id.slice(-6)} - ${order.totalPrice.toLocaleString('vi-VN')}đ - ${new Date(order.createdAt).toLocaleDateString('vi-VN')}`,
                                 value: order._id
                             }))}

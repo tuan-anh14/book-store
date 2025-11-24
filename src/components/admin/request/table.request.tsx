@@ -10,10 +10,26 @@ const TableRequest = () => {
     const actionRef = useRef<ActionType | null>(null);
     const [meta, setMeta] = useState({ current: 1, pageSize: 5, total: 0 });
     const [openViewDetail, setOpenViewDetail] = useState(false);
-    const [dataViewDetail, setDataViewDetail] = useState<any>(null);
+    interface SupportRequest {
+        _id: string;
+        email: string;
+        phone: string;
+        mainIssue: string;
+        detailIssue?: string;
+        order_number?: string;
+        subject: string;
+        description: string;
+        status: string;
+        createdAt?: string;
+        file_list?: string[];
+        adminReply?: string;
+        adminReplyImages?: string[];
+    }
+
+    const [dataViewDetail, setDataViewDetail] = useState<SupportRequest | null>(null);
     const { message, notification } = App.useApp();
 
-    const columns: ProColumns<any>[] = [
+    const columns: ProColumns<SupportRequest>[] = [
         {
             dataIndex: 'index',
             valueType: 'indexBorder',

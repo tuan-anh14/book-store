@@ -1,6 +1,6 @@
 import { Descriptions, Drawer, Divider, Image, Upload } from "antd";
 import dayjs from "dayjs";
-import { FORMATE_DATE } from "@/services/helper";
+import { FORMATE_DATE, getImageUrl } from "@/services/helper";
 import { useEffect, useState } from "react";
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,12 +30,11 @@ const DetailComment = (props: IProps) => {
     useEffect(() => {
         if (dataViewDetail?.images && dataViewDetail.images.length > 0) {
             const imgFiles: UploadFile[] = dataViewDetail.images.map((img) => {
-                const isFullUrl = img.startsWith('http');
                 return {
                     uid: uuidv4(),
                     name: img,
                     status: 'done',
-                    url: isFullUrl ? img : `${import.meta.env.VITE_BACKEND_URL}/images/comment/${img}`,
+                    url: getImageUrl(img, 'comment'),
                 };
             });
             setFileList(imgFiles);

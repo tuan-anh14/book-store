@@ -1,47 +1,115 @@
 import { Drawer, Descriptions, Divider, Tag, Image, Button, Form, Input, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { updateSupportRequestAPI } from '@/services/api';
-import type { UploadFile, RcFile } from 'antd/es/upload/interface';
+import { updateSupportRequestAPI, uploadFileAPI } from '@/services/api';
+import type { UploadFile } from 'antd/es/upload/interface';
+import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
 
-const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setDataViewDetail }: any) => {
+interface DetailRequestProps {
+    openViewDetail: boolean;
+    setOpenViewDetail: (open: boolean) => void;
+    dataViewDetail: {
+        _id: string;
+        email: string;
+        phone: string;
+        mainIssue: string;
+        detailIssue?: string;
+        order_number?: string;
+        subject: string;
+        description: string;
+        status: string;
+        createdAt?: string;
+        file_list?: string[];
+        adminReply?: string;
+        adminReplyImages?: string[];
+    } | null;
+    setDataViewDetail: (data: DetailRequestProps['dataViewDetail']) => void;
+}
+
+const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setDataViewDetail }: DetailRequestProps) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
     const onClose = () => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
         form.resetFields();
         setFileList([]);
+        setUploadedImageUrls([]);
     };
 
-    const handleSubmit = async (values: any) => {
+    const handleUploadFile = async (options: RcCustomRequestOptions) => {
+        const { onSuccess, onError, file, onProgress } = options;
+        const uploadFile = file as File;
+        
+        try {
+            // Show upload progress
+            if (onProgress) {
+                onProgress({ percent: 0 });
+            }
+
+            const res = await uploadFileAPI(uploadFile, 'admin');
+            
+            if (res?.data?.url) {
+                const cloudinaryUrl = res.data.url;
+                setUploadedImageUrls(prev => [...prev, cloudinaryUrl]);
+                
+                // Update fileList with Cloudinary URL
+                setFileList(prev => prev.map(f => 
+                    f.uid === (file as UploadFile).uid 
+                        ? { ...f, url: cloudinaryUrl, status: 'done', name: cloudinaryUrl }
+                        : f
+                ));
+
+                if (onProgress) {
+                    onProgress({ percent: 100 });
+                }
+                
+                if (onSuccess) {
+                    onSuccess('ok');
+                }
+            } else {
+                throw new Error('Upload failed: No URL returned');
+            }
+        } catch (error) {
+            message.error('Upload ảnh thất bại!');
+            setFileList(prev => prev.filter(f => f.uid !== (file as UploadFile).uid));
+            if (onError) {
+                onError(error instanceof Error ? error : new Error('Upload failed'));
+            }
+        }
+    };
+
+    const handleSubmit = async (values: { adminReply: string }) => {
+        if (!dataViewDetail) return;
+        
         try {
             setLoading(true);
+            
+            // Get all Cloudinary URLs from uploaded images
+            const imageUrls = uploadedImageUrls.filter(url => url);
+
+            // Create FormData with Cloudinary URLs
             const formData = new FormData();
             formData.append('adminReply', values.adminReply);
-            fileList.forEach((file) => {
-                if (file.originFileObj) {
-                    formData.append('adminReplyImages', file.originFileObj);
-                }
+            imageUrls.forEach((url) => {
+                formData.append('adminReplyImages', url);
             });
 
-            console.log('Nội dung phản hồi:', values.adminReply);
-            console.log('Số lượng ảnh đính kèm:', fileList.length);
-
             const res = await updateSupportRequestAPI(dataViewDetail._id, formData);
-            console.log('Response từ server:', res.data);
 
             if (res.data) {
                 message.success('Gửi phản hồi thành công');
                 setDataViewDetail({ ...dataViewDetail, ...res.data });
                 form.resetFields();
                 setFileList([]);
+                setUploadedImageUrls([]);
             }
-        } catch (error: any) {
-            console.error('Lỗi khi gửi phản hồi:', error);
-            message.error(error.message || 'Có lỗi xảy ra');
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
+            message.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -130,10 +198,22 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
                                     listType="picture"
                                     maxCount={5}
                                     fileList={fileList}
-                                    onChange={({ fileList }) => {
-                                        console.log('Danh sách file đã chọn:', fileList);
-                                        setFileList(fileList);
+                                    onChange={({ fileList: newFileList }) => {
+                                        setFileList(newFileList);
+                                        // Remove URLs for removed files
+                                        const currentUrls = newFileList
+                                            .map(f => f.url)
+                                            .filter((url): url is string => Boolean(url));
+                                        setUploadedImageUrls(currentUrls);
                                     }}
+                                    onRemove={(file) => {
+                                        setFileList(prev => prev.filter(f => f.uid !== file.uid));
+                                        if (file.url) {
+                                            setUploadedImageUrls(prev => prev.filter(url => url !== file.url));
+                                        }
+                                        return true;
+                                    }}
+                                    customRequest={handleUploadFile}
                                     beforeUpload={() => false}
                                 >
                                     <Button icon={<UploadOutlined />}>Chọn ảnh</Button>

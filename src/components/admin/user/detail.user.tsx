@@ -1,4 +1,4 @@
-import { FORMATE_DATE } from "@/services/helper";
+import { FORMATE_DATE, getImageUrl } from "@/services/helper";
 import { Avatar, Badge, Descriptions, Drawer } from "antd";
 import dayjs from "dayjs";
 
@@ -15,7 +15,7 @@ const DetailUser: React.FC<IProps> = ({ openViewDetail, setOpenViewDetail, dataV
         setDataViewDetail(null);
     };
 
-    const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${dataViewDetail?.avatar}`;
+    const avatarURL = getImageUrl(dataViewDetail?.avatar, 'avatar');
 
     return (
         <Drawer title="User Details" width={"50vw"} onClose={onClose} open={openViewDetail}>

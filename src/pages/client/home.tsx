@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Popup from '@/components/popup/popup';
 import popupImg from '@/assets/popup.jpg';
+import { getImageUrl } from '@/services/helper';
 
 import 'styles/home.scss';
 
@@ -358,7 +359,7 @@ const HomePage = () => {
                                                         className="column" key={`book-${index}`}>
                                                         <div className='wrapper'>
                                                             <div className='thumbnail'>
-                                                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`} alt={item.mainText} />
+                                                                <img src={getImageUrl(item.thumbnail, 'book')} alt={item.mainText} />
                                                             </div>
                                                             <div className='text' title={item.mainText}>
                                                                 {item.mainText}

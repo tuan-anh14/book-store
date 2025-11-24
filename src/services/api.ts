@@ -70,10 +70,26 @@ export const getCategoryAPI = () => {
   return axios.get<IBackendRes<ICategory[]>>(urlBackend);
 };
 
-export const uploadFileAPI = (file: any, folderType: string) => {
+// Old uploadFileAPI - using local storage (commented out)
+// export const uploadFileAPI = (file: any, folderType: string) => {
+//   const bodyFormData = new FormData();
+//   bodyFormData.append('fileUpload', file);
+//   return axios<IBackendRes<{ fileName: string }>>({
+//     method: 'post',
+//     url: '/api/v1/files/upload',
+//     data: bodyFormData,
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//       "folder_type": folderType
+//     },
+//   });
+// };
+
+// New uploadFileAPI - using Cloudinary
+export const uploadFileAPI = (file: File, folderType: string) => {
   const bodyFormData = new FormData();
   bodyFormData.append('fileUpload', file);
-  return axios<IBackendRes<{ fileName: string }>>({
+  return axios<IBackendRes<{ fileName: string; url: string; publicId: string }>>({
     method: 'post',
     url: '/api/v1/files/upload',
     data: bodyFormData,
