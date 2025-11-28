@@ -1,5 +1,5 @@
 import React from 'react';
-import './Popup.scss';
+import './popup.scss';
 
 interface PopupProps {
     isVisible: boolean;

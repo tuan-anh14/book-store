@@ -1,5 +1,5 @@
 import React from 'react';
-import './ChatBot.scss';
+import './chatbot.scss';
 import { ChatHeaderProps } from '../../types/chat';
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onClose, onMinimize, onMaximize }) => {
