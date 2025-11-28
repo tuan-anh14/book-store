@@ -3,7 +3,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { App, message, Modal, notification, Table, Upload } from 'antd';
 import Exceljs from 'exceljs';
-import { Buffer } from 'buffer';
+
 import { bulkCreateBookAPI } from '@/services/api';
 import templateFile from "assets/template/book.xlsx?url";
 
@@ -59,8 +59,7 @@ const ImportBook = (props: IProps) => {
                     try {
                         const workbook = new Exceljs.Workbook();
                         const arrayBuffer = await file.arrayBuffer();
-                        const buffer = Buffer.from(arrayBuffer);
-                        await workbook.xlsx.load(buffer);
+                        await workbook.xlsx.load(arrayBuffer);
 
                         let jsonData: IDataImport[] = [];
 
@@ -90,12 +89,13 @@ const ImportBook = (props: IProps) => {
                                 if (cell.value === null || cell.value === undefined) {
                                     value = '';
                                 } else if (typeof cell.value === 'object') {
-                                    if ('text' in cell.value) {
-                                        value = cell.value.text as string;
-                                    } else if ('richText' in cell.value) {
-                                        value = cell.value.richText.map((rt: any) => rt.text).join('');
-                                    } else if ('hyperlink' in cell.value) {
-                                        value = cell.value.hyperlink as string;
+                                    const cellValue = cell.value as any;
+                                    if ('text' in cellValue) {
+                                        value = cellValue.text as string;
+                                    } else if ('richText' in cellValue) {
+                                        value = cellValue.richText.map((rt: any) => rt.text).join('');
+                                    } else if ('hyperlink' in cellValue) {
+                                        value = cellValue.hyperlink as string;
                                     } else {
                                         try {
                                             value = cell.text || cell.value.toString();

@@ -3,7 +3,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { App, message, Modal, notification, Table, Upload } from 'antd';
 import Exceljs from 'exceljs';
-import { Buffer } from 'buffer';
+
 import { bulkCreateUserAPI } from '@/services/api';
 import templateFile from "assets/template/user.xlsx?url";
 
@@ -61,8 +61,7 @@ const ImportUser = (props: IProps) => {
                         // load file to buffer
                         const workbook = new Exceljs.Workbook();
                         const arrayBuffer = await file.arrayBuffer();
-                        const buffer = Buffer.from(arrayBuffer);
-                        await workbook.xlsx.load(buffer);
+                        await workbook.xlsx.load(arrayBuffer);
 
                         // convert file to json
                         let jsonData: IDataImport[] = [];
@@ -98,12 +97,13 @@ const ImportUser = (props: IProps) => {
                                     value = '';
                                 } else if (typeof cell.value === 'object') {
                                     // Đối với kiểu dữ liệu phức tạp như Rich Text hoặc đối tượng khác
-                                    if (cell.value.text) {
-                                        value = cell.value.text;
-                                    } else if (cell.value.richText) {
-                                        value = cell.value.richText.map(rt => rt.text).join('');
-                                    } else if (cell.value.hyperlink) {
-                                        value = cell.value.hyperlink;
+                                    const cellValue = cell.value as any;
+                                    if (cellValue.text) {
+                                        value = cellValue.text;
+                                    } else if (cellValue.richText) {
+                                        value = cellValue.richText.map((rt: any) => rt.text).join('');
+                                    } else if (cellValue.hyperlink) {
+                                        value = cellValue.hyperlink;
                                     } else {
                                         // Cố gắng chuyển đổi nếu có thể
                                         try {
@@ -135,7 +135,7 @@ const ImportUser = (props: IProps) => {
                             jsonData.push(userData);
                         });
                         setDataImport(jsonData);
-                    } catch (error) {
+                    } catch (error: any) {
                         message.error(`Lỗi khi đọc file: ${error.message}`);
                     }
                 }
