@@ -1,8 +1,8 @@
 import { Row, Col, Card } from 'antd';
 import MonthlyRevenue from '@/components/admin/dashboard/monthly_revenue';
-import OverallSales from '@/components/admin/dashboard/overallsales';
+import OverallSales from '@/components/admin/dashboard/OverallSales';
 import OrdersByStatus from '@/components/admin/dashboard/orders_by_status';
-import CustomerReviews from '@/components/admin/dashboard/customerreviews';
+import CustomerReviews from '@/components/admin/dashboard/CustomerReviews';
 import ExportReport from '@/components/admin/dashboard/ExportReport';
 import RealTimeRevenue from '@/components/admin/dashboard/real_time_revenue';
 import RevenueTrends from '@/components/admin/dashboard/revenue_trends';
