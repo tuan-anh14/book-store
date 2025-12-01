@@ -15,7 +15,8 @@ import {
     SettingOutlined,
     HomeOutlined,
     ShoppingCartOutlined,
-    QuestionCircleOutlined
+    QuestionCircleOutlined,
+    MenuOutlined
 } from '@ant-design/icons';
 import SearchResults from '../client/search/search.result';
 import logoBook from '@/assets/logo_book.jpg';
@@ -98,8 +99,6 @@ const AppHeader = (props: any) => {
         })
     }
 
-    console.log(user)
-
     const urlAvatar = getImageUrl(user?.avatar, 'avatar');
 
     const contentPopover = () => {
@@ -170,7 +169,7 @@ const AppHeader = (props: any) => {
                         <div className="header-shortcut-block">
                             <div className="shortcut-item" onClick={() => navigate('/')}>
                                 <HomeOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
-                                <span>Trang chủ</span>
+                                <span className='desktop-only'>Trang chủ</span>
                             </div>
                             <div className="shortcut-item">
                                 <Popover
@@ -189,7 +188,7 @@ const AppHeader = (props: any) => {
                                     </div>
                                 </Popover>
                             </div>
-                            <div className="shortcut-item">
+                            <div className="shortcut-item desktop-only">
                                 {!isAuthenticated ?
                                     <div className="account-shortcut" onClick={() => navigate('/login')}>
                                         <UserOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
@@ -204,19 +203,21 @@ const AppHeader = (props: any) => {
                                     </Dropdown>
                                 }
                             </div>
+                            <div className="shortcut-item mobile-only" onClick={() => setOpenDrawer(true)}>
+                                <MenuOutlined style={{ fontSize: '20px', color: '#1890ff' }} />
+                            </div>
                         </div>
-                        <div className="header-delivery-zone">
+                        <div className="header-delivery-zone desktop-only">
                             <EnvironmentOutlined style={{ color: '#1890ff', fontSize: 20, marginRight: 6 }} />
                             <span className="delivery-label">Giao đến:</span>
                             <span className="delivery-address">
                                 {user?.address ? <b>{user.address}</b> : <span style={{ color: '#888' }}>Chưa xác định</span>}
-                                {/* <span style={{ color: '#888' }}>Chưa xác định</span> */}
                             </span>
                         </div>
                     </div>
                 </div>
                 {/* Cam kết */}
-                <div style={{ backgroundColor: 'white' }} className="commitment-section">
+                <div style={{ backgroundColor: 'white' }} className="commitment-section desktop-only">
                     <div className="commitment-link">
                         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                             <div style={{ color: '#003EA1' }} className="commitment-title">Cam kết</div>
@@ -261,7 +262,13 @@ const AppHeader = (props: any) => {
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
                     <UserOutlined />
-                    <span>Quản lý tài khoản</span>
+                    <span onClick={() => setOpenManageAccount(true)} style={{ cursor: 'pointer' }}>Quản lý tài khoản</span>
+                </div>
+                <Divider />
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                    <HistoryOutlined />
+                    <Link to="/history" style={{ color: 'inherit' }}>Lịch sử mua hàng</Link>
                 </div>
                 <Divider />
 
