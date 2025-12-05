@@ -1,5 +1,5 @@
 import { FORMATE_DATE, getImageUrl } from "@/services/helper";
-import { Avatar, Badge, Descriptions, Drawer } from "antd";
+import { Avatar, Badge, Descriptions, Drawer, Grid } from "antd";
 import dayjs from "dayjs";
 
 interface IProps {
@@ -17,9 +17,17 @@ const DetailUser: React.FC<IProps> = ({ openViewDetail, setOpenViewDetail, dataV
 
     const avatarURL = getImageUrl(dataViewDetail?.avatar, 'avatar');
 
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
+
     return (
-        <Drawer title="User Details" width={"50vw"} onClose={onClose} open={openViewDetail}>
-            <Descriptions title="User Information" bordered column={2}>
+        <Drawer
+            title="User Details"
+            width={screens.md ? "50vw" : "100%"}
+            onClose={onClose}
+            open={openViewDetail}
+        >
+            <Descriptions title="User Information" bordered column={{ xs: 1, sm: 2, md: 2 }}>
                 <Descriptions.Item label="ID">{dataViewDetail?._id}</Descriptions.Item>
                 <Descriptions.Item label="Full Name">{dataViewDetail?.fullName}</Descriptions.Item>
                 <Descriptions.Item label="Email">{dataViewDetail?.email}</Descriptions.Item>

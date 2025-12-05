@@ -206,6 +206,18 @@ const TableUser = () => {
                     },
                 }}
                 headerTitle="Table User"
+                search={{
+                    labelWidth: 'auto',
+                    span: {
+                        xs: 24,
+                        sm: 12,
+                        md: 8,
+                        lg: 8,
+                        xl: 8,
+                        xxl: 6,
+                    },
+                }}
+                scroll={{ x: true }}
                 toolBarRender={() => [
                     <Button
                         icon={<ExportOutlined />}

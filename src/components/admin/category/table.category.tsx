@@ -146,16 +146,19 @@ const TableCategory = () => {
                     };
                 }}
                 rowKey="_id"
+                headerTitle="Table Category"
                 search={{
                     labelWidth: 'auto',
-                    span: 6,
+                    span: {
+                        xs: 24,
+                        sm: 12,
+                        md: 8,
+                        lg: 8,
+                        xl: 8,
+                        xxl: 6,
+                    },
                 }}
-                pagination={{
-                    showSizeChanger: true,
-                    defaultPageSize: 5,
-                    pageSizeOptions: ['5', '10', '20', '50']
-                }}
-                headerTitle="Table Category"
+                scroll={{ x: true }}
                 toolBarRender={() => [
                     <Button
                         key="button"

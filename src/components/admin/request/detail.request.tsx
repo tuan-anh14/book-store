@@ -1,4 +1,4 @@
-import { Drawer, Descriptions, Divider, Tag, Image, Button, Form, Input, Upload, message } from 'antd';
+import { Drawer, Descriptions, Divider, Tag, Image, Button, Form, Input, Upload, message, Grid } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { updateSupportRequestAPI, uploadFileAPI } from '@/services/api';
@@ -31,6 +31,8 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
     const [loading, setLoading] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
 
     const onClose = () => {
         setOpenViewDetail(false);
@@ -43,7 +45,7 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
     const handleUploadFile = async (options: RcCustomRequestOptions) => {
         const { onSuccess, onError, file, onProgress } = options;
         const uploadFile = file as File;
-        
+
         try {
             // Show upload progress
             if (onProgress) {
@@ -51,14 +53,14 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
             }
 
             const res = await uploadFileAPI(uploadFile, 'admin');
-            
+
             if (res?.data?.url) {
                 const cloudinaryUrl = res.data.url;
                 setUploadedImageUrls(prev => [...prev, cloudinaryUrl]);
-                
+
                 // Update fileList with Cloudinary URL
-                setFileList(prev => prev.map(f => 
-                    f.uid === (file as UploadFile).uid 
+                setFileList(prev => prev.map(f =>
+                    f.uid === (file as UploadFile).uid
                         ? { ...f, url: cloudinaryUrl, status: 'done', name: cloudinaryUrl }
                         : f
                 ));
@@ -66,7 +68,7 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
                 if (onProgress) {
                     onProgress({ percent: 100 });
                 }
-                
+
                 if (onSuccess) {
                     onSuccess('ok');
                 }
@@ -84,10 +86,10 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
 
     const handleSubmit = async (values: { adminReply: string }) => {
         if (!dataViewDetail) return;
-        
+
         try {
             setLoading(true);
-            
+
             // Get all Cloudinary URLs from uploaded images
             const imageUrls = uploadedImageUrls.filter(url => url);
 
@@ -118,7 +120,7 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
     return (
         <Drawer
             title="Chi tiết khiếu nại khách hàng"
-            width={600}
+            width={screens.md ? 600 : "100%"}
             onClose={onClose}
             open={openViewDetail}
             extra={
@@ -131,7 +133,7 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
         >
             {dataViewDetail && (
                 <>
-                    <Descriptions bordered column={1} size="small">
+                    <Descriptions bordered column={{ xs: 1, sm: 2 }} size="small">
                         <Descriptions.Item label="Email">{dataViewDetail.email}</Descriptions.Item>
                         <Descriptions.Item label="Số điện thoại">{dataViewDetail.phone}</Descriptions.Item>
                         <Descriptions.Item label="Vấn đề chính">{dataViewDetail.mainIssue}</Descriptions.Item>

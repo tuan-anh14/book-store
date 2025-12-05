@@ -183,6 +183,18 @@ const TableComment = () => {
                     showTotal: (total, range) => `${range[0]}-${range[1]} trên ${total} rows`,
                 }}
                 headerTitle="Table Comments"
+                search={{
+                    labelWidth: 'auto',
+                    span: {
+                        xs: 24,
+                        sm: 12,
+                        md: 8,
+                        lg: 8,
+                        xl: 8,
+                        xxl: 6,
+                    },
+                }}
+                scroll={{ x: true }}
             />
 
             <DetailComment

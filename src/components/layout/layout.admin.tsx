@@ -134,14 +134,16 @@ const LayoutAdmin = () => {
     return (
         <>
             <Layout
-                style={{ minHeight: '100vh' }}
                 className="layout-admin"
             >
                 <Sider
                     theme='light'
                     collapsible
                     collapsed={collapsed}
-                    onCollapse={(value) => setCollapsed(value)}>
+                    onCollapse={(value) => setCollapsed(value)}
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                >
                     <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
                         Admin
                     </div>
@@ -153,15 +155,7 @@ const LayoutAdmin = () => {
                     />
                 </Sider>
                 <Layout>
-                    <div className='admin-header' style={{
-                        height: "50px",
-                        borderBottom: "1px solid #ebebeb",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0 15px",
-
-                    }}>
+                    <div className='admin-header'>
                         <span>
                             {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                 className: 'trigger',
@@ -175,7 +169,7 @@ const LayoutAdmin = () => {
                             </Space>
                         </Dropdown>
                     </div>
-                    <Content style={{ padding: '15px' }}>
+                    <Content className='admin-content'>
                         <Outlet />
                     </Content>
                     <Footer style={{ padding: 0, textAlign: "center" }}>

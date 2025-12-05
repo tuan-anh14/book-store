@@ -1,4 +1,4 @@
-import { Badge, Descriptions, Divider, Drawer, Image, Upload } from "antd";
+import { Badge, Descriptions, Divider, Drawer, Image, Upload, Grid } from "antd";
 import { useEffect, useState } from "react";
 
 import type { GetProp, UploadFile, UploadProps } from 'antd';
@@ -88,18 +88,21 @@ const DetailBook = (props: IProps) => {
         setFileList(newFileList);
     };
 
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
+
     return (
         <>
             <Drawer
                 title="Chức năng xem chi tiết"
-                width="70vw"
+                width={screens.md ? "70vw" : "100%"}
                 onClose={onClose}
                 open={openViewDetail}
             >
                 <Descriptions
                     title="Thông tin Book"
                     bordered
-                    column={2}
+                    column={{ xs: 1, sm: 2, md: 2 }}
                 >
                     <Descriptions.Item label="Id">{dataViewDetail?._id}</Descriptions.Item>
                     <Descriptions.Item label="Tên sách">{dataViewDetail?.mainText}</Descriptions.Item>

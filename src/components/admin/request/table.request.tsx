@@ -149,6 +149,18 @@ const TableRequest = () => {
                     total: meta.total,
                 }}
                 headerTitle="Quản lý khiếu nại"
+                search={{
+                    labelWidth: 'auto',
+                    span: {
+                        xs: 24,
+                        sm: 12,
+                        md: 8,
+                        lg: 8,
+                        xl: 8,
+                        xxl: 6,
+                    },
+                }}
+                scroll={{ x: true }}
             />
             <DetailRequest
                 openViewDetail={openViewDetail}

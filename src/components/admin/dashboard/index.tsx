@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     return (
         <div className="dashboard">
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col span={6}>
+                <Col xs={24} sm={12} md={6}>
                     <Card title="Tổng Users" bordered={false} className="dashboard__card">
                         <Statistic
                             title="Tổng Users"
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12} md={6}>
                     <Card title="Tổng Đơn hàng" bordered={false} className="dashboard__card">
                         <Statistic
                             title="Tổng Đơn hàng"
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12} md={6}>
                     <Card title="Tổng Books" bordered={false} className="dashboard__card">
                         <Statistic
                             title="Tổng Books"
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
                         />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col xs={24} sm={12} md={6}>
                     <OrderSummary />
                 </Col>
             </Row>
@@ -96,25 +96,25 @@ const AdminDashboard = () => {
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col span={12}>
+                <Col xs={24} lg={12}>
                     <OverallSales />
                 </Col>
-                <Col span={12}>
+                <Col xs={24} lg={12}>
                     <OrdersByStatus />
                 </Col>
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col span={12}>
+                <Col xs={24} lg={12}>
                     <MonthlyRevenue />
                 </Col>
-                <Col span={12}>
+                <Col xs={24} lg={12}>
                     <CustomerReviews />
                 </Col>
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col span={12}>
+                <Col xs={24} lg={12}>
                     <ExportReport />
                 </Col>
             </Row>

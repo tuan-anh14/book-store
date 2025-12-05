@@ -1,4 +1,4 @@
-import { Descriptions, Drawer, Divider, Image, Upload } from "antd";
+import { Descriptions, Drawer, Divider, Image, Upload, Grid } from "antd";
 import dayjs from "dayjs";
 import { FORMATE_DATE, getImageUrl } from "@/services/helper";
 import { useEffect, useState } from "react";
@@ -43,6 +43,9 @@ const DetailComment = (props: IProps) => {
         }
     }, [dataViewDetail]);
 
+    const { useBreakpoint } = Grid;
+    const screens = useBreakpoint();
+
     const onClose = () => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
@@ -76,14 +79,14 @@ const DetailComment = (props: IProps) => {
         <>
             <Drawer
                 title="Chức năng xem chi tiết"
-                width="70vw"
+                width={screens.md ? "70vw" : "100%"}
                 onClose={onClose}
                 open={openViewDetail}
             >
                 <Descriptions
                     title="Thông tin Bình luận"
                     bordered
-                    column={2}
+                    column={{ xs: 1, sm: 2, md: 2 }}
                 >
                     <Descriptions.Item label="Id">{dataViewDetail?._id}</Descriptions.Item>
                     <Descriptions.Item label="Người dùng">{dataViewDetail?.user?.fullName}</Descriptions.Item>
