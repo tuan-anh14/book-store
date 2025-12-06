@@ -261,24 +261,45 @@ const AppHeader = (props: any) => {
                 open={openDrawer}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
-                    <UserOutlined />
-                    <span onClick={() => setOpenManageAccount(true)} style={{ cursor: 'pointer' }}>Quản lý tài khoản</span>
+                    <HomeOutlined />
+                    <Link to="/" onClick={() => setOpenDrawer(false)} style={{ color: 'inherit' }}>Trang chủ</Link>
                 </div>
                 <Divider />
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
-                    <HistoryOutlined />
-                    <Link to="/history" style={{ color: 'inherit' }}>Lịch sử mua hàng</Link>
-                </div>
-                <Divider />
+                {isAuthenticated ? (
+                    <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                            <UserOutlined />
+                            <span onClick={() => {
+                                setOpenManageAccount(true);
+                                setOpenDrawer(false);
+                            }} style={{ cursor: 'pointer' }}>Quản lý tài khoản</span>
+                        </div>
+                        <Divider />
 
-                <div
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0', cursor: 'pointer' }}
-                    onClick={() => handleLogout()}
-                >
-                    <LogoutOutlined />
-                    <span>Đăng xuất</span>
-                </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                            <HistoryOutlined />
+                            <Link to="/history" onClick={() => setOpenDrawer(false)} style={{ color: 'inherit' }}>Lịch sử mua hàng</Link>
+                        </div>
+                        <Divider />
+
+                        <div
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0', cursor: 'pointer' }}
+                            onClick={() => {
+                                handleLogout();
+                                setOpenDrawer(false);
+                            }}
+                        >
+                            <LogoutOutlined />
+                            <span>Đăng xuất</span>
+                        </div>
+                    </>
+                ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                        <UserOutlined />
+                        <Link to="/login" onClick={() => setOpenDrawer(false)} style={{ color: 'inherit' }}>Đăng nhập</Link>
+                    </div>
+                )}
                 <Divider />
             </Drawer>
 

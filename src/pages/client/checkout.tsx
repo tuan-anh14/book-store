@@ -86,14 +86,12 @@ function Checkout() {
     return (
         <div style={{ padding: '20px' }}>
             <h1>Thanh toán</h1>
-            <Row gutter={24}>
-                <Col span={14}>
+            <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={12} lg={14}>
                     <Card title="Thông tin nhận hàng">
                         <Form
                             form={form}
                             layout="vertical"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 16 }}
                         >
                             <Form.Item label="Họ và tên" name="fullName">
                                 <Input />
@@ -110,9 +108,14 @@ function Checkout() {
                     </Card>
                 </Col>
 
-                <Col span={10}>
+                <Col xs={24} sm={24} md={12} lg={10}>
                     <Card title="Thông tin sản phẩm">
-                        <Table pagination={false} dataSource={tableData} columns={columns} />
+                        <Table
+                            pagination={false}
+                            dataSource={tableData}
+                            columns={columns}
+                            scroll={{ x: 600 }}
+                        />
                         <h3 style={{ marginTop: '20px' }}>
                             Tổng tiền: {checkoutCarts.reduce((init, item) => init + (item.detail.price * item.quantity), 0).toLocaleString('vi-VN')} VNĐ
                         </h3>

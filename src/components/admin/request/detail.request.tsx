@@ -133,7 +133,7 @@ const DetailRequest = ({ openViewDetail, setOpenViewDetail, dataViewDetail, setD
         >
             {dataViewDetail && (
                 <>
-                    <Descriptions bordered column={{ xs: 1, sm: 2 }} size="small">
+                    <Descriptions bordered column={1} size="small">
                         <Descriptions.Item label="Email">{dataViewDetail.email}</Descriptions.Item>
                         <Descriptions.Item label="Số điện thoại">{dataViewDetail.phone}</Descriptions.Item>
                         <Descriptions.Item label="Vấn đề chính">{dataViewDetail.mainIssue}</Descriptions.Item>
