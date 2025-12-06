@@ -47,12 +47,12 @@ const UserInfo = () => {
     const handleUploadFile = async (options: RcCustomRequestOptions) => {
         const { onSuccess, file } = options;
         const fileObj = file as File;
-        
+
         if (!fileObj || !(fileObj instanceof File)) {
             message.error('File không hợp lệ');
             return;
         }
-        
+
         const res = await uploadFileAPI(fileObj, "avatar");
 
         if (res && res.data) {
@@ -88,9 +88,14 @@ const UserInfo = () => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         console.log("Form values:", values);
-        const { fullName, phone, _id, address } = values;
+        const { fullName, phone, address } = values;
+        const userId = user?._id; // Use _id from context, not form
+        if (!userId) {
+            notification.error({ message: 'Lỗi', description: 'Không tìm thấy ID người dùng' });
+            return;
+        }
         setIsSubmit(true);
-        const res = await updateUserInfoAPI(_id, userAvatar, fullName, phone, address);
+        const res = await updateUserInfoAPI(userId, userAvatar, fullName, phone, address);
 
         if (res && res.data) {
             //update react context
