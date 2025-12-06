@@ -144,14 +144,32 @@ const LayoutAdmin = () => {
                     breakpoint="lg"
                     collapsedWidth="0"
                 >
-                    <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
-                        Admin
+                    <div style={{ height: 32, margin: 16, textAlign: 'center', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>Admin</span>
+                        {/* Show close button only on mobile when not collapsed (logic can be handled via CSS or verify with media query hook, but simple close icon here works) */}
+                        {!collapsed && (
+                            <MenuFoldOutlined
+                                style={{ fontSize: '18px', cursor: 'pointer', display: 'none' }} // Hidden by default, show on mobile via CSS if needed, or just let user click menu item
+                                className="mobile-close-trigger"
+                                onClick={() => setCollapsed(true)}
+                            />
+                        )}
                     </div>
                     <Menu
                         defaultSelectedKeys={[activeMenu]}
                         mode="inline"
                         items={items}
-                        onClick={(e) => setActiveMenu(e.key)}
+                        onClick={(e) => {
+                            setActiveMenu(e.key);
+                            // Auto close on mobile logic could be improved with screen width check, 
+                            // but setting collapsed true here is safe if we only want it for mobile behavior, however it might annoy desktop users.
+                            // Better to rely on "trigger" for closing or ensure this only affects mobile.
+                            // For now, let's just allow the user to close via the normal trigger or add a specific close logic.
+                            // Actually, mostly users want sidebar to close after selection on mobile.
+                            if (window.innerWidth < 768) {
+                                setCollapsed(true);
+                            }
+                        }}
                     />
                 </Sider>
                 <Layout>

@@ -35,4 +35,54 @@
             color: #1890ff;
         }
     }
+
+    @include mobile {
+        .ant-layout-sider {
+            position: fixed !important;
+            height: 100vh;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+
+            &.ant-layout-sider-collapsed {
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 0 !important;
+                flex: 0 0 0 !important;
+            }
+
+            .mobile-close-trigger {
+                display: block !important;
+            }
+        }
+
+        // Fix ProTable Search Form on mobile
+        .ant-pro-table-search {
+            .ant-form-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+
+                .ant-form-item-label {
+                    text-align: left;
+                    padding: 0 0 8px;
+                }
+
+                .ant-form-item-control {
+                    width: 100%;
+                    max-width: 100%;
+                }
+            }
+
+            // Ensure inputs inside are full width
+            .ant-input,
+            .ant-input-number,
+            .ant-picker,
+            .ant-select {
+                width: 100% !important;
+            }
+        }
+    }
 }
