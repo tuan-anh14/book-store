@@ -26,22 +26,22 @@ const Dashboard = () => {
                 <Col span={24}>
                     <TopSellingProducts />
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <Card title="Doanh thu theo tháng">
                         <MonthlyRevenue />
                     </Card>
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <Card title="Doanh số theo phương thức thanh toán">
                         <OverallSales />
                     </Card>
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <Card title="Đơn hàng theo trạng thái">
                         <OrdersByStatus />
                     </Card>
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <Card title="Đánh giá khách hàng">
                         <CustomerReviews />
                     </Card>

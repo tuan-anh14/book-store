@@ -52,7 +52,7 @@ const SalesPerformance: React.FC = () => {
     return (
         <Card title="Hiệu suất bán hàng">
             <Row gutter={16}>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
                             title="Doanh thu ngày"
@@ -66,7 +66,7 @@ const SalesPerformance: React.FC = () => {
                         </div>
                     </Card>
                 </Col>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
                             title="Doanh thu tuần"
@@ -80,7 +80,7 @@ const SalesPerformance: React.FC = () => {
                         </div>
                     </Card>
                 </Col>
-                <Col span={8}>
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
                             title="Doanh thu tháng"

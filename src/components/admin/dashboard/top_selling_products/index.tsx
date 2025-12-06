@@ -89,6 +89,7 @@ const TopSellingProducts: React.FC = () => {
                     columns={columns}
                     rowKey="_id"
                     pagination={{ pageSize: 5 }}
+                    scroll={{ x: 600 }}
                 />
             )}
         </Card>

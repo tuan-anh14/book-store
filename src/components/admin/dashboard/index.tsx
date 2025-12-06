@@ -96,25 +96,25 @@ const AdminDashboard = () => {
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <OverallSales />
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <OrdersByStatus />
                 </Col>
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <MonthlyRevenue />
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <CustomerReviews />
                 </Col>
             </Row>
 
             <Row gutter={[40, 40]} className="dashboard__row">
-                <Col xs={24} lg={12}>
+                <Col xs={24} md={12} lg={12}>
                     <ExportReport />
                 </Col>
             </Row>

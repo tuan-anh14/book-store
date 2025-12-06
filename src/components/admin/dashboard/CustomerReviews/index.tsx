@@ -93,7 +93,7 @@ const CustomerReviews = () => {
                                     percent={Math.round(percentage)}
                                     showInfo
                                     strokeColor={getRatingColor(item.rating)}
-                                    style={{ width: 300 }}
+                                    style={{ width: '100%' }}
                                 />
                             </Flex>
                         );
