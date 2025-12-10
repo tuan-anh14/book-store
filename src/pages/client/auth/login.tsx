@@ -1,4 +1,4 @@
-import { App, Button, Divider, Form, Input, Space, theme } from 'antd';
+import { App, Button, Divider, Form, Input, Space, theme, Alert } from 'antd';
 import type { FormProps } from 'antd';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -69,6 +69,13 @@ const LoginPage = () => {
                             <h2 className='text text-large'>Đăng nhập</h2>
                             <p className='text text-normal'>Chào mừng bạn đến với BookStore</p>
                         </div>
+                        <Alert
+                            message="Tài khoản Admin Demo"
+                            description="Email: admin@gmail.com | Pass: 123456"
+                            type="info"
+                            showIcon
+                            style={{ margin: "10px 0 20px 0" }}
+                        />
                         <Form
                             name='form-login'
                             onFinish={onFinish}
