@@ -27,6 +27,7 @@ type FieldType = {
     description: string;
     thumbnail: UploadFile[];
     slider: UploadFile[];
+    quantity: number;
 };
 
 const UpdateBook = (props: IProps) => {
@@ -51,6 +52,7 @@ const UpdateBook = (props: IProps) => {
                 mainText: dataUpdate.mainText,
                 author: dataUpdate.author,
                 price: dataUpdate.price,
+                quantity: dataUpdate.quantity,
                 category: dataUpdate.category,
                 description: dataUpdate.description
             });
@@ -145,12 +147,12 @@ const UpdateBook = (props: IProps) => {
     const handleUploadFile = async (options: RcCustomRequestOptions, type: 'thumbnail' | 'slider') => {
         const { onSuccess, file } = options;
         const fileObj = file as File;
-        
+
         if (!fileObj || !(fileObj instanceof File)) {
             message.error('File không hợp lệ');
             return;
         }
-        
+
         const res = await uploadFileAPI(fileObj, "book");
 
         if (res && res.data) {
@@ -178,14 +180,14 @@ const UpdateBook = (props: IProps) => {
     }
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const { _id, mainText, author, price, category, description } = values;
+        const { _id, mainText, author, price, quantity, category, description } = values;
         // Use Cloudinary URLs instead of fileName
         const thumbnail = fileListThumbnail?.[0]?.url ?? "";
         const slider = fileListSlider?.map((item) => item.url ?? "").filter(url => url !== "") ?? [];
 
         setIsSubmit(true);
 
-        const res = await updateBookAPI(_id, mainText, author, price, category, description, thumbnail, slider);
+        const res = await updateBookAPI(_id, mainText, author, price, category, description, thumbnail, slider, quantity);
         if (res && res.data) {
             message.success('Cập nhật sách thành công');
             form.resetFields();
@@ -263,7 +265,7 @@ const UpdateBook = (props: IProps) => {
                     </Row>
 
                     <Row gutter={15}>
-                        <Col span={12}>
+                        <Col span={8}>
                             <Form.Item<FieldType>
                                 labelCol={{ span: 24 }}
                                 label="Giá tiền"
@@ -277,7 +279,17 @@ const UpdateBook = (props: IProps) => {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
+                        <Col span={8}>
+                            <Form.Item<FieldType>
+                                labelCol={{ span: 24 }}
+                                label="Số lượng"
+                                name="quantity"
+                                rules={[{ required: true, message: 'Vui lòng nhập số lượng!' }]}
+                            >
+                                <InputNumber min={0} style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
                             <Form.Item<FieldType>
                                 labelCol={{ span: 24 }}
                                 label="Thể loại"

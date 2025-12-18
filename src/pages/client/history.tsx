@@ -99,6 +99,7 @@ const HistoryPage = () => {
                 dataSource={dataOrders}
                 rowKey="_id"
                 loading={loading}
+                scroll={{ x: 'max-content' }}
             />
             <Drawer
                 title="Chi tiết đơn hàng"

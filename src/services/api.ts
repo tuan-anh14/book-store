@@ -271,7 +271,8 @@ export const updateBookAPI = (
   category: string,
   description: string,
   thumbnail: string,
-  slider: string[]
+  slider: string[],
+  quantity: number
 ) => {
   const urlBackend = `/api/v1/book/${_id}`;
   return axios.patch<IBackendRes<IRegister>>(urlBackend, {
@@ -281,7 +282,8 @@ export const updateBookAPI = (
     category,
     description,
     thumbnail,
-    slider
+    slider,
+    quantity
   });
 };
 

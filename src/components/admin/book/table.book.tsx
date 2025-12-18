@@ -123,6 +123,13 @@ const TableBook = () => {
             },
         },
         {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            hideInSearch: true,
+            sorter: true,
+            width: 120,
+        },
+        {
             title: 'Ngày cập nhật',
             dataIndex: 'updatedAt',
             sorter: true,
